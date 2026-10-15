@@ -164,6 +164,9 @@ pub fn enemy_ai_delta(
 
     // barra de jefe: el maximo hp entre jefes vivos
     let mut top_boss: Option<(String, f32, f32)> = None;
+    // abejas vivas (para que el Panal no spawnee sin limite); se cuenta antes
+    // del loop mutable para no pedir prestada la query dos veces.
+    let bees = q_enemy.iter().filter(|(_, _, x)| x.kind == EnemyKind::Bee).count();
 
     for (e, mut tf, mut en) in &mut q_enemy {
         en.t += dt;
@@ -211,7 +214,6 @@ pub fn enemy_ai_delta(
                     en.spawn_t += dt;
                     if en.spawn_t > 6.0 {
                         en.spawn_t = 0.0;
-                        let bees = q_enemy.iter().filter(|(_, _, x)| x.kind == EnemyKind::Bee).count();
                         if bees < 3 {
                             spawn_enemy_kind(&mut commands, EnemyKind::Bee, tf.translation.truncate() + Vec2::Y);
                         }
@@ -296,7 +298,7 @@ pub fn enemy_ai_delta(
         }
         if en.boss {
             let label = format!("{:?}", en.kind);
-            if top_boss.map(|(_, hp, _)| hp).unwrap_or(-1.0) < en.hp {
+            if top_boss.as_ref().map(|(_, hp, _)| *hp).unwrap_or(-1.0) < en.hp {
                 top_boss = Some((label, en.hp, en.kind.hp()));
             }
         }

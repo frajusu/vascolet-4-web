@@ -370,8 +370,8 @@ pub fn setup_level(
         .prop("music,normal")
         .or_else(|| map.prop("defaultMusic"))
         .unwrap_or("normal");
-    let file = match track {
-        "normal" => "audio/music/win/menu.ogg",
+    let file: String = match track {
+        "normal" => "audio/music/win/menu.ogg".to_string(),
         s if s.ends_with(".ogg") => {
             // las props traen solo nombre ("level1.ogg"); estan en music/win
             if s.contains('/') { s.to_string() } else { format!("audio/music/win/{}", s) }
@@ -381,9 +381,10 @@ pub fn setup_level(
     // hack temporal: level1..6 existen; el resto usa menu.ogg (se mapea abajo)
     let file = real_music_file(n, &file);
     music.track = file.clone();
+    let music_handle: Handle<AudioSource> = asset_server.load(file);
     commands.spawn((
         MusicMarker,
-        AudioPlayer(asset_server.load(file)),
+        AudioPlayer(music_handle),
         PlaybackSettings::LOOP,
     ));
 
@@ -513,9 +514,11 @@ pub fn level_director(
             commands.entity(e).despawn_recursive();
         }
         music.track = "audio/music/win/boss.ogg".to_string();
+        music.track = "audio/music/win/boss.ogg".to_string();
+        let boss_handle: Handle<AudioSource> = asset_server.load("audio/music/win/boss.ogg");
         commands.spawn((
             MusicMarker,
-            AudioPlayer(asset_server.load("audio/music/win/boss.ogg")),
+            AudioPlayer(boss_handle),
             PlaybackSettings::LOOP,
         ));
     }

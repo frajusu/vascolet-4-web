@@ -62,10 +62,19 @@ impl TmxMap {
 fn attr_value(e: &quick_xml::events::BytesStart, key: &[u8]) -> Option<String> {
     for a in e.attributes().flatten() {
         if a.key.as_ref() == key {
-            return a.decoded_value().ok().map(|c| c.into_owned());
+            let raw = String::from_utf8_lossy(&a.value).into_owned();
+            return Some(unescape_xml(&raw));
         }
     }
     None
+}
+
+fn unescape_xml(s: &str) -> String {
+    s.replace("&amp;", "&")
+        .replace("&lt;", "<")
+        .replace("&gt;", ">")
+        .replace("&quot;", "\"")
+        .replace("&apos;", "'")
 }
 
 fn num<T: std::str::FromStr>(s: Option<String>, d: T) -> T {
@@ -192,7 +201,7 @@ pub fn parse_tmx(xml: &str) -> Result<TmxMap, String> {
             },
             Event::Text(e) => {
                 if in_data {
-                    data_text.push_str(&e.decoded().map_err(|e| e.to_string())?);
+                    data_text.push_str(&String::from_utf8_lossy(e.as_ref()));
                 }
             }
             Event::End(e) => match e.name().as_ref() {

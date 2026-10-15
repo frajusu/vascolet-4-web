@@ -1,7 +1,6 @@
 //! Estado global, progresion de niveles, pausa, game over y victoria.
 
 use bevy::prelude::*;
-use crate::level::level_def;
 
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum AppState {
