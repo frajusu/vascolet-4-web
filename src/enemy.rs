@@ -152,7 +152,7 @@ pub fn enemy_ai_delta(
     grid: Res<SolidGrid>,
     q_player: Query<(&Transform, &PlayerStats), With<Player>>,
     mut q_enemy: Query<(Entity, &mut Transform, &mut Enemy), Without<Player>>,
-    q_boom: Query<(&Transform, &Boomerang)>,
+    q_boom: Query<&Boomerang>,
 ) {
     if *state.get() != AppState::Playing {
         return;
@@ -247,8 +247,8 @@ pub fn enemy_ai_delta(
 
         // boomerang golpea (columnas inmunes)
         if en.kind != EnemyKind::FrontColumn && en.kind != EnemyKind::SideColumn {
-            for (btf, _) in &q_boom {
-                if btf.translation.distance(tf.translation) < 1.0 {
+            for b in &q_boom {
+                if b.pos.distance(tf.translation) < 1.0 {
                     en.hp -= boom_dmg;
                     crate::audio::play_sfx(&mut commands, &asset_server, crate::audio::Sfx::Hit);
                     break;

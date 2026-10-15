@@ -56,6 +56,7 @@ fn main() {
                 game::pause_keys,
                 fit_camera,
                 player::player_move_delta,
+                player::sync_boomerang_pos,
                 enemy::enemy_ai_delta,
                 items::item_pickup,
                 world::tip_triggers,
@@ -95,8 +96,8 @@ fn setup_camera(mut commands: Commands) {
 fn fit_camera(
     q_win: Query<&Window>,
     mut q_cam: Query<&mut Projection, With<MainCamera>>,
-    q_player: Query<&Transform, With<player::Player>>,
-    mut q_cam_tf: Query<&mut Transform, With<MainCamera>>,
+    q_player: Query<&Transform, (With<Player>, Without<MainCamera>)>,
+    mut q_cam_tf: Query<&mut Transform, (With<MainCamera>, Without<Player>)>,
 ) {
     let Ok(win) = q_win.get_single() else { return };
     let Ok(mut proj) = q_cam.get_single_mut() else { return };

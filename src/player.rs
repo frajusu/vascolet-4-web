@@ -42,6 +42,15 @@ pub struct Boomerang {
     pub vel: Vec2,
     pub life: f32,
     pub returning: bool,
+    pub pos: Vec3,
+}
+
+/// Copia la posicion al componente para que otros systems la lean sin
+/// pedir &Transform (evita el conflicto B0001 de queries).
+pub fn sync_boomerang_pos(mut q: Query<(&Transform, &mut Boomerang)>) {
+    for (tf, mut b) in &mut q {
+        b.pos = tf.translation;
+    }
 }
 
 const GRAVITY: f32 = 24.0;
@@ -180,7 +189,7 @@ pub fn player_move_delta(
             st.fire_cd = cd;
             let dir = st.facing;
             commands.spawn((
-                Boomerang { vel: Vec2::new(dir * 12.0, 2.0), life: 2.0, returning: false },
+                Boomerang { vel: Vec2::new(dir * 12.0, 2.0), life: 2.0, returning: false, pos: Vec3::ZERO },
                 Sprite {
                     color: Color::srgb(0.9, 0.8, 0.3),
                     custom_size: Some(Vec2::splat(0.5)),

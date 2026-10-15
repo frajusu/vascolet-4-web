@@ -46,7 +46,7 @@ pub fn item_pickup(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     q_player: Query<&Transform, With<Player>>,
-    mut q_item: Query<(Entity, &mut Transform, &mut Item)>,
+    mut q_item: Query<(Entity, &mut Transform, &mut Item), Without<Player>>,
 ) {
     if *state.get() != AppState::Playing {
         return;
