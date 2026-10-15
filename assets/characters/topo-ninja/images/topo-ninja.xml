@@ -1,0 +1,30 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="shuriken00" sourceImage="topo-ninja" axis="20,19" sourceRect="325,424,42,40" />
+    <SpriteData keyName="shuriken01" sourceImage="topo-ninja" axis="14,14" sourceRect="325,465,30,30" />
+    <SpriteData keyName="topoDamage" sourceImage="topo-ninja" axis="77,125" sourceRect="601,132,164,130" />
+    <SpriteData keyName="topoJump00" sourceImage="topo-ninja" axis="69,125" sourceRect="404,289,166,130" />
+    <SpriteData keyName="topoJump01" sourceImage="topo-ninja" axis="74,127" sourceRect="263,154,166,134" />
+    <SpriteData keyName="topoJump02" sourceImage="topo-ninja" axis="74,143" sourceRect="571,265,138,130" />
+    <SpriteData keyName="topoJump03" sourceImage="topo-ninja" axis="84,131" sourceRect="172,436,152,128" />
+    <SpriteData keyName="topoJump04" sourceImage="topo-ninja" axis="68,123" sourceRect="710,263,134,130" />
+    <SpriteData keyName="topoJump05" sourceImage="topo-ninja" axis="56,142" sourceRect="132,162,130,138" />
+    <SpriteData keyName="topoJump06" sourceImage="topo-ninja" axis="66,152" sourceRect="289,1,128,152" />
+    <SpriteData keyName="topoJump07" sourceImage="topo-ninja" axis="77,136" sourceRect="273,289,130,134" />
+    <SpriteData keyName="topoJump08" sourceImage="topo-ninja" axis="67,124" sourceRect="768,1,138,130" />
+    <SpriteData keyName="topoJump09" sourceImage="topo-ninja" axis="70,134" sourceRect="1,698,150,128" />
+    <SpriteData keyName="topoJump10" sourceImage="topo-ninja" axis="68,145" sourceRect="766,132,134,130" />
+    <SpriteData keyName="topoJump11" sourceImage="topo-ninja" axis="76,135" sourceRect="1,162,130,140" />
+    <SpriteData keyName="topoJump12" sourceImage="topo-ninja" axis="64,138" sourceRect="160,1,128,152" />
+    <SpriteData keyName="topoJump13" sourceImage="topo-ninja" axis="56,136" sourceRect="142,301,130,134" />
+    <SpriteData keyName="topoKicking" sourceImage="topo-ninja" axis="64,138" sourceRect="1,1,158,160" />
+    <SpriteData keyName="topoShot00" sourceImage="topo-ninja" axis="75,131" sourceRect="1,303,140,136" />
+    <SpriteData keyName="topoShot01" sourceImage="topo-ninja" axis="69,127" sourceRect="418,1,182,132" />
+    <SpriteData keyName="topoStand00" sourceImage="topo-ninja" axis="69,125" sourceRect="601,1,166,130" />
+    <SpriteData keyName="topoStand01" sourceImage="topo-ninja" axis="69,123" sourceRect="1,569,166,128" />
+    <SpriteData keyName="topoStand02" sourceImage="topo-ninja" axis="69,123" sourceRect="1,440,170,128" />
+    <SpriteData keyName="topoStand03" sourceImage="topo-ninja" axis="69,120" sourceRect="172,565,174,126" />
+    <SpriteData keyName="topoStand04" sourceImage="topo-ninja" axis="69,122" sourceRect="845,263,174,128" />
+    <SpriteData keyName="topoStand05" sourceImage="topo-ninja" axis="69,124" sourceRect="430,134,170,130" />
+  </data>
+</LibraryInfo>

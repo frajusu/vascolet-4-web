@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExportedData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Animations>
+    <Animation name="Walk" fps="24" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk04" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk05" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+        <Flag type="PlaySound" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk06" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk07" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk08" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk09" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk10" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="walk11" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+        <Flag type="PlaySound" />
+      </Frame>
+    </Animation>
+    <Animation name="Test" fps="24" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="jump02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="jump03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+    </Animation>
+  </Animations>
+</ExportedData>

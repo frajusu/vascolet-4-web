@@ -1,0 +1,50 @@
+﻿<ExportedData version="1">
+  <Animations>
+    <Animation name="damage" fps="60" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dead" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="dead" fps="60" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dead" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="normal" fps="8" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="malmark00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="malmark01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="malmark02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="malmark03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="attack1" fps="12" loopIndex="2">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="attack00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="attack01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="attack02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="attack03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="attack2" fps="12" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="secondAttack00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="secondAttack01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+  </Animations>
+</ExportedData>

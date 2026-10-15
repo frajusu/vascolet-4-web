@@ -1,0 +1,1490 @@
+﻿<ExportedData version="1">
+  <Animations>
+    <Animation name="key1" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="agua" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="key2" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cereal" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="key3" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="leche" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="key4" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="queso" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="key5" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="yoghurt" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="boomerang1" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="manzana" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="boomerang2" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="naranja" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="boomerang4" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pera" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="boomerang5" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="uvas" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="boomerang3" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="banana" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="longJump" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="saltarMas" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="doubleJump" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dobleSalto" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="swim" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="nadar" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="jumpAttack" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pisar" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="run" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="correr" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="void" fps="24" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0" />
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0" />
+    </Animation>
+    <Animation name="life1" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="cebolla" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="life2" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="lechuga" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="life3" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="papa" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="life4" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="tomate" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="life5" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="zanahoria" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="energy" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="energia" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="fullEnergy" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="pocion" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="redKey" fps="8" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyRed00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyRed01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyRed02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyRed01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="greenKey" fps="8" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyGreen00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyGreen01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyGreen02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyGreen01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="blueKey" fps="8" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyBlue00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyBlue01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyBlue02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="keyBlue01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="skullKey" fps="8" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="skullKey00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="skullKey01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="skullKey02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="skullKey01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="extraLive" fps="24" loopIndex="1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vidaExtra" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+  </Animations>
+</ExportedData>

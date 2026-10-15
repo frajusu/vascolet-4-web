@@ -1,0 +1,8 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="boladepinchos00" sourceImage="bola-de-pinchos" axis="26,45" sourceRect="54,54,52,52" />
+    <SpriteData keyName="boladepinchos01" sourceImage="bola-de-pinchos" axis="26,45" sourceRect="1,54,52,52" />
+    <SpriteData keyName="boladepinchos02" sourceImage="bola-de-pinchos" axis="26,45" sourceRect="54,1,52,52" />
+    <SpriteData keyName="boladepinchos03" sourceImage="bola-de-pinchos" axis="26,45" sourceRect="1,1,52,52" />
+  </data>
+</LibraryInfo>

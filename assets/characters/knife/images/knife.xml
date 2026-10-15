@@ -1,0 +1,35 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="knife00" sourceImage="knife" axis="-2,2" sourceRect="12,79,2,6" />
+    <SpriteData keyName="knife01" sourceImage="knife" axis="2,5" sourceRect="12,68,6,10" />
+    <SpriteData keyName="knife02" sourceImage="knife" axis="4,6" sourceRect="1,107,10,12" />
+    <SpriteData keyName="knife03" sourceImage="knife" axis="7,4" sourceRect="161,124,16,10" />
+    <SpriteData keyName="knife04" sourceImage="knife" axis="9,1" sourceRect="148,138,20,6" />
+    <SpriteData keyName="knife05" sourceImage="knife" axis="10,6" sourceRect="230,48,24,12" />
+    <SpriteData keyName="knife06" sourceImage="knife" axis="10,11" sourceRect="161,101,24,22" />
+    <SpriteData keyName="knife07" sourceImage="knife" axis="9,15" sourceRect="60,164,20,30" />
+    <SpriteData keyName="knife08" sourceImage="knife" axis="5,18" sourceRect="1,68,10,38" />
+    <SpriteData keyName="knife09" sourceImage="knife" axis="8,19" sourceRect="209,48,20,40" />
+    <SpriteData keyName="knife10" sourceImage="knife" axis="14,17" sourceRect="60,127,32,36" />
+    <SpriteData keyName="knife11" sourceImage="knife" axis="20,14" sourceRect="81,167,44,28" />
+    <SpriteData keyName="knife12" sourceImage="knife" axis="25,8" sourceRect="1,240,52,14" />
+    <SpriteData keyName="knife13" sourceImage="knife" axis="27,13" sourceRect="93,138,54,28" />
+    <SpriteData keyName="knife14" sourceImage="knife" axis="24,21" sourceRect="158,56,50,44" />
+    <SpriteData keyName="knife15" sourceImage="knife" axis="17,32" sourceRect="20,66,38,62" />
+    <SpriteData keyName="knife16" sourceImage="knife" axis="5,32" sourceRect="86,1,16,64" />
+    <SpriteData keyName="knife17" sourceImage="knife" axis="15,32" sourceRect="53,1,32,64" />
+    <SpriteData keyName="knife18" sourceImage="knife" axis="23,27" sourceRect="150,1,46,54" />
+    <SpriteData keyName="knife19" sourceImage="knife" axis="29,18" sourceRect="1,168,58,38" />
+    <SpriteData keyName="knife20" sourceImage="knife" axis="31,6" sourceRect="64,215,64,16" />
+    <SpriteData keyName="knife21" sourceImage="knife" axis="29,16" sourceRect="98,105,62,32" />
+    <SpriteData keyName="knife22" sourceImage="knife" axis="25,24" sourceRect="103,56,54,48" />
+    <SpriteData keyName="knife23" sourceImage="knife" axis="18,30" sourceRect="59,66,38,60" />
+    <SpriteData keyName="knife24" sourceImage="knife" axis="9,32" sourceRect="1,1,18,66" />
+    <SpriteData keyName="knife25" sourceImage="knife" axis="14,30" sourceRect="20,1,32,64" />
+    <SpriteData keyName="knife26" sourceImage="knife" axis="21,26" sourceRect="103,1,46,54" />
+    <SpriteData keyName="knife27" sourceImage="knife" axis="27,19" sourceRect="1,129,58,38" />
+    <SpriteData keyName="knife28" sourceImage="knife" axis="31,10" sourceRect="64,196,64,18" />
+    <SpriteData keyName="knife29" sourceImage="knife" axis="31,15" sourceRect="1,207,62,32" />
+    <SpriteData keyName="knife30" sourceImage="knife" axis="26,22" sourceRect="197,1,54,46" />
+  </data>
+</LibraryInfo>

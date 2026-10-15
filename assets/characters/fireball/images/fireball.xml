@@ -1,0 +1,12 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="fireball00" sourceImage="fireball" axis="10,18" sourceRect="101,1,16,12" />
+    <SpriteData keyName="fireball01" sourceImage="fireball" axis="10,28" sourceRect="58,1,42,36" />
+    <SpriteData keyName="fireball02" sourceImage="fireball" axis="25,34" sourceRect="1,1,56,44" />
+    <SpriteData keyName="fireball03" sourceImage="fireball" axis="22,29" sourceRect="1,46,54,34" />
+    <SpriteData keyName="fireball04" sourceImage="fireball" axis="32,24" sourceRect="1,81,64,24" />
+    <SpriteData keyName="fireball05" sourceImage="fireball" axis="6,24" sourceRect="58,38,38,24" />
+    <SpriteData keyName="fireball06" sourceImage="fireball" axis="-4,20" sourceRect="1,106,28,16" />
+    <SpriteData keyName="fireball07" sourceImage="fireball" axis="-23,19" sourceRect="101,14,10,12" />
+  </data>
+</LibraryInfo>

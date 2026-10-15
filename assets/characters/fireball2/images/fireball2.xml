@@ -1,0 +1,21 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="enemyfireball" sourceImage="fireball2" axis="-3,6" sourceRect="38,109,6,8" />
+    <SpriteData keyName="enemyfireball00" sourceImage="fireball2" axis="-3,6" sourceRect="31,109,6,8" />
+    <SpriteData keyName="enemyfireball01" sourceImage="fireball2" axis="-1,8" sourceRect="20,109,10,12" />
+    <SpriteData keyName="enemyfireball02" sourceImage="fireball2" axis="4,11" sourceRect="1,109,18,16" />
+    <SpriteData keyName="enemyfireball03" sourceImage="fireball2" axis="3,13" sourceRect="50,107,20,20" />
+    <SpriteData keyName="enemyfireball04" sourceImage="fireball2" axis="5,18" sourceRect="99,99,26,28" />
+    <SpriteData keyName="enemyfireball05" sourceImage="fireball2" axis="8,17" sourceRect="209,77,28,30" />
+    <SpriteData keyName="enemyfireball06" sourceImage="fireball2" axis="11,16" sourceRect="209,42,38,34" />
+    <SpriteData keyName="enemyfireball07" sourceImage="fireball2" axis="18,22" sourceRect="209,1,42,40" />
+    <SpriteData keyName="enemyfireball08" sourceImage="fireball2" axis="24,26" sourceRect="50,1,50,54" />
+    <SpriteData keyName="enemyfireball09" sourceImage="fireball2" axis="20,31" sourceRect="50,56,48,50" />
+    <SpriteData keyName="enemyfireball10" sourceImage="fireball2" axis="26,32" sourceRect="101,50,56,48" />
+    <SpriteData keyName="enemyfireball11" sourceImage="fireball2" axis="16,28" sourceRect="158,50,50,48" />
+    <SpriteData keyName="enemyfireball12" sourceImage="fireball2" axis="14,34" sourceRect="1,1,48,56" />
+    <SpriteData keyName="enemyfireball13" sourceImage="fireball2" axis="16,24" sourceRect="1,58,48,50" />
+    <SpriteData keyName="enemyfireball14" sourceImage="fireball2" axis="18,22" sourceRect="101,1,56,48" />
+    <SpriteData keyName="enemyfireball15" sourceImage="fireball2" axis="22,24" sourceRect="158,1,50,48" />
+  </data>
+</LibraryInfo>

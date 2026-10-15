@@ -1,0 +1,20 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="axe00" sourceImage="axe" axis="3,2" sourceRect="18,120,6,6" />
+    <SpriteData keyName="axe01" sourceImage="axe" axis="0,10" sourceRect="18,107,12,12" />
+    <SpriteData keyName="axe02" sourceImage="axe" axis="8,6" sourceRect="1,107,16,14" />
+    <SpriteData keyName="axe03" sourceImage="axe" axis="5,4" sourceRect="132,97,22,22" />
+    <SpriteData keyName="axe04" sourceImage="axe" axis="12,11" sourceRect="107,97,24,26" />
+    <SpriteData keyName="axe05" sourceImage="axe" axis="21,9" sourceRect="201,81,32,32" />
+    <SpriteData keyName="axe06" sourceImage="axe" axis="17,15" sourceRect="201,48,34,32" />
+    <SpriteData keyName="axe07" sourceImage="axe" axis="27,26" sourceRect="156,50,44,44" />
+    <SpriteData keyName="axe08" sourceImage="axe" axis="23,23" sourceRect="154,1,46,48" />
+    <SpriteData keyName="axe09" sourceImage="axe" axis="20,30" sourceRect="54,54,52,52" />
+    <SpriteData keyName="axe10" sourceImage="axe" axis="24,21" sourceRect="201,1,48,46" />
+    <SpriteData keyName="axe11" sourceImage="axe" axis="21,19" sourceRect="1,54,52,52" />
+    <SpriteData keyName="axe12" sourceImage="axe" axis="23,23" sourceRect="107,1,46,48" />
+    <SpriteData keyName="axe13" sourceImage="axe" axis="31,20" sourceRect="54,1,52,52" />
+    <SpriteData keyName="axe14" sourceImage="axe" axis="24,21" sourceRect="107,50,48,46" />
+    <SpriteData keyName="axe15" sourceImage="axe" axis="31,30" sourceRect="1,1,52,52" />
+  </data>
+</LibraryInfo>

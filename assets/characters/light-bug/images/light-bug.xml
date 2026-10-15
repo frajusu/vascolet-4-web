@@ -1,0 +1,8 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="lightBug00" sourceImage="light-bug" axis="24,62" sourceRect="190,1,62,66" />
+    <SpriteData keyName="lightBug01" sourceImage="light-bug" axis="24,60" sourceRect="127,1,62,66" />
+    <SpriteData keyName="lightBug02" sourceImage="light-bug" axis="25,61" sourceRect="64,1,62,66" />
+    <SpriteData keyName="lightBug03" sourceImage="light-bug" axis="24,64" sourceRect="1,1,62,66" />
+  </data>
+</LibraryInfo>

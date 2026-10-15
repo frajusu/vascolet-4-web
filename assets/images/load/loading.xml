@@ -1,0 +1,6 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="back" sourceImage="loading" axis="0,0" sourceRect="0,0,512,384" />
+	<SpriteData keyName="loading" sourceImage="cargando" axis="69,17" sourceRect="0,0,139,34" />
+  </data>
+</LibraryInfo>

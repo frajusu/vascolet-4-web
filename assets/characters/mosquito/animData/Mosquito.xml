@@ -1,0 +1,25 @@
+﻿<ExportedData version="0">
+  <Animations>
+    <Animation name="damage" fps="60" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dead" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+    </Animation>
+    <Animation name="dead" fps="60" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dead" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+    </Animation>
+    <Animation name="normal" fps="12" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="flying00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="flying01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="flying02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+    </Animation>
+  </Animations>
+</ExportedData>

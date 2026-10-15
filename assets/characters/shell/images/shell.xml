@@ -1,0 +1,12 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="bubble00" sourceImage="shell" axis="7,51" sourceRect="82,86,16,16" />
+    <SpriteData keyName="bubble01" sourceImage="shell" axis="6,50" sourceRect="82,103,14,14" />
+    <SpriteData keyName="bubble02" sourceImage="shell" axis="5,48" sourceRect="99,82,12,10" />
+    <SpriteData keyName="shell00" sourceImage="shell" axis="40,48" sourceRect="1,86,80,54" />
+    <SpriteData keyName="shell01" sourceImage="shell" axis="43,78" sourceRect="1,1,84,84" />
+    <SpriteData keyName="shell02" sourceImage="shell" axis="41,67" sourceRect="169,1,82,74" />
+    <SpriteData keyName="shell03" sourceImage="shell" axis="42,73" sourceRect="86,1,82,80" />
+    <SpriteData keyName="shell04" sourceImage="shell" axis="43,40" sourceRect="1,141,86,46" />
+  </data>
+</LibraryInfo>

@@ -1,0 +1,7 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="ayuda" sourceImage="carteles-ayuda-guardar" axis="23,76" sourceRect="95,1,46,76" />
+    <SpriteData keyName="guardar00" sourceImage="carteles-ayuda-guardar" axis="23,75" sourceRect="48,1,46,76" />
+    <SpriteData keyName="guardar01" sourceImage="carteles-ayuda-guardar" axis="23,75" sourceRect="1,1,46,76" />
+  </data>
+</LibraryInfo>

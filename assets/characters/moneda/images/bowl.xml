@@ -1,0 +1,34 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="bowl0000" sourceImage="bowl" axis="22,37" sourceRect="134,1,42,38" />
+    <SpriteData keyName="bowl0001" sourceImage="bowl" axis="22,37" sourceRect="46,40,44,38" />
+    <SpriteData keyName="bowl0002" sourceImage="bowl" axis="21,36" sourceRect="1,79,44,38" />
+    <SpriteData keyName="bowl0003" sourceImage="bowl" axis="21,36" sourceRect="91,40,42,38" />
+    <SpriteData keyName="bowl0004" sourceImage="bowl" axis="22,35" sourceRect="134,77,44,36" />
+    <SpriteData keyName="bowl0005" sourceImage="bowl" axis="22,34" sourceRect="177,1,44,36" />
+    <SpriteData keyName="bowl0006" sourceImage="bowl" axis="22,33" sourceRect="87,118,44,34" />
+    <SpriteData keyName="bowl0007" sourceImage="bowl" axis="21,32" sourceRect="134,114,42,34" />
+    <SpriteData keyName="bowl0008" sourceImage="bowl" axis="21,31" sourceRect="177,147,42,32" />
+    <SpriteData keyName="bowl0009" sourceImage="bowl" axis="22,31" sourceRect="132,182,44,32" />
+    <SpriteData keyName="bowl0010" sourceImage="bowl" axis="22,31" sourceRect="87,221,44,32" />
+    <SpriteData keyName="bowl0011" sourceImage="bowl" axis="22,31" sourceRect="177,114,44,32" />
+    <SpriteData keyName="bowl0012" sourceImage="bowl" axis="21,31" sourceRect="132,149,44,32" />
+    <SpriteData keyName="bowl0013" sourceImage="bowl" axis="21,31" sourceRect="87,188,44,32" />
+    <SpriteData keyName="bowl0014" sourceImage="bowl" axis="21,32" sourceRect="87,153,42,34" />
+    <SpriteData keyName="bowl0015" sourceImage="bowl" axis="21,33" sourceRect="44,192,42,34" />
+    <SpriteData keyName="bowl0016" sourceImage="bowl" axis="21,34" sourceRect="44,155,42,36" />
+    <SpriteData keyName="bowl0017" sourceImage="bowl" axis="20,34" sourceRect="1,192,42,36" />
+    <SpriteData keyName="bowl0018" sourceImage="bowl" axis="21,34" sourceRect="44,118,42,36" />
+    <SpriteData keyName="bowl0019" sourceImage="bowl" axis="22,34" sourceRect="134,40,44,36" />
+    <SpriteData keyName="bowl0020" sourceImage="bowl" axis="22,34" sourceRect="89,79,44,36" />
+    <SpriteData keyName="bowl0021" sourceImage="bowl" axis="21,34" sourceRect="1,155,42,36" />
+    <SpriteData keyName="bowl0022" sourceImage="bowl" axis="21,34" sourceRect="1,118,42,36" />
+    <SpriteData keyName="bowl0023" sourceImage="bowl" axis="20,34" sourceRect="179,75,42,36" />
+    <SpriteData keyName="bowl0024" sourceImage="bowl" axis="21,35" sourceRect="179,38,42,36" />
+    <SpriteData keyName="bowl0025" sourceImage="bowl" axis="21,36" sourceRect="1,40,44,38" />
+    <SpriteData keyName="bowl0026" sourceImage="bowl" axis="21,36" sourceRect="91,1,42,38" />
+    <SpriteData keyName="bowl0027" sourceImage="bowl" axis="21,37" sourceRect="46,79,42,38" />
+    <SpriteData keyName="bowl0028" sourceImage="bowl" axis="22,37" sourceRect="46,1,44,38" />
+    <SpriteData keyName="bowl0029" sourceImage="bowl" axis="22,37" sourceRect="1,1,44,38" />
+  </data>
+</LibraryInfo>

@@ -1,0 +1,9 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="dead" sourceImage="little-spider" axis="26,38" sourceRect="1,48,56,46" />
+    <SpriteData keyName="littleSpider00" sourceImage="little-spider" axis="26,37" sourceRect="115,1,56,44" />
+    <SpriteData keyName="littleSpider01" sourceImage="little-spider" axis="26,39" sourceRect="58,1,56,46" />
+    <SpriteData keyName="littleSpider02" sourceImage="little-spider" axis="26,38" sourceRect="1,1,56,46" />
+    <SpriteData keyName="littleSpider03" sourceImage="little-spider" axis="26,36" sourceRect="58,48,56,44" />
+  </data>
+</LibraryInfo>

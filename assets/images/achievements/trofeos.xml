@@ -1,0 +1,44 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="agua_disabled" sourceImage="trofeos" axis="-6,-3" sourceRect="211,111,48,52" />
+    <SpriteData keyName="agua_enabled" sourceImage="trofeos" axis="-6,-3" sourceRect="229,54,48,52" />
+    <SpriteData keyName="banana_disabled" sourceImage="trofeos" axis="0,0" sourceRect="1,174,54,54" />
+    <SpriteData keyName="banana_enabled" sourceImage="trofeos" axis="0,0" sourceRect="1,119,54,54" />
+    <SpriteData keyName="cebolla_disabled" sourceImage="trofeos" axis="-6,-6" sourceRect="378,52,48,50" />
+    <SpriteData keyName="cebolla_enabled" sourceImage="trofeos" axis="-6,-6" sourceRect="427,1,48,50" />
+    <SpriteData keyName="cereal_disabled" sourceImage="trofeos" axis="-6,-6" sourceRect="464,201,48,48" />
+    <SpriteData keyName="cereal_enabled" sourceImage="trofeos" axis="-6,-6" sourceRect="415,201,48,48" />
+    <SpriteData keyName="correr_disabled" sourceImage="trofeos" axis="-2,0" sourceRect="60,62,58,56" />
+    <SpriteData keyName="correr_enabled" sourceImage="trofeos" axis="-2,0" sourceRect="1,62,58,56" />
+    <SpriteData keyName="dobleSalto_disabled" sourceImage="trofeos" axis="-6,-6" sourceRect="211,164,50,50" />
+    <SpriteData keyName="dobleSalto_enabled" sourceImage="trofeos" axis="-6,-6" sourceRect="260,107,50,50" />
+    <SpriteData keyName="leche_disabled" sourceImage="trofeos" axis="-6,-6" sourceRect="278,1,48,52" />
+    <SpriteData keyName="leche_enabled" sourceImage="trofeos" axis="-6,-6" sourceRect="229,1,48,52" />
+    <SpriteData keyName="lechuga_disabled" sourceImage="trofeos" axis="-6,-6" sourceRect="311,156,54,48" />
+    <SpriteData keyName="lechuga_enabled" sourceImage="trofeos" axis="-6,-6" sourceRect="360,103,54,48" />
+    <SpriteData keyName="manzana_disabled" sourceImage="trofeos" axis="-6,0" sourceRect="109,119,52,54" />
+    <SpriteData keyName="manzana_enabled" sourceImage="trofeos" axis="-6,0" sourceRect="56,119,52,54" />
+    <SpriteData keyName="nadar_disabled" sourceImage="trofeos" axis="-2,-1" sourceRect="170,1,58,54" />
+    <SpriteData keyName="nadar_enabled" sourceImage="trofeos" axis="-2,-1" sourceRect="111,1,58,54" />
+    <SpriteData keyName="naranja_disabled" sourceImage="trofeos" axis="-6,-1" sourceRect="162,166,48,54" />
+    <SpriteData keyName="naranja_enabled" sourceImage="trofeos" axis="-6,-1" sourceRect="162,111,48,54" />
+    <SpriteData keyName="papa_disabled" sourceImage="trofeos" axis="-6,-6" sourceRect="174,56,54,54" />
+    <SpriteData keyName="papa_enabled" sourceImage="trofeos" axis="-6,-6" sourceRect="119,56,54,54" />
+    <SpriteData keyName="pera_disabled" sourceImage="trofeos" axis="-6,-6" sourceRect="262,158,48,50" />
+    <SpriteData keyName="pera_enabled" sourceImage="trofeos" axis="-6,-6" sourceRect="311,105,48,50" />
+    <SpriteData keyName="pisar_disabled" sourceImage="trofeos" axis="-6,-1" sourceRect="107,174,50,54" />
+    <SpriteData keyName="pisar_enabled" sourceImage="trofeos" axis="-6,-1" sourceRect="56,174,50,54" />
+    <SpriteData keyName="queso_disabled" sourceImage="trofeos" axis="-6,-6" sourceRect="417,152,48,48" />
+    <SpriteData keyName="queso_enabled" sourceImage="trofeos" axis="-6,-6" sourceRect="366,201,48,48" />
+    <SpriteData keyName="saltarMas_disabled" sourceImage="trofeos" axis="-6,-4" sourceRect="278,54,50,50" />
+    <SpriteData keyName="saltarMas_enabled" sourceImage="trofeos" axis="-6,-4" sourceRect="327,1,50,50" />
+    <SpriteData keyName="tomate_disabled" sourceImage="trofeos" axis="-6,-6" sourceRect="366,152,50,48" />
+    <SpriteData keyName="tomate_enabled" sourceImage="trofeos" axis="-6,-6" sourceRect="415,103,50,48" />
+    <SpriteData keyName="uvas_disabled" sourceImage="trofeos" axis="-6,0" sourceRect="56,1,54,60" />
+    <SpriteData keyName="uvas_enabled" sourceImage="trofeos" axis="-6,0" sourceRect="1,1,54,60" />
+    <SpriteData keyName="yoghurt_disabled" sourceImage="trofeos" axis="-6,-6" sourceRect="329,52,48,50" />
+    <SpriteData keyName="yoghurt_enabled" sourceImage="trofeos" axis="-6,-6" sourceRect="378,1,48,50" />
+    <SpriteData keyName="zanahoria_disabled" sourceImage="trofeos" axis="-6,-6" sourceRect="311,205,50,48" />
+    <SpriteData keyName="zanahoria_enabled" sourceImage="trofeos" axis="-6,-6" sourceRect="427,52,50,48" />
+  </data>
+</LibraryInfo>

@@ -1,0 +1,34 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="moneda0000" sourceImage="moneda" axis="14,32" sourceRect="65,34,26,32" />
+    <SpriteData keyName="moneda0001" sourceImage="moneda" axis="13,32" sourceRect="92,34,24,32" />
+    <SpriteData keyName="moneda0002" sourceImage="moneda" axis="11,32" sourceRect="105,67,20,32" />
+    <SpriteData keyName="moneda0003" sourceImage="moneda" axis="10,32" sourceRect="182,1,18,32" />
+    <SpriteData keyName="moneda0004" sourceImage="moneda" axis="8,32" sourceRect="136,34,18,32" />
+    <SpriteData keyName="moneda0005" sourceImage="moneda" axis="8,32" sourceRect="163,1,18,32" />
+    <SpriteData keyName="moneda0006" sourceImage="moneda" axis="9,32" sourceRect="201,1,22,30" />
+    <SpriteData keyName="moneda0007" sourceImage="moneda" axis="11,31" sourceRect="155,34,26,30" />
+    <SpriteData keyName="moneda0008" sourceImage="moneda" axis="12,31" sourceRect="159,96,28,28" />
+    <SpriteData keyName="moneda0009" sourceImage="moneda" axis="13,31" sourceRect="184,63,30,28" />
+    <SpriteData keyName="moneda0010" sourceImage="moneda" axis="14,31" sourceRect="215,32,32,28" />
+    <SpriteData keyName="moneda0011" sourceImage="moneda" axis="15,31" sourceRect="126,98,32,28" />
+    <SpriteData keyName="moneda0012" sourceImage="moneda" axis="16,31" sourceRect="151,67,32,28" />
+    <SpriteData keyName="moneda0013" sourceImage="moneda" axis="16,31" sourceRect="182,34,32,28" />
+    <SpriteData keyName="moneda0014" sourceImage="moneda" axis="15,31" sourceRect="224,1,30,28" />
+    <SpriteData keyName="moneda0015" sourceImage="moneda" axis="13,31" sourceRect="215,61,26,28" />
+    <SpriteData keyName="moneda0016" sourceImage="moneda" axis="12,32" sourceRect="126,67,24,30" />
+    <SpriteData keyName="moneda0017" sourceImage="moneda" axis="10,32" sourceRect="84,67,20,32" />
+    <SpriteData keyName="moneda0018" sourceImage="moneda" axis="8,32" sourceRect="117,34,18,32" />
+    <SpriteData keyName="moneda0019" sourceImage="moneda" axis="7,32" sourceRect="144,1,18,32" />
+    <SpriteData keyName="moneda0020" sourceImage="moneda" axis="7,32" sourceRect="125,1,18,32" />
+    <SpriteData keyName="moneda0021" sourceImage="moneda" axis="8,32" sourceRect="61,67,22,32" />
+    <SpriteData keyName="moneda0022" sourceImage="moneda" axis="10,32" sourceRect="100,1,24,32" />
+    <SpriteData keyName="moneda0023" sourceImage="moneda" axis="11,32" sourceRect="32,67,28,32" />
+    <SpriteData keyName="moneda0024" sourceImage="moneda" axis="13,32" sourceRect="1,67,30,32" />
+    <SpriteData keyName="moneda0025" sourceImage="moneda" axis="14,32" sourceRect="1,34,32,32" />
+    <SpriteData keyName="moneda0026" sourceImage="moneda" axis="15,32" sourceRect="67,1,32,32" />
+    <SpriteData keyName="moneda0027" sourceImage="moneda" axis="16,32" sourceRect="34,1,32,32" />
+    <SpriteData keyName="moneda0028" sourceImage="moneda" axis="16,32" sourceRect="1,1,32,32" />
+    <SpriteData keyName="moneda0029" sourceImage="moneda" axis="15,32" sourceRect="34,34,30,32" />
+  </data>
+</LibraryInfo>

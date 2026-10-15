@@ -1,0 +1,9 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="banner" sourceImage="level" axis="0,0" sourceRect="1,1,376,46" />
+    <SpriteData keyName="levelDisabled" sourceImage="level" axis="9,8" sourceRect="38,89,36,34" />
+    <SpriteData keyName="levelIndicator" sourceImage="level" axis="-10,18" sourceRect="1,48,46,40" />
+    <SpriteData keyName="levelOver" sourceImage="level" axis="11,7" sourceRect="48,48,36,40" />
+    <SpriteData keyName="levelUp" sourceImage="level" axis="9,8" sourceRect="1,89,36,34" />
+  </data>
+</LibraryInfo>

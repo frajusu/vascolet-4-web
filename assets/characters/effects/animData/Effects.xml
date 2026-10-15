@@ -1,0 +1,226 @@
+﻿<ExportedData version="1">
+  <Animations>
+    <Animation name="shot_impact" fps="30" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact01" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact00" xOffset="-1" yOffset="-6" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact02" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact03" xOffset="0" yOffset="-5" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact04" xOffset="0" yOffset="-6" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact05" xOffset="0" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact06" xOffset="0" yOffset="-3" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact07" xOffset="0" yOffset="-1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact08" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact09" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact10" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="shotImpact11" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0" />
+    </Animation>
+    <Animation name="shot_fail" fps="30" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="electricPulse01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="reboundShot00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="electricPulse03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="reboundShot00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="reboundShot01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="reboundShot00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="reboundShot02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="reboundShot00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="reboundShot03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0" />
+    </Animation>
+    <Animation name="electric_shot" fps="24" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="electricPulse00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="electricPulse01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="electricPulse02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="reboundShot02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="electricPulse03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="reboundShot01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="explosion" fps="24" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="explosion00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="electricPulse03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="explosion01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="explosion02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="explosion03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="explosion04" xOffset="-2" yOffset="-4" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="explosion05" xOffset="-6" yOffset="-7" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0" />
+    </Animation>
+    <Animation name="bullet" fps="30" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="normalShot00" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="normalShot01" xOffset="0" yOffset="-8" xScale="-1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="normalShot02" xOffset="0" yOffset="-8" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="normalShot01" xOffset="0" yOffset="-8" xScale="-1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="item" fps="24" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items04" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items05" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items07" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items08" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items09" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items10" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="items11" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0" />
+    </Animation>
+    <Animation name="dust_run" fps="12" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dust00" xOffset="0" yOffset="-39" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dust01" xOffset="0" yOffset="-39" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dust02" xOffset="0" yOffset="-39" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dust03" xOffset="0" yOffset="-39" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dust04" xOffset="0" yOffset="-39" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0" />
+    </Animation>
+    <Animation name="dust_jump" fps="12" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dustJump00" xOffset="0" yOffset="-37" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dustJump01" xOffset="0" yOffset="-37" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dustJump02" xOffset="0" yOffset="-37" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dustJump03" xOffset="0" yOffset="-37" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dustJump04" xOffset="0" yOffset="-37" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="dustJump05" xOffset="0" yOffset="-37" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0" />
+    </Animation>
+    <Animation name="bubble" fps="4" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="bubble00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="bubble01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="bubble02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="bubble01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+  </Animations>
+</ExportedData>

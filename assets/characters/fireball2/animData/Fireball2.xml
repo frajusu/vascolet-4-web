@@ -1,0 +1,93 @@
+﻿<ExportedData version="1">
+  <Animations>
+    <Animation name="appear" fps="24" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball00" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball01" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball02" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball03" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball04" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball05" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball06" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball07" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball08" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="normal" fps="24" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball09" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball10" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball11" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball12" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball13" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball14" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball15" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball08" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="disappear" fps="24" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball08" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball07" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball06" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball05" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball04" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball03" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball02" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball01" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball00" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="dead" fps="24" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="enemyfireball" xOffset="0" yOffset="-14" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+  </Animations>
+</ExportedData>

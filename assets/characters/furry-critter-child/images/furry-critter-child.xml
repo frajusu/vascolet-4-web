@@ -1,0 +1,9 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="dead" sourceImage="furry-critter-child" axis="31,32" sourceRect="147,1,74,38" />
+    <SpriteData keyName="walking00" sourceImage="furry-critter-child" axis="31,36" sourceRect="72,1,74,42" />
+    <SpriteData keyName="walking01" sourceImage="furry-critter-child" axis="30,37" sourceRect="72,44,72,42" />
+    <SpriteData keyName="walking02" sourceImage="furry-critter-child" axis="29,38" sourceRect="1,1,70,44" />
+    <SpriteData keyName="walking03" sourceImage="furry-critter-child" axis="28,39" sourceRect="1,46,68,44" />
+  </data>
+</LibraryInfo>

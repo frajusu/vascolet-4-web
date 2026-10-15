@@ -1,0 +1,8 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="dead" sourceImage="ghost-child" axis="27,44" sourceRect="50,50,48,48" />
+    <SpriteData keyName="flying00" sourceImage="ghost-child" axis="27,43" sourceRect="1,50,48,48" />
+    <SpriteData keyName="flying01" sourceImage="ghost-child" axis="27,43" sourceRect="50,1,48,48" />
+    <SpriteData keyName="flying02" sourceImage="ghost-child" axis="27,43" sourceRect="1,1,48,48" />
+  </data>
+</LibraryInfo>

@@ -1,0 +1,20 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="boomerang00" sourceImage="boomerang" axis="15,4" sourceRect="152,1,34,12" />
+    <SpriteData keyName="boomerang01" sourceImage="boomerang" axis="18,5" sourceRect="117,41,30,12" />
+    <SpriteData keyName="boomerang02" sourceImage="boomerang" axis="13,6" sourceRect="127,1,24,18" />
+    <SpriteData keyName="boomerang03" sourceImage="boomerang" axis="8,9" sourceRect="63,24,18,22" />
+    <SpriteData keyName="boomerang04" sourceImage="boomerang" axis="11,7" sourceRect="38,24,24,22" />
+    <SpriteData keyName="boomerang05" sourceImage="boomerang" axis="16,5" sourceRect="82,45,34,16" />
+    <SpriteData keyName="boomerang06" sourceImage="boomerang" axis="18,5" sourceRect="130,20,36,12" />
+    <SpriteData keyName="boomerang07" sourceImage="boomerang" axis="16,4" sourceRect="32,47,30,14" />
+    <SpriteData keyName="boomerang08" sourceImage="boomerang" axis="9,6" sourceRect="109,22,20,18" />
+    <SpriteData keyName="boomerang09" sourceImage="boomerang" axis="8,6" sourceRect="73,1,18,22" />
+    <SpriteData keyName="boomerang10" sourceImage="boomerang" axis="10,7" sourceRect="82,24,26,20" />
+    <SpriteData keyName="boomerang11" sourceImage="boomerang" axis="12,6" sourceRect="1,47,30,14" />
+    <SpriteData keyName="boomerangreturn00" sourceImage="boomerang" axis="16,8" sourceRect="38,1,34,22" />
+    <SpriteData keyName="boomerangreturn01" sourceImage="boomerang" axis="16,7" sourceRect="92,1,34,20" />
+    <SpriteData keyName="boomerangreturn02" sourceImage="boomerang" axis="19,8" sourceRect="1,24,36,22" />
+    <SpriteData keyName="boomerangreturn03" sourceImage="boomerang" axis="17,7" sourceRect="1,1,36,22" />
+  </data>
+</LibraryInfo>

@@ -1,0 +1,9 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="bat00" sourceImage="big-bat" axis="57,158" sourceRect="245,1,116,164" />
+    <SpriteData keyName="bat01" sourceImage="big-bat" axis="57,178" sourceRect="1,1,116,184" />
+    <SpriteData keyName="bat02" sourceImage="big-bat" axis="57,71" sourceRect="118,1,126,170" />
+    <SpriteData keyName="bat03" sourceImage="big-bat" axis="72,80" sourceRect="245,166,130,86" />
+    <SpriteData keyName="damage" sourceImage="big-bat" axis="57,158" sourceRect="362,1,114,164" />
+  </data>
+</LibraryInfo>

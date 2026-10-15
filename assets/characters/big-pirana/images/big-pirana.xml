@@ -1,0 +1,13 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="dead" sourceImage="big-pirana" axis="89,153" sourceRect="379,176,166,162" />
+    <SpriteData keyName="swimming00" sourceImage="big-pirana" axis="88,165" sourceRect="379,339,178,158" />
+    <SpriteData keyName="swimming01" sourceImage="big-pirana" axis="80,165" sourceRect="572,1,166,160" />
+    <SpriteData keyName="swimming02" sourceImage="big-pirana" axis="80,165" sourceRect="546,176,174,158" />
+    <SpriteData keyName="swimming03" sourceImage="big-pirana" axis="88,165" sourceRect="1,178,190,174" />
+    <SpriteData keyName="swimming04" sourceImage="big-pirana" axis="95,167" sourceRect="192,178,186,174" />
+    <SpriteData keyName="swimming05" sourceImage="big-pirana" axis="94,167" sourceRect="397,1,174,174" />
+    <SpriteData keyName="swimming06" sourceImage="big-pirana" axis="95,167" sourceRect="198,1,198,174" />
+    <SpriteData keyName="swimming07" sourceImage="big-pirana" axis="95,167" sourceRect="1,1,196,176" />
+  </data>
+</LibraryInfo>

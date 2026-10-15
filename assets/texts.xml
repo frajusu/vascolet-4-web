@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<data>
+	<texts>
+
+		<node key="game_name" 		text="Vascolet 2" />
+		<node key="any_key_start" 	text="¡Presiona ENTER para comenzar!" />
+		
+		<node key="tip-hello"					text="Este jardín tiene muchos insectos... ¡Ten cuidado!\nUsa las flechas para moverte..."/>
+		<node key="tip-howToJump"				text="Salta presionando las teclas [Z] o [S]."/>
+		<node key="tip-fire"					text="Dispara bumeranes presionando\nlas teclas [A] o [X]."/>
+		<node key="tip-duck"					text="Para vencer a la flor debes agacharte\nusando la tecla [Abajo] y disparar."/>
+		<node key="tip-save"					text="Toca esto para salvar.\nCuando pierdas una vida continuarás desde aquí."/>
+		<node key="tip-sustainjump"				text="Sube al árbol para tomar ese objeto.\n¡Incrementarás tu salto!"/>
+		<node key="tip-jumpattack"				text="Sube al árbol para tomar ese objeto.\n¡Podrás saltarle encima a los enemigos!"/>
+		<node key="tip-heart"					text="Comer vegetales incrementa tu vida.\nAsí podrás enfrentar enemigos más poderosos."/> 
+		<node key="tip-boomerang"				text="Comer frutas aumenta tu capacidad de disparo..."/> 
+		<node key="tip-energy"					text="Cuando pierdas energía\nrecupérala tomando el corazón."/> 
+		<node key="tip-fullenergy"				text="Para enfrentar al jefe final es conveniente\nantes recargar toda la energía."/> 
+		<node key="tip-level1battle"			text="Aquí abajo está la cueva del escorpión gigante...\nCúbrete debajo de las piedras al luchar..."/>
+		<node key="tip-level2intro"				text="En esta zona vamos derecho...\n¡Cuidado no te quedes encerrado en las piedras!"/>
+		<node key="tip-level3intro"				text="Aquí habita el topo ninja...\n¡Prepárate para enfrentarlo!"/>
+		<node key="tip-level3battle"			text="Debajo está la guarida del topo ninja...\n¡Agáchate y anticípate a sus acciones!"/>
+		<node key="tip-level4intro"				text="La zona de árboles tiene una fauna y flora\npeligrosa... ¡Salta con cuidado!"/>
+		<node key="tip-level4battle"			text="¡Cuidado, aquí viven los pájaros! Sabemos\nque comen insectos y seres pequeños..."/>
+		<node key="tip-doublejump"				text="¡Doble salto! Salta y luego en el aire vuelve\na saltar para llegar a lugares altos."/>
+		<node key="tip-swim"					text="Usa la tecla de saltar para\nimpulsarte en el agua..."/>
+		<node key="tip-level5intro"				text="¡Agárrate Alejandro!\n¡Este tunel es bastante peligroso!"/>
+		<node key="tip-level6intro"				text="En esta zona habita el bicho peludo,\nten mucho cuidado..."/>
+		<node key="tip-level6battle"			text="Esta es la entrada a la guarida del bicho peludo..."/>
+		<node key="tip-level7intro"				text="Esta zona está repleta de libélulas y\nbichos voladores... ¡Apunta bien!"/>		
+		<node key="tip-level7pinchos"			text="Salta y luego vuelve a saltar en el\naire para no caer en las espinas."/>				
+		<node key="tip-level7battle"			text="Abajo vive un dragón verde muy peligroso.\n¡Salta y dispárale!"/>		
+		<node key="tip-level8intro"				text="El abismo es una zona llena de\nenemigos voladores... ¡Cuidado!"/>
+		<node key="tip-level9intro"				text="Esta es el área del la libélula gigante...\nEs un insecto muy veloz..."/>
+		<node key="tip-level10intro"			text="¡El estanque del miedo es la fosa del castillo!\nDebes luchar contra los peligrosos peces..."/>
+		<node key="tip-level10battle"			text="¡Esta es la entrada al pasaje secreto!\nCuidado con la anguila que lo cuida la entrada..."/>
+		<node key="tip-level11intro"			text="Este es el pasaje secreto..."/>
+		<node key="tip-run"						text="Para correr tienes que pulsar\ndos veces la flecha."/>
+		<node key="tip-level9battle"			text="Aquí abajo habita la libélula gigante.\n¡Anticípate a su ataque!"/>
+		<node key="tip-level12intro"			text="Esta es la zona que conduce al castillo. Aquí vive la piraña esqueleto."/>
+		<node key="tip-level12battle"			text="En este pozo vive la piraña esqueleto. ¡Ten cuidado!"/>
+		<node key="tip-level13intro"			text="Malmark sabe que eres pequeño\ny abrió todas las ventanas..."/>
+		<node key="tip-level13ladder"			text="Sube las escaleras para acceder al comedor...\n¡Ojo! Malmark no lavó los platos y hay moscas..."/>
+		<node key="tip-level13battle"			text="Tírate aquí para luchar contra\nel murciélago de la biblioteca..."/>
+		<node key="tip-level14intro"			text="Este salón tiene muchos peligros.\nMalmark siempre deja las ventanas abiertas..."/>
+		<node key="tip-level15intro"			text="Estamos cerca de la entrada\na la cámara de Malmark..."/>
+		<node key="tip-level15battle"			text="Abajo está la puerta final.\n¡Cuidado con la araña que dispara mucho!"/>
+		<node key="tip-level15battle2"			text="Esta araña cuida el pasaje a la poción mágica...\nYo ya no puedo seguir... ¡Me despido!"/>
+		<node key="tip-level16intro"			text="En estas cámaras debes utilizar todas\ntus habilidades para sobrevivir..."/>
+		<node key="tip-level16battle"			text="Aquí abajo enfrentarás a un\nfantasma muy enojado..."/>
+		<node key="tip-level17intro"			text="¡Salta ya Alejandro! ¡Que no te atrape el piso!"/>
+		<node key="tip-level17right"			text="¡Toma por la derecha!"/>
+		<node key="tip-level17left"				text="¡Toma por la izquierda!"/>
+		<node key="tip-alimento1"				text="¡El agua es un elemento vital\npara nuestro cuerpo!"/>		
+		<node key="tip-alimento2"				text="¡Los cereales nos dan mucha energía!"/>		
+		<node key="tip-alimento3"				text="Es necesario tomar leche todos los días,\nen el desayuno y en la merienda."/>		
+		<node key="tip-alimento4"				text="¡El queso es un alimento\nque trae muchos beneficios!"/>		
+		<node key="tip-alimento5"				text="¡El yogur es un alimento\nmuy importante en nuestra dieta!"/>		
+		<node key="st1-tipHowToJump2"			text="Presiona más tiempo la tecla de salto para saltar más alto."/>
+		<node key="st1-tipFall"					text="¿Qué habrá al fondo de este pozo?\nTe puedes tirar..."/>
+		<node key="st1-tipJumpEnemies"			text="Salta sobre los enemigos para librarte de ellos."/>
+		<node key="st1-tipSecretWalls"			text="¡Detrás de algunas paredes se esconden grandes secretos!"/>
+		<node key="st1-tipRunNeeded"			text="No podrás alcanzar lugares lejanos si no corres antes de saltar."/>
+		<node key="st1-tipVascoletItem"			text="¡Una Zapatilla! ¡Si la usas podrás correr muy rápido!"/>
+		<node key="st1-tipHowToRun"				text="Para correr tienes que presionar dos veces la flecha."/>
+		<node key="st1-tipDontJumpOverHedehog"	text="Algunos enemigos son invencibles.\n¡Cuidado con este puercoespín!"/>
+		<node key="st1-tipBoomerangUse"			text="Lanza boomerangs presionando\nlas teclas [A] o [X]."/>
+		<node key="st1-tipSecretPlaces"			text="Cuando veas cosas extrañas puede significar que hay un pasaje secreto muy cerca..."/>
+		<node key="st1-secretFound"				text="¡Encontraste un pasaje secreto!"/>
+		<node key="st1-tipEnergy"				text="¡Los vascolets y los cereales te dan energía!"/>
+		<node key="st1-tipLives"				text="¡Hay una vida extra arriba del árbol!"/>
+		<node key="st1-tipDoubleJump"			text="¡Un resorte! Si lo tienes podrás dar saltos dobles."/>
+		<node key="st1-tipDoubleJump2"			text="Salta y luego en el aire vuelve a saltar para llegar a lugares altos."/>
+		<node key="st1-tipInpresiveSecrets"		text="A veces lo que parece el fin del camino, no es más que el comienzo del mismo..."/>
+		<node key="st1-tipBlueKeyNeeded"		text="Necesitas una llave azul para abrir esta puerta."/>
+		<node key="st1-tipHowToBeatTheBoss"		text="Para vencer al Ogro, písalo cuando no pueda atacarte."/>
+		<node key="st1-tipKeyAndDoor"			text="Necesitas una llave verde, para poder seguir adelante."/>
+		<node key="st1-tipRedKeyRequired"		text="Necesitas una llave roja para seguir... ¿Has leido todos los carteles?"/>
+		<node key="st1-save"					text="Si tocas el salvado luego puedes continuar desde este punto."/>
+		<node key="st1-findVascolet"			text="No puedes correr sin las zapatillas adecuadas. ¡Búscalas!"/>
+		<node key="st1-runAndJump"				text=" "/>
+		<node key="st1-platforms"				text="Utiliza las plataformas para llegar a otras zonas."/>
+		<node key="st1-ogro1"					text="El mago Malmark transformó las criaturas de este bosque en seres malvados."/>
+		<node key="st1-ogro2"					text="Dos llaves necesitarás para poder seguir adelante..."/>
+		<node key="st1-coins"					text="Cuidado... Malmark se acerca..."/>
+		
+		<node key="st2-monster"			text="En este lago vivía un peligroso Monstruo."/>
+		<node key="st2-swim"			text="Usa la tecla de saltar para\nimpulsarte en el agua."/>
+		<node key="st2-SaltoDoble"		text="Toma el resorte que lo\nnecesitarás más adelante!"/>
+		<node key="st2-explorer"		text="¿Como llegaste aquí?"/>
+		<node key="st2-out"				text="Puedes salir a la superficie saltando en el borde del agua."/>
+		<node key="st2-secrets"			text="Se esconden varios secretos en las profundidades de este lago."/>
+		<node key="st2-UsarSaltoDoble"	text="Necesitarás tu salto doble\npara cruzar esta zona..."/>
+		<node key="st2-CuidadoJefe"		text="¡El Monstruo odia la electricidad!"/>
+		<node key="st2-story1"			text="Antiguamente había una civilización, hasta que llegó Malmark..."/>
+		<node key="st2-story2"			text="Dinero recaudado para el hospital de peces."/>
+
+		<node key="st3-HowToShot"		text="Utiliza [S] o [Z] para volar\ny [A] o [X] para atacar."/>
+
+		<node key="st4-bossTip1"		text="¡Hay un Golem muy peligroso aquí!"/>
+		<node key="st4-bossTip2"		text="Debes averiguar su debilidad..."/>
+		<node key="st4-bossTip3"		text="Piensa... Usa la cabeza..."/>
+		
+		
+		<node key="st5-SomeWallsAreIlussion"	text="Algunas paredes son simplemente ilusiones..."/>
+		<node key="st5-EndOfWaySorry"			text="Fin del camino..."/>
+		<node key="st5-ThisNot"					text="Pero esta no..."/>
+		<node key="st5-Secreto3Armaduras"		text="Hay un secreto más allá de las tres armaduras..."/>
+		<node key="st5-EnMedioDeLas2Armaduras"	text="¡Cuidado, el piso es falso en medio de las dos armaduras!"/>
+		<node key="st5-CuidadoAlBajar"			text="Cuidado abajo..."/>
+		<node key="st5-lastBossTip"				text="Para alcanzar al mago... rebota sobre sus bolas de fuego..."/>
+		
+		
+		<node key="tip01"	text="Tip ganador: El calcio es un mineral muy importante para el desarrollo de huesos y dientes."/>
+		<node key="tip02"	text="Tip ganador: Los alimentos que nos aportan calcio son la leche, el queso y el yogur (lácteos)."/>
+		<node key="tip03"	text="Tip ganador: Es necesario consumir 3 porciones de lácteos al día para cubrir las necesidades de calcio que necesitamos por día."/>
+		<node key="tip04"	text="Tip ganador: El desayuno es la comida más importante del día."/>
+		<node key="tip05"	text="Tip ganador: Un desayuno completo debe incluir leche, cereal y una fruta (leche, pan y fruta)."/>
+		<node key="tip06"	text="Tip ganador: Debes desayunar todos los días. Tómate el tiempo para hacerlo."/>
+		<node key="tip07"	text="Tip ganador: Debes consumir frutas y verduras todos los días."/>
+		<node key="tip08"	text="Tip ganador: Aprovecha los días soleados para salir a jugar con amigos, andar en bicicleta, correr o jugar a la pelota."/>
+		<node key="tip09"	text="Tip ganador: Cada vez que tengas sed, toma agua fresca, te ayudará a hidratarte, principalmente luego de hacer ejercicio físico."/>
+		<node key="tip10"	text="Tip ganador: No consumas golosinas todos los días, ¡cuida tus dientes!"/>
+		<node key="tip11"	text="Tip ganador: El desayuno te proporcionará los nutrientes necesarios para comenzar el día con toda la energía."/>
+		<node key="tip12"	text="Tip ganador: ¡Duerme bien! El cuerpo necesita recuperarse y no es bueno dormir mal."/>
+		<node key="tip13"	text="Tip ganador: Ve a la escuela todos los días. Estudiar te da elementos para desarrollarte."/>
+		<node key="tip14"	text="Tip ganador: Leer estimula tu imaginación y te ayuda a saber más."/>
+		<node key="tip15"	text="Tip ganador: Practica deportes regularmente para estar saludable."/>
+		<node key="tip16"	text="Tip ganador: Aliméntate correctamente para crecer fuerte y sano."/>
+		<node key="tip17"	text="Tip ganador: Sal a jugar y a correr todos los días, es importante que te ejercites y que juegues."/>
+		<node key="tip18"	text="Tip ganador: Antes de ponerte a jugar deberías hacer los deberes."/>
+				
+		<node key="cs1-msg001" 	text="Capítulo I: Una nueva aventura..." />
+		<node key="cs1-msg002" 	text="¿Dónde estará Alejandro?" />
+		<node key="cs1-msg003" 	text="¿Habrá vuelto de su aventura en el tiempo?" />
+		<node key="cs1-msg004" 	text="¡Alejandro!" />
+		<node key="cs1-msg005" 	text="¡Hola chicos!" />
+		<node key="cs1-msg006" 	text="¿Cómo han estado?" />
+		<node key="cs1-msg007" 	text="¡Muy bien! ¿Y vos?" />
+		<node key="cs1-msg008" 	text="¡Bien! ¡No saben cuánto me divertí!" />
+		<node key="cs1-msg009" 	text="¿Que fue eso?" />
+		<node key="cs1-msg010" 	text="¡Mira Alejandro! ¡El portal...!" />
+		<node key="cs1-msg011" 	text="¡Allá voy!" />
+		<node key="cs1-msg012" 	text="Soy el poderoso MALMARK." />
+		<node key="cs1-msg013" 	text="Dame tu libro de la fórmula secreta." />
+		<node key="cs1-msg014" 	text="¡Ahora es mío!" />
+		<node key="cs1-msg015" 	text="¡Jajajaja!" />
+		
+		<node key="cs2-msg001" 	text="Capítulo II: El Lago del Monstruo" />
+		<node key="cs2-msg002" 	text="¿Y ésto?\n¿Un esnórquel?" />
+		<node key="cs2-msg003" 	text="Este lago parece muy profundo..." />
+		<node key="cs2-msg004" 	text="¡Me viene ideal para nadar aquí!" />
+		
+		<node key="cs3-msg001" 	text="Capítulo III: El Mundo de los Dragones" />
+		<node key="cs3-msg002" 	text="¿¡Un pequeño dragón!?" />
+		<node key="cs3-msg003" 	text="¡Me pareció haberlo visto antes!" />
+		<node key="cs3-msg004" 	text="¡Parece cansado!..." />
+		<node key="cs3-msg005" 	text="¡Hola! ¿Cómo te llamás?" />
+		<node key="cs3-msg006" 	text="Yo... soy WILLY..." />
+		<node key="cs3-msg007" 	text="Esos carteles del cielo... y el esnórquel... ¿Eras tú?" />
+		<node key="cs3-msg008" 	text="Asi es..." />
+		<node key="cs3-msg009" 	text="¿Qué te sucede?" />
+		<node key="cs3-msg010" 	text="Estoy muy cansado... Malmark... me ha hechizado..." />
+		<node key="cs3-msg011" 	text="¡Te daré algo que te ayudará!" />
+		<node key="cs3-msg012" 	text="¡Muchas gracias!" />
+		<node key="cs3-msg013" 	text="¡Ya me siento con mucha energía!" />
+		<node key="cs3-msg014" 	text="Debemos apresurarnos... ¡Hay que detener a Malmark!" />
+		<node key="cs3-msg015" 	text="¡Vamos volando! ¡Sube que te llevo!" />
+		
+		<node key="cs4-msg001" 	text="Capítulo IV: La Montaña del Mal" />
+		<node key="cs4-msg002" 	text="¡Llegamos a la Montaña del Mal!" />
+		<node key="cs4-msg003" 	text="Los dragones no podemos acercarnos...\n¡No podré acompañarte!" />
+		<node key="cs4-msg004" 	text="No importa...\n¡Muchas gracias por haberme traído!" />
+		<node key="cs4-msg005" 	text="¿Qué harás ahora?" />
+		<node key="cs4-msg006" 	text="Debo volver a mi mundo.\n¡Ten cuidado con Malmark!" />
+		<node key="cs4-msg007" 	text="¡Adiós Willy!\n¡Te voy a extrañar!" />
+		<node key="cs4-msg008" 	text="¡Y yo a tí! ¡Ten cuidado!" />
+		
+		<node key="cs5-msg001" 	text="Capitulo V: El Castillo de Malmark" />
+		<node key="cs5-msg002" 	text="¡Esta parece la puerta del Castillo!" />
+		<node key="cs5-msg003" 	text="¡Debo tener mucho cuidado!" />
+		<node key="cs5-msg004" 	text="¡Malmark no debe saber que estoy aquí!" />
+		<node key="cs5-msg005" 	text="¿A dónde crees que vas?" />
+		<node key="cs5-msg006" 	text="¡Es increíble que hayas llegado tan lejos!" />
+		<node key="cs5-msg007" 	text="¿Porque insistes?\n¡No te devolveré la fórmula secreta!" />
+		<node key="cs5-msg008" 	text="Te estaré esperando...\n si logras econtrarme... ¡Jajajaja!" />
+		
+		<node key="cs6-msg001" 	text="De nuevo en la Escuela..." />
+		<node key="cs6-msg002" 	text="El castillo... ¿se derrumbó?...\nRecuerdo que alguien me salvó..." />
+		<node key="cs6-msg003" 	text="¡Alejandro! ¿Que pasó?" />
+		<node key="cs6-msg004" 	text="¡Uy! ¡No! ¡El libro...!" />
+		<node key="cs6-msg005" 	text="¡Se quedó en el Castillo...!" />
+		<node key="cs6-msg006" 	text="¡Era el libro de la fórmula secreta!" />
+		<node key="cs6-msg007" 	text="¡Lo he perdido para siempre!" />
+		<node key="cs6-msg008" 	text="¡Willy!" />
+		<node key="cs6-msg009" 	text="¡Hola Alejandro! ¡Te traje el libro!" />
+		<node key="cs6-msg010" 	text="Ahora lo recuerdo... ¡Fuiste tú quien me salvó! ¡Gracias!" />
+		<node key="cs6-msg011" 	text="¡Si!... Escucha... ¡He leído el libro!" />
+		<node key="cs6-msg012" 	text="¡Tiene la fórmula perfecta para preparar Vascolet!" />
+		<node key="cs6-msg013" 	text="¡Gracias por salvar mi mundo Alejandro! ¡Te extrañaré!" />
+		<node key="cs6-msg014" 	text="¡Willy espera! ¿Nos volverémos a ver?" />
+		<node key="cs6-msg015" 	text="... ¡Seguramente...!" />
+		
+		<node key="ni-msg00" 	text="El calcio es un mineral muy importante para el desarrollo de huesos y dientes." />
+		<node key="ni-msg01" 	text="Los alimentos que nos aportan calcio son la leche, el queso y el yogur (lácteos)." />
+		<node key="ni-msg02" 	text="Es necesario consumir 3 porciones de lácteos al día para cubrir las necesidades de calcio que necesitamos por día." />
+		<node key="ni-msg03" 	text="El desayuno es la comida más importante del día." />
+		<node key="ni-msg04" 	text="Un desayuno completo debe incluir leche, cereal y una fruta (leche, pan y fruta)." />
+		<node key="ni-msg05" 	text="Debes desayunar todos los días. El desayuno te proporcionará los nutrientes necesarios para comenzar el día con toda la energía." />
+		<node key="ni-msg06" 	text="Debes consumir frutas y verduras todos los días." />
+		<node key="ni-msg07" 	text="Aprovecha los días soleados para salir a jugar con amigos, andar en bicicleta, correr o jugar a la pelota." />
+		<node key="ni-msg08" 	text="Cada vez que tengas sed, toma agua fresca, te ayudará a hidratarte principalmente luego de hacer ejercicio físico." />
+		<node key="ni-msg09" 	text="No consumas golosinas todos los días, ¡cuida tus dientes!" />
+		
+		<node key="ln-lvl1"		text="Capítulo 1-1: El Jardín de los Insectos" />
+		<node key="ln-lvl2"		text="Capítulo 1-2: La Cueva Oscura" />
+		<node key="ln-lvl3"		text="Capítulo 1-3: El Topo Ninja" />
+		<node key="ln-lvl4"		text="Capítulo 2-1: El Árbol Embrujado" />
+		<node key="ln-lvl5"		text="Capítulo 2-2: El Túnel Secreto" />
+		<node key="ln-lvl6"		text="Capítulo 2-3: El Bicho Peludo" />
+		<node key="ln-lvl7"		text="Capítulo 3-1: Zona de Libélulas" />
+		<node key="ln-lvl8"		text="Capítulo 3-2: El Abismo" />
+		<node key="ln-lvl9"		text="Capítulo 3-3: La Libélula Gigante" />
+		<node key="ln-lvl10"	text="Capítulo 4-1: El Estanque del Miedo" />
+		<node key="ln-lvl11"	text="Capítulo 4-2: El Pasaje Secreto" />
+		<node key="ln-lvl12"	text="Capítulo 4-3: La Piraña Esqueleto" />
+		<node key="ln-lvl13"	text="Capítulo 5-1: Salones del Castillo" />
+		<node key="ln-lvl14"	text="Capítulo 5-2: Salón Principal" />
+		<node key="ln-lvl15"	text="Capítulo 5-3: Antecámara" />
+		<node key="ln-lvl16"	text="Capítulo 6-1: Cámaras de Malmark" />
+		<node key="ln-lvl17"	text="Capítulo 6-2: La Torre Negra" />
+		<node key="ln-lvl18"	text="Capítulo 6-3: El Templo de Malmark" />
+		
+		<node key="version"	text="Versión: "/>
+		<node key="new-version"	text="¡Existe una nueva versión para descargar!\nNueva versión: "/>
+		
+	</texts>
+</data>

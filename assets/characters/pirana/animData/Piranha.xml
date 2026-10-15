@@ -1,0 +1,36 @@
+﻿<ExportedData>
+  <Animations>
+    <Animation name="normal" fps="12" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="swiming00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="swiming01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="swiming00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="swiming02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+    </Animation>
+    <Animation name="damage" fps="24" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="damage" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+    </Animation>
+    <Animation name="attack" fps="24" loopIndex="-1">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="swiming03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+    </Animation>
+    <Animation name="pain" fps="24" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="swiming00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="2" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="damage" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+    </Animation>
+  </Animations>
+</ExportedData>

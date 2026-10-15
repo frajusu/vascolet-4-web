@@ -1,0 +1,10 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="attack00" sourceImage="pirana-lava" axis="45,68" sourceRect="1,1,92,82" />
+    <SpriteData keyName="attack01" sourceImage="pirana-lava" axis="45,69" sourceRect="1,167,78,82" />
+    <SpriteData keyName="dead" sourceImage="pirana-lava" axis="34,66" sourceRect="177,1,74,78" />
+    <SpriteData keyName="jump00" sourceImage="pirana-lava" axis="45,68" sourceRect="1,84,82,82" />
+    <SpriteData keyName="jump01" sourceImage="pirana-lava" axis="45,68" sourceRect="94,1,82,82" />
+    <SpriteData keyName="jump02" sourceImage="pirana-lava" axis="45,68" sourceRect="84,84,82,80" />
+  </data>
+</LibraryInfo>

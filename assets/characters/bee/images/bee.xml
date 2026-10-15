@@ -1,0 +1,9 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="bee00" sourceImage="bee" axis="25,79" sourceRect="225,1,68,84" />
+    <SpriteData keyName="bee01" sourceImage="bee" axis="30,79" sourceRect="1,162,74,84" />
+    <SpriteData keyName="bee02" sourceImage="bee" axis="29,79" sourceRect="136,88,72,84" />
+    <SpriteData keyName="beeDamage" sourceImage="bee" axis="38,77" sourceRect="136,1,88,86" />
+    <SpriteData keyName="panal" sourceImage="bee" axis="92,141" sourceRect="1,1,134,160" />
+  </data>
+</LibraryInfo>

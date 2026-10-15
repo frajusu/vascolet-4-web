@@ -1,0 +1,9 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="dead" sourceImage="big-spider" axis="93,147" sourceRect="198,1,178,176" />
+    <SpriteData keyName="shooting" sourceImage="big-spider" axis="103,147" sourceRect="1,1,196,176" />
+    <SpriteData keyName="walking00" sourceImage="big-spider" axis="103,147" sourceRect="198,178,196,164" />
+    <SpriteData keyName="walking01" sourceImage="big-spider" axis="103,147" sourceRect="1,343,196,164" />
+    <SpriteData keyName="walking02" sourceImage="big-spider" axis="103,147" sourceRect="1,178,196,164" />
+  </data>
+</LibraryInfo>

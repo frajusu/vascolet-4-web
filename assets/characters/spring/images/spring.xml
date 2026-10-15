@@ -1,0 +1,5 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="spring" sourceImage="spring" axis="21,42" sourceRect="1,1,42,46" />
+  </data>
+</LibraryInfo>

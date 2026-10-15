@@ -1,0 +1,5 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="exitGame" sourceImage="exit-game" axis="256,192" sourceRect="0,0,512,384" />
+  </data>
+</LibraryInfo>

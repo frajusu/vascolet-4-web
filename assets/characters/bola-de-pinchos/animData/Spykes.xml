@@ -1,0 +1,30 @@
+﻿<ExportedData>
+  <Animations>
+    <Animation name="normal" fps="24" loopIndex="0">
+      <Frame duration="12" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="boladepinchos00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="boladepinchos01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="boladepinchos02" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="boladepinchos01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="boladepinchos00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="boladepinchos03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="boladepinchos00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="boladepinchos03" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+    </Animation>
+  </Animations>
+</ExportedData>

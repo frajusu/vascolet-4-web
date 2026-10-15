@@ -1,0 +1,8 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="dead" sourceImage="frog" axis="34,69" sourceRect="1,1,88,74" />
+    <SpriteData keyName="frog00" sourceImage="frog" axis="48,57" sourceRect="90,1,86,64" />
+    <SpriteData keyName="frog01" sourceImage="frog" axis="49,52" sourceRect="1,129,90,58" />
+    <SpriteData keyName="frog02" sourceImage="frog" axis="62,56" sourceRect="90,66,124,62" />
+  </data>
+</LibraryInfo>

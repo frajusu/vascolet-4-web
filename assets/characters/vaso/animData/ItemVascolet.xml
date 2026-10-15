@@ -1,0 +1,97 @@
+﻿<ExportedData>
+  <Animations>
+    <Animation name="normal" fps="30" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0000" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0001" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0002" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0003" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0004" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0005" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0006" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0007" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0008" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0009" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0010" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0011" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0012" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0013" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0014" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0015" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0016" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0017" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0018" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0019" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0020" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0021" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0022" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0023" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0024" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0025" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0026" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0027" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0028" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="vaso0029" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" />
+        <Flag type="MakeEffect" />
+      </Frame>
+    </Animation>
+  </Animations>
+</ExportedData>

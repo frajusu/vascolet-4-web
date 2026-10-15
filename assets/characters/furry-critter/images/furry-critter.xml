@@ -1,0 +1,15 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="attack" sourceImage="furry-critter" axis="90,119" sourceRect="1,1,188,130" />
+    <SpriteData keyName="dead" sourceImage="furry-critter" axis="90,85" sourceRect="343,118,190,98" />
+    <SpriteData keyName="smash00" sourceImage="furry-critter" axis="90,105" sourceRect="184,247,174,110" />
+    <SpriteData keyName="smash01" sourceImage="furry-critter" axis="90,118" sourceRect="1,132,160,124" />
+    <SpriteData keyName="smash02" sourceImage="furry-critter" axis="90,77" sourceRect="558,1,186,88" />
+    <SpriteData keyName="walking00" sourceImage="furry-critter" axis="90,96" sourceRect="369,1,188,106" />
+    <SpriteData keyName="walking01" sourceImage="furry-critter" axis="89,97" sourceRect="186,358,186,108" />
+    <SpriteData keyName="walking02" sourceImage="furry-critter" axis="88,99" sourceRect="1,370,184,110" />
+    <SpriteData keyName="walking03" sourceImage="furry-critter" axis="87,101" sourceRect="1,257,182,112" />
+    <SpriteData keyName="walking04" sourceImage="furry-critter" axis="86,103" sourceRect="162,132,180,114" />
+    <SpriteData keyName="walking05" sourceImage="furry-critter" axis="85,105" sourceRect="190,1,178,116" />
+  </data>
+</LibraryInfo>

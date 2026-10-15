@@ -1,0 +1,15 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="attack00" sourceImage="malmark" axis="72,159" sourceRect="757,1,164,170" />
+    <SpriteData keyName="attack01" sourceImage="malmark" axis="74,163" sourceRect="172,208,158,172" />
+    <SpriteData keyName="attack02" sourceImage="malmark" axis="79,190" sourceRect="208,1,176,200" />
+    <SpriteData keyName="attack03" sourceImage="malmark" axis="93,196" sourceRect="1,1,206,206" />
+    <SpriteData keyName="dead" sourceImage="malmark" axis="74,166" sourceRect="1,208,170,174" />
+    <SpriteData keyName="malmark00" sourceImage="malmark" axis="72,158" sourceRect="538,343,166,168" />
+    <SpriteData keyName="malmark01" sourceImage="malmark" axis="72,159" sourceRect="538,172,164,170" />
+    <SpriteData keyName="malmark02" sourceImage="malmark" axis="74,160" sourceRect="703,172,158,170" />
+    <SpriteData keyName="malmark03" sourceImage="malmark" axis="72,159" sourceRect="592,1,164,170" />
+    <SpriteData keyName="secondAttack00" sourceImage="malmark" axis="93,159" sourceRect="331,202,206,170" />
+    <SpriteData keyName="secondAttack01" sourceImage="malmark" axis="93,159" sourceRect="385,1,206,170" />
+  </data>
+</LibraryInfo>

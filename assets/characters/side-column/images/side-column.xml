@@ -1,0 +1,7 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="sideColumn00" sourceImage="side-column" axis="17,94" sourceRect="67,1,32,100" />
+    <SpriteData keyName="sideColumn01" sourceImage="side-column" axis="17,94" sourceRect="34,1,32,100" />
+    <SpriteData keyName="sideColumn02" sourceImage="side-column" axis="17,94" sourceRect="1,1,32,122" />
+  </data>
+</LibraryInfo>

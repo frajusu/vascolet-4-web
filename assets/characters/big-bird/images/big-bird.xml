@@ -1,0 +1,10 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="dead" sourceImage="big-bird" axis="95,99" sourceRect="285,1,194,138" />
+    <SpriteData keyName="flying00" sourceImage="big-bird" axis="76,129" sourceRect="142,1,142,142" />
+    <SpriteData keyName="flying01" sourceImage="big-bird" axis="74,135" sourceRect="1,1,140,148" />
+    <SpriteData keyName="flying02" sourceImage="big-bird" axis="77,58" sourceRect="1,253,142,82" />
+    <SpriteData keyName="flying03" sourceImage="big-bird" axis="80,58" sourceRect="285,140,146,96" />
+    <SpriteData keyName="flying04" sourceImage="big-bird" axis="77,95" sourceRect="142,144,142,108" />
+  </data>
+</LibraryInfo>

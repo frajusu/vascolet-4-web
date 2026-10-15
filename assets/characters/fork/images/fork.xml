@@ -1,0 +1,35 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="fork00" sourceImage="fork" axis="3,3" sourceRect="168,42,2,6" />
+    <SpriteData keyName="fork01" sourceImage="fork" axis="2,4" sourceRect="163,42,4,8" />
+    <SpriteData keyName="fork02" sourceImage="fork" axis="4,5" sourceRect="137,104,8,10" />
+    <SpriteData keyName="fork03" sourceImage="fork" axis="7,5" sourceRect="137,93,14,10" />
+    <SpriteData keyName="fork04" sourceImage="fork" axis="10,6" sourceRect="142,42,20,8" />
+    <SpriteData keyName="fork05" sourceImage="fork" axis="12,5" sourceRect="99,128,22,10" />
+    <SpriteData keyName="fork06" sourceImage="fork" axis="12,9" sourceRect="99,109,22,18" />
+    <SpriteData keyName="fork07" sourceImage="fork" axis="10,13" sourceRect="1,171,20,26" />
+    <SpriteData keyName="fork08" sourceImage="fork" axis="6,17" sourceRect="122,93,14,34" />
+    <SpriteData keyName="fork09" sourceImage="fork" axis="9,19" sourceRect="226,77,16,36" />
+    <SpriteData keyName="fork10" sourceImage="fork" axis="15,18" sourceRect="226,40,28,36" />
+    <SpriteData keyName="fork11" sourceImage="fork" axis="20,15" sourceRect="1,113,40,30" />
+    <SpriteData keyName="fork12" sourceImage="fork" axis="24,8" sourceRect="1,223,48,18" />
+    <SpriteData keyName="fork13" sourceImage="fork" axis="25,12" sourceRect="1,198,50,24" />
+    <SpriteData keyName="fork14" sourceImage="fork" axis="24,20" sourceRect="173,81,48,38" />
+    <SpriteData keyName="fork15" sourceImage="fork" axis="21,26" sourceRect="1,60,40,52" />
+    <SpriteData keyName="fork16" sourceImage="fork" axis="13,29" sourceRect="51,1,22,58" />
+    <SpriteData keyName="fork17" sourceImage="fork" axis="13,28" sourceRect="1,1,26,58" />
+    <SpriteData keyName="fork18" sourceImage="fork" axis="20,25" sourceRect="101,1,40,50" />
+    <SpriteData keyName="fork19" sourceImage="fork" axis="26,19" sourceRect="173,42,52,38" />
+    <SpriteData keyName="fork20" sourceImage="fork" axis="29,13" sourceRect="22,171,58,24" />
+    <SpriteData keyName="fork21" sourceImage="fork" axis="29,13" sourceRect="42,113,56,26" />
+    <SpriteData keyName="fork22" sourceImage="fork" axis="26,20" sourceRect="122,52,50,40" />
+    <SpriteData keyName="fork23" sourceImage="fork" axis="19,26" sourceRect="42,60,38,52" />
+    <SpriteData keyName="fork24" sourceImage="fork" axis="10,29" sourceRect="28,1,22,58" />
+    <SpriteData keyName="fork25" sourceImage="fork" axis="14,29" sourceRect="74,1,26,56" />
+    <SpriteData keyName="fork26" sourceImage="fork" axis="21,26" sourceRect="81,58,40,50" />
+    <SpriteData keyName="fork27" sourceImage="fork" axis="26,19" sourceRect="193,1,52,38" />
+    <SpriteData keyName="fork28" sourceImage="fork" axis="29,10" sourceRect="60,140,58,22" />
+    <SpriteData keyName="fork29" sourceImage="fork" axis="28,14" sourceRect="1,144,58,26" />
+    <SpriteData keyName="fork30" sourceImage="fork" axis="25,21" sourceRect="142,1,50,40" />
+  </data>
+</LibraryInfo>

@@ -1,0 +1,51 @@
+﻿<ExportedData version="1">
+  <Animations>
+    <Animation name="normal" fps="4" loopIndex="0">
+      <Frame duration="8" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn00" xOffset="0" yOffset="1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="3" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn01" xOffset="0" yOffset="1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="attack" fps="8" loopIndex="-1">
+      <Frame duration="4" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="2" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn02" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="6" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn02" xOffset="0" yOffset="-2" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+        <Flag type="Custom" />
+      </Frame>
+      <Frame duration="4" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn01" xOffset="0" yOffset="1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn01" xOffset="0" yOffset="1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn01" xOffset="0" yOffset="1" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn01" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+    </Animation>
+    <Animation name="dead" fps="30" loopIndex="0">
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0">
+        <Sprite type="Character" image="sideColumn00" xOffset="0" yOffset="0" xScale="1" yScale="1" rotation="0" alpha="1" blendMode="normal" />
+      </Frame>
+      <Frame duration="1" priority="0" xDisplacement="0" yDisplacement="0" />
+    </Animation>
+  </Animations>
+</ExportedData>

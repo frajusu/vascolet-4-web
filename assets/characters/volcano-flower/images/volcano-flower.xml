@@ -1,0 +1,16 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="attack00" sourceImage="volcano-flower" axis="39,47" sourceRect="1,193,80,56" />
+    <SpriteData keyName="attack01" sourceImage="volcano-flower" axis="39,58" sourceRect="249,1,80,68" />
+    <SpriteData keyName="dead00" sourceImage="volcano-flower" axis="39,56" sourceRect="249,70,80,66" />
+    <SpriteData keyName="dead01" sourceImage="volcano-flower" axis="41,59" sourceRect="110,177,82,70" />
+    <SpriteData keyName="dead02" sourceImage="volcano-flower" axis="53,76" sourceRect="1,106,108,86" />
+    <SpriteData keyName="dead03" sourceImage="volcano-flower" axis="62,84" sourceRect="126,1,122,94" />
+    <SpriteData keyName="dead04" sourceImage="volcano-flower" axis="60,94" sourceRect="1,1,124,104" />
+    <SpriteData keyName="dead05" sourceImage="volcano-flower" axis="54,64" sourceRect="110,106,108,70" />
+    <SpriteData keyName="dead06" sourceImage="volcano-flower" axis="12,18" sourceRect="82,193,26,20" />
+    <SpriteData keyName="volcanoFlower00" sourceImage="volcano-flower" axis="39,53" sourceRect="330,66,80,62" />
+    <SpriteData keyName="volcanoFlower01" sourceImage="volcano-flower" axis="39,54" sourceRect="193,177,80,64" />
+    <SpriteData keyName="volcanoFlower02" sourceImage="volcano-flower" axis="39,55" sourceRect="330,1,80,64" />
+  </data>
+</LibraryInfo>

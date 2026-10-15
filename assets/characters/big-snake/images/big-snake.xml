@@ -1,0 +1,7 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="bigSnake00" sourceImage="big-snake" axis="56,332" sourceRect="267,1,132,340" />
+    <SpriteData keyName="bigSnake01" sourceImage="big-snake" axis="57,332" sourceRect="1,1,132,358" />
+    <SpriteData keyName="dead" sourceImage="big-snake" axis="56,332" sourceRect="134,1,132,352" />
+  </data>
+</LibraryInfo>

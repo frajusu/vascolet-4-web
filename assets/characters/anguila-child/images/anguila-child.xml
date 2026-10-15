@@ -1,0 +1,9 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="anguila00" sourceImage="anguila-child" axis="39,17" sourceRect="1,64,76,20" />
+    <SpriteData keyName="anguila01" sourceImage="anguila-child" axis="33,18" sourceRect="1,85,70,20" />
+    <SpriteData keyName="anguila02" sourceImage="anguila-child" axis="33,16" sourceRect="1,106,68,20" />
+    <SpriteData keyName="damage00" sourceImage="anguila-child" axis="25,22" sourceRect="68,1,54,28" />
+    <SpriteData keyName="damage01" sourceImage="anguila-child" axis="32,41" sourceRect="1,1,66,62" />
+  </data>
+</LibraryInfo>

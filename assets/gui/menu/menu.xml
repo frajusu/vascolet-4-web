@@ -1,0 +1,26 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="ayudaOver" sourceImage="menu" axis="55,15" sourceRect="223,125,110,30" />
+    <SpriteData keyName="ayudaUp" sourceImage="menu" axis="55,15" sourceRect="334,1,110,30" />
+    <SpriteData keyName="continuarOver" sourceImage="menu" axis="55,15" sourceRect="223,94,110,30" />
+    <SpriteData keyName="continuarUp" sourceImage="menu" axis="55,15" sourceRect="223,63,110,30" />
+    <SpriteData keyName="creditosOver" sourceImage="menu" axis="55,15" sourceRect="223,32,110,30" />
+    <SpriteData keyName="creditosUp" sourceImage="menu" axis="55,15" sourceRect="223,1,110,30" />
+    <SpriteData keyName="jugarOver" sourceImage="menu" axis="55,15" sourceRect="112,218,110,30" />
+    <SpriteData keyName="jugarUp" sourceImage="menu" axis="55,15" sourceRect="112,187,110,30" />
+    <SpriteData keyName="leerTodoOver" sourceImage="menu" axis="55,15" sourceRect="112,156,110,30" />
+    <SpriteData keyName="leerTodoUp" sourceImage="menu" axis="55,15" sourceRect="112,125,110,30" />
+    <SpriteData keyName="logrosOver" sourceImage="menu" axis="55,15" sourceRect="1,218,110,30" />
+    <SpriteData keyName="logrosUp" sourceImage="menu" axis="55,15" sourceRect="1,187,110,30" />
+    <SpriteData keyName="noOver" sourceImage="menu" axis="55,15" sourceRect="1,156,110,30" />
+    <SpriteData keyName="noUp" sourceImage="menu" axis="55,15" sourceRect="1,125,110,30" />
+    <SpriteData keyName="opcionesOver" sourceImage="menu" axis="55,15" sourceRect="112,94,110,30" />
+    <SpriteData keyName="opcionesUp" sourceImage="menu" axis="55,15" sourceRect="112,63,110,30" />
+    <SpriteData keyName="salirOver" sourceImage="menu" axis="55,15" sourceRect="112,32,110,30" />
+    <SpriteData keyName="salirUp" sourceImage="menu" axis="55,15" sourceRect="112,1,110,30" />
+    <SpriteData keyName="siOver" sourceImage="menu" axis="55,15" sourceRect="1,94,110,30" />
+    <SpriteData keyName="siUp" sourceImage="menu" axis="55,15" sourceRect="1,63,110,30" />
+    <SpriteData keyName="volverOver" sourceImage="menu" axis="55,15" sourceRect="1,32,110,30" />
+    <SpriteData keyName="volverUp" sourceImage="menu" axis="55,15" sourceRect="1,1,110,30" />
+  </data>
+</LibraryInfo>

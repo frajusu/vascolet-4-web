@@ -1,0 +1,8 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="attack" sourceImage="center-column" axis="32,62" sourceRect="1,66,64,64" />
+    <SpriteData keyName="centerColumn00" sourceImage="center-column" axis="32,62" sourceRect="131,1,64,64" />
+    <SpriteData keyName="centerColumn01" sourceImage="center-column" axis="32,62" sourceRect="66,1,64,64" />
+    <SpriteData keyName="dead" sourceImage="center-column" axis="32,62" sourceRect="1,1,64,64" />
+  </data>
+</LibraryInfo>

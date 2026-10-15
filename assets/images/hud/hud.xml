@@ -1,0 +1,37 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="alejandro" sourceImage="hud" axis="27,22" sourceRect="533,58,56,44" />
+    <SpriteData keyName="blackHeart" sourceImage="hud" axis="9,9" sourceRect="165,236,18,18" />
+    <SpriteData keyName="blueKey" sourceImage="hud" axis="21,18" sourceRect="584,103,42,36" />
+    <SpriteData keyName="bossEnergy" sourceImage="hud" axis="113,17" sourceRect="641,46,226,34" />
+    <SpriteData keyName="bossEnergyBase" sourceImage="hud" axis="113,17" sourceRect="690,1,226,34" />
+    <SpriteData keyName="cartel" sourceImage="hud" axis="155,50" sourceRect="1,1,310,100" />
+    <SpriteData keyName="coins" sourceImage="hud" axis="50,15" sourceRect="641,81,100,30" />
+    <SpriteData keyName="colorHeart" sourceImage="hud" axis="9,9" sourceRect="146,236,18,18" />
+    <SpriteData keyName="dialogBanner" sourceImage="hud" axis="233,-2" sourceRect="1,102,466,68" />
+    <SpriteData keyName="cartelDialogos" sourceImage="hud" axis="233,-2" sourceRect="1,102,466,68" />
+    <SpriteData keyName="dialogBannerAle" sourceImage="hud" axis="25,22" sourceRect="590,56,50,44" />
+    <SpriteData keyName="dialogBannerAnt" sourceImage="hud" axis="25,22" sourceRect="639,1,50,44" />
+    <SpriteData keyName="dialogBannerButterfly" sourceImage="hud" axis="25,22" sourceRect="533,103,50,44" />
+    <SpriteData keyName="dialogBannerLampi" sourceImage="hud" axis="36,31" sourceRect="312,1,72,62" />
+    <SpriteData keyName="dialogBannerMalmark" sourceImage="hud" axis="25,22" sourceRect="468,164,50,44" />
+    <SpriteData keyName="dialogBannerWilly" sourceImage="hud" axis="27,27" sourceRect="519,1,54,56" />
+    <SpriteData keyName="greenKey" sourceImage="hud" axis="21,18" sourceRect="533,148,42,36" />
+    <SpriteData keyName="headBigBat" sourceImage="hud" axis="29,20" sourceRect="456,1,62,56" />
+    <SpriteData keyName="headBigBird" sourceImage="hud" axis="30,20" sourceRect="574,1,64,54" />
+    <SpriteData keyName="headBigScorpion" sourceImage="hud" axis="31,20" sourceRect="468,113,64,50" />
+    <SpriteData keyName="headBigSpider" sourceImage="hud" axis="38,20" sourceRect="322,171,72,56" />
+    <SpriteData keyName="headElectricEel" sourceImage="hud" axis="29,37" sourceRect="64,171,62,66" />
+    <SpriteData keyName="headFurryCritter" sourceImage="hud" axis="30,20" sourceRect="468,58,64,54" />
+    <SpriteData keyName="headGhost" sourceImage="hud" axis="29,35" sourceRect="127,171,62,64" />
+    <SpriteData keyName="headGiantDragonfly" sourceImage="hud" axis="36,20" sourceRect="385,1,70,58" />
+    <SpriteData keyName="headMalmark" sourceImage="hud" axis="31,30" sourceRect="190,171,68,60" />
+    <SpriteData keyName="headPiranha" sourceImage="hud" axis="28,20" sourceRect="259,171,62,58" />
+    <SpriteData keyName="headTopoNinja" sourceImage="hud" axis="32,21" sourceRect="395,171,66,56" />
+    <SpriteData keyName="headUglyDragon" sourceImage="hud" axis="28,30" sourceRect="1,171,62,66" />
+    <SpriteData keyName="lives" sourceImage="hud" axis="45,19" sourceRect="462,209,90,38" />
+    <SpriteData keyName="malmark" sourceImage="hud" axis="32,18" sourceRect="385,60,64,38" />
+    <SpriteData keyName="redHeart" sourceImage="hud" axis="9,9" sourceRect="127,236,18,18" />
+    <SpriteData keyName="redKey" sourceImage="hud" axis="22,18" sourceRect="312,64,44,36" />
+  </data>
+</LibraryInfo>

@@ -1,0 +1,16 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="check" sourceImage="options" axis="-2,-2" sourceRect="514,120,22,22" />
+    <SpriteData keyName="checkSelected" sourceImage="options" axis="0,0" sourceRect="563,67,24,26" />
+    <SpriteData keyName="opciones" sourceImage="options" axis="256,192" sourceRect="1,386,512,384" />
+    <SpriteData keyName="opcionesXo" sourceImage="options" axis="256,192" sourceRect="1,1,512,384" />
+    <SpriteData keyName="soundOff" sourceImage="options" axis="-1,-2" sourceRect="514,83,44,36" />
+    <SpriteData keyName="soundOffSelected" sourceImage="options" axis="0,0" sourceRect="514,42,48,40" />
+    <SpriteData keyName="soundOn" sourceImage="options" axis="-1,-1" sourceRect="563,1,44,36" />
+    <SpriteData keyName="soundOnSelected" sourceImage="options" axis="0,0" sourceRect="514,1,48,40" />
+    <SpriteData keyName="uncheck" sourceImage="options" axis="-2,-2" sourceRect="633,1,22,22" />
+    <SpriteData keyName="uncheckSelected" sourceImage="options" axis="0,0" sourceRect="608,1,24,26" />
+    <SpriteData keyName="volumeControl" sourceImage="options" axis="-2,-2" sourceRect="592,38,22,22" />
+    <SpriteData keyName="volumeControlSelected" sourceImage="options" axis="0,0" sourceRect="563,38,28,28" />
+  </data>
+</LibraryInfo>

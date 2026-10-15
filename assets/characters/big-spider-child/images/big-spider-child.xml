@@ -1,0 +1,11 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="walking00" sourceImage="big-spider-child" axis="34,60" sourceRect="1,141,70,68" />
+    <SpriteData keyName="walking01" sourceImage="big-spider-child" axis="34,62" sourceRect="72,1,70,70" />
+    <SpriteData keyName="walking02" sourceImage="big-spider-child" axis="34,64" sourceRect="1,1,70,70" />
+    <SpriteData keyName="walking03" sourceImage="big-spider-child" axis="34,62" sourceRect="72,139,70,66" />
+    <SpriteData keyName="walking04" sourceImage="big-spider-child" axis="34,59" sourceRect="72,72,70,66" />
+    <SpriteData keyName="walking05" sourceImage="big-spider-child" axis="34,60" sourceRect="1,72,70,68" />
+    <SpriteData keyName="walking06" sourceImage="big-spider-child" axis="34,60" sourceRect="143,1,70,68" />
+  </data>
+</LibraryInfo>

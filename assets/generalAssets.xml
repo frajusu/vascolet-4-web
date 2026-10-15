@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<assets>
+
+	<asset nameId="BENCHMARK_NUMBERS" location="assets/lang/images/benchmarkNumbers.png" mode="SINGLE" regPointMode="CUSTOM" renderingMode="AUTO">
+		<rect x="0" y="0" w="80" h="8" regx="0" regy="0" />
+	</asset>
+	
+	<asset nameId="transition" location="assets/images/transition.jpg" mode="SINGLE" regPointMode="CUSTOM" >
+		<rect x="0" y="0" w="512" h="384" regx="0" regy="0" />
+	</asset>	
+	
+	
+
+	
+</assets>

@@ -1,0 +1,18 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="arrowDown" sourceImage="user-help-buttons" axis="12,10" sourceRect="26,109,24,14" />
+    <SpriteData keyName="arrowUp" sourceImage="user-help-buttons" axis="12,10" sourceRect="1,109,24,16" />
+    <SpriteData keyName="downKeyDown" sourceImage="user-help-buttons" axis="19,13" sourceRect="111,28,38,26" />
+    <SpriteData keyName="downKeyUp" sourceImage="user-help-buttons" axis="19,13" sourceRect="42,82,40,26" />
+    <SpriteData keyName="enterKeyDown" sourceImage="user-help-buttons" axis="29,13" sourceRect="1,28,58,26" />
+    <SpriteData keyName="enterKeyUp" sourceImage="user-help-buttons" axis="30,13" sourceRect="1,1,60,26" />
+    <SpriteData keyName="escKeyDown" sourceImage="user-help-buttons" axis="25,13" sourceRect="60,28,50,26" />
+    <SpriteData keyName="escKeyUp" sourceImage="user-help-buttons" axis="26,13" sourceRect="62,1,52,26" />
+    <SpriteData keyName="leftArrowKeyDown" sourceImage="user-help-buttons" axis="19,13" sourceRect="115,1,38,26" />
+    <SpriteData keyName="leftArrowKeyUp" sourceImage="user-help-buttons" axis="19,13" sourceRect="42,55,40,26" />
+    <SpriteData keyName="rightArrowKeyDown" sourceImage="user-help-buttons" axis="19,13" sourceRect="83,82,38,26" />
+    <SpriteData keyName="rightArrowKeyUp" sourceImage="user-help-buttons" axis="19,13" sourceRect="1,82,40,26" />
+    <SpriteData keyName="upKeyDown" sourceImage="user-help-buttons" axis="19,13" sourceRect="83,55,38,26" />
+    <SpriteData keyName="upKeyUp" sourceImage="user-help-buttons" axis="19,13" sourceRect="1,55,40,26" />
+  </data>
+</LibraryInfo>

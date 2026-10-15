@@ -1,0 +1,8 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="platform00" sourceImage="plataforma" axis="48,32" sourceRect="98,1,96,36" />
+    <SpriteData keyName="platform01" sourceImage="plataforma" axis="48,32" sourceRect="1,87,98,36" />
+    <SpriteData keyName="platform02" sourceImage="plataforma" axis="48,32" sourceRect="1,46,96,40" />
+    <SpriteData keyName="platform03" sourceImage="plataforma" axis="48,32" sourceRect="1,1,96,44" />
+  </data>
+</LibraryInfo>

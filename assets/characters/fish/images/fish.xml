@@ -1,0 +1,8 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="damage" sourceImage="fish" axis="32,29" sourceRect="1,71,62,34" />
+    <SpriteData keyName="fish00" sourceImage="fish" axis="32,29" sourceRect="1,36,62,34" />
+    <SpriteData keyName="fish01" sourceImage="fish" axis="34,29" sourceRect="1,1,64,34" />
+    <SpriteData keyName="fish02" sourceImage="fish" axis="32,29" sourceRect="66,1,62,34" />
+  </data>
+</LibraryInfo>

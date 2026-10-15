@@ -1,0 +1,6 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="skullKeyDoor00" sourceImage="puerta-calavera" axis="16,127" sourceRect="1,1,32,128" />
+    <SpriteData keyName="skullKeyDoor01" sourceImage="puerta-calavera" axis="16,127" sourceRect="1,130,32,72" />
+  </data>
+</LibraryInfo>

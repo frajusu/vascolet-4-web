@@ -1,0 +1,8 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="extraLife00" sourceImage="vida-extra" axis="29,42" sourceRect="72,1,60,48" />
+    <SpriteData keyName="extraLife01" sourceImage="vida-extra" axis="32,45" sourceRect="1,62,66,54" />
+    <SpriteData keyName="extraLife02" sourceImage="vida-extra" axis="29,42" sourceRect="68,62,60,48" />
+    <SpriteData keyName="extraLife03" sourceImage="vida-extra" axis="35,48" sourceRect="1,1,70,60" />
+  </data>
+</LibraryInfo>

@@ -1,0 +1,8 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="confirmContinueLevel01" sourceImage="quit-confirmation" axis="256,192" sourceRect="0,0,512,384" />
+    <SpriteData keyName="confirmContinueLevel02" sourceImage="quit-confirmation" axis="256,192" sourceRect="512,0,512,384" />
+    <SpriteData keyName="pause" sourceImage="quit-confirmation" axis="256,192" sourceRect="0,384,512,384" />
+    <SpriteData keyName="quitConfirmation" sourceImage="quit-confirmation" axis="256,192" sourceRect="512,384,512,384" />
+  </data>
+</LibraryInfo>

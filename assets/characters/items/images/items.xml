@@ -1,0 +1,39 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="agua" sourceImage="items" axis="23,34" sourceRect="44,196,42,48" />
+    <SpriteData keyName="banana" sourceImage="items" axis="25,35" sourceRect="87,196,42,46" />
+    <SpriteData keyName="cebolla" sourceImage="items" axis="19,27" sourceRect="436,1,40,34" />
+    <SpriteData keyName="cereal" sourceImage="items" axis="21,32" sourceRect="256,89,42,42" />
+    <SpriteData keyName="correr" sourceImage="items" axis="23,33" sourceRect="268,1,44,44" />
+    <SpriteData keyName="dobleSalto" sourceImage="items" axis="20,30" sourceRect="277,132,40,40" />
+    <SpriteData keyName="energia" sourceImage="items" axis="18,28" sourceRect="346,85,36,36" />
+    <SpriteData keyName="keyBlue00" sourceImage="items" axis="29,44" sourceRect="168,1,52,66" />
+    <SpriteData keyName="keyBlue01" sourceImage="items" axis="28,42" sourceRect="117,68,50,62" />
+    <SpriteData keyName="keyBlue02" sourceImage="items" axis="27,41" sourceRect="152,131,48,60" />
+    <SpriteData keyName="keyGreen00" sourceImage="items" axis="29,44" sourceRect="115,1,52,66" />
+    <SpriteData keyName="keyGreen01" sourceImage="items" axis="28,42" sourceRect="52,133,50,62" />
+    <SpriteData keyName="keyGreen02" sourceImage="items" axis="27,41" sourceRect="103,131,48,60" />
+    <SpriteData keyName="keyRed00" sourceImage="items" axis="29,44" sourceRect="62,1,52,66" />
+    <SpriteData keyName="keyRed01" sourceImage="items" axis="28,42" sourceRect="1,133,50,62" />
+    <SpriteData keyName="keyRed02" sourceImage="items" axis="27,41" sourceRect="168,68,48,60" />
+    <SpriteData keyName="leche" sourceImage="items" axis="20,31" sourceRect="303,46,40,42" />
+    <SpriteData keyName="lechuga" sourceImage="items" axis="23,29" sourceRect="224,176,44,38" />
+    <SpriteData keyName="manzana" sourceImage="items" axis="20,35" sourceRect="201,129,40,46" />
+    <SpriteData keyName="nadar" sourceImage="items" axis="23,31" sourceRect="256,46,46,42" />
+    <SpriteData keyName="naranja" sourceImage="items" axis="21,30" sourceRect="299,89,46,40" />
+    <SpriteData keyName="papa" sourceImage="items" axis="21,29" sourceRect="221,1,46,44" />
+    <SpriteData keyName="pera" sourceImage="items" axis="19,31" sourceRect="217,68,38,46" />
+    <SpriteData keyName="pisar" sourceImage="items" axis="21,31" sourceRect="313,1,42,42" />
+    <SpriteData keyName="pocion" sourceImage="items" axis="17,29" sourceRect="242,132,34,42" />
+    <SpriteData keyName="queso" sourceImage="items" axis="21,26" sourceRect="387,44,42,36" />
+    <SpriteData keyName="saltarMas" sourceImage="items" axis="23,31" sourceRect="344,44,42,40" />
+    <SpriteData keyName="skullKey00" sourceImage="items" axis="31,43" sourceRect="1,1,60,66" />
+    <SpriteData keyName="skullKey01" sourceImage="items" axis="30,42" sourceRect="1,68,58,64" />
+    <SpriteData keyName="skullKey02" sourceImage="items" axis="29,41" sourceRect="60,68,56,62" />
+    <SpriteData keyName="tomate" sourceImage="items" axis="20,31" sourceRect="395,1,40,40" />
+    <SpriteData keyName="uvas" sourceImage="items" axis="22,35" sourceRect="1,196,42,48" />
+    <SpriteData keyName="vidaExtra" sourceImage="items" axis="26,32" sourceRect="171,192,52,44" />
+    <SpriteData keyName="yoghurt" sourceImage="items" axis="21,35" sourceRect="130,192,40,46" />
+    <SpriteData keyName="zanahoria" sourceImage="items" axis="18,33" sourceRect="356,1,38,42" />
+  </data>
+</LibraryInfo>

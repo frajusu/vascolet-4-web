@@ -1,0 +1,11 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="dead" sourceImage="big-scorpion-v02" axis="82,69" sourceRect="365,1,172,92" />
+    <SpriteData keyName="walk00" sourceImage="big-scorpion-v02" axis="78,120" sourceRect="1,154,178,144" />
+    <SpriteData keyName="walk01" sourceImage="big-scorpion-v02" axis="78,124" sourceRect="1,299,178,142" />
+    <SpriteData keyName="walk02" sourceImage="big-scorpion-v02" axis="78,126" sourceRect="186,146,178,140" />
+    <SpriteData keyName="walk03" sourceImage="big-scorpion-v02" axis="78,116" sourceRect="186,1,178,144" />
+    <SpriteData keyName="walk04" sourceImage="big-scorpion-v02" axis="75,118" sourceRect="180,287,176,140" />
+    <SpriteData keyName="walk05" sourceImage="big-scorpion-v02" axis="84,129" sourceRect="1,1,184,152" />
+  </data>
+</LibraryInfo>

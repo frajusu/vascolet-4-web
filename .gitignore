@@ -1,0 +1,5 @@
+/target
+/dist
+**/*.rs.bk
+vascolet-save.json
+vascolet-settings.json

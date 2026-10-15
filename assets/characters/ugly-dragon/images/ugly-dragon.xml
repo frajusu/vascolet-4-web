@@ -1,0 +1,13 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="attack00" sourceImage="ugly-dragon" axis="58,103" sourceRect="291,1,138,112" />
+    <SpriteData keyName="attack01" sourceImage="ugly-dragon" axis="58,117" sourceRect="1,128,138,126" />
+    <SpriteData keyName="attack02" sourceImage="ugly-dragon" axis="58,103" sourceRect="152,114,138,112" />
+    <SpriteData keyName="attack03" sourceImage="ugly-dragon" axis="58,103" sourceRect="152,1,138,112" />
+    <SpriteData keyName="dead" sourceImage="ugly-dragon" axis="58,84" sourceRect="152,227,130,94" />
+    <SpriteData keyName="flying00" sourceImage="ugly-dragon" axis="58,98" sourceRect="291,114,150,108" />
+    <SpriteData keyName="flying01" sourceImage="ugly-dragon" axis="58,117" sourceRect="1,1,150,126" />
+    <SpriteData keyName="flying02" sourceImage="ugly-dragon" axis="58,89" sourceRect="1,354,150,98" />
+    <SpriteData keyName="flying03" sourceImage="ugly-dragon" axis="58,89" sourceRect="1,255,150,98" />
+  </data>
+</LibraryInfo>

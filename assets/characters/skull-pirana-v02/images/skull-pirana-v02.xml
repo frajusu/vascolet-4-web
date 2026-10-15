@@ -1,0 +1,8 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="jump00" sourceImage="skull-pirana-v02" axis="52,95" sourceRect="104,1,92,104" />
+    <SpriteData keyName="jump01" sourceImage="skull-pirana-v02" axis="52,93" sourceRect="94,112,92,98" />
+    <SpriteData keyName="jump02" sourceImage="skull-pirana-v02" axis="52,98" sourceRect="1,112,92,102" />
+    <SpriteData keyName="jump03" sourceImage="skull-pirana-v02" axis="52,102" sourceRect="1,1,102,110" />
+  </data>
+</LibraryInfo>

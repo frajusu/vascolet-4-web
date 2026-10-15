@@ -1,0 +1,10 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="snailDamage" sourceImage="snail" axis="64,91" sourceRect="0,0,0,98" />
+    <SpriteData keyName="snailWalking00" sourceImage="snail" axis="63,100" sourceRect="124,130,146,106" />
+    <SpriteData keyName="snailWalking01" sourceImage="snail" axis="47,107" sourceRect="1,130,122,114" />
+    <SpriteData keyName="snailWalking02" sourceImage="snail" axis="67,119" sourceRect="305,1,154,126" />
+    <SpriteData keyName="snailWalking03" sourceImage="snail" axis="63,121" sourceRect="1,1,156,128" />
+    <SpriteData keyName="snailWalking04" sourceImage="snail" axis="61,121" sourceRect="158,1,146,128" />
+  </data>
+</LibraryInfo>

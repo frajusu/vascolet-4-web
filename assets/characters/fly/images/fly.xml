@@ -1,0 +1,9 @@
+﻿<LibraryInfo>
+  <data>
+    <SpriteData keyName="fly00" sourceImage="fly" axis="25,61" sourceRect="60,1,52,66" />
+    <SpriteData keyName="fly01" sourceImage="fly" axis="30,57" sourceRect="172,1,58,62" />
+    <SpriteData keyName="fly02" sourceImage="fly" axis="28,52" sourceRect="60,68,56,58" />
+    <SpriteData keyName="fly03" sourceImage="fly" axis="30,57" sourceRect="113,1,58,62" />
+    <SpriteData keyName="flyDamage" sourceImage="fly" axis="26,53" sourceRect="1,1,58,74" />
+  </data>
+</LibraryInfo>
