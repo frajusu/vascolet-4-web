@@ -8,7 +8,7 @@ use crate::hud::{BossText, HudText, MenuText, TipText};
 use crate::level::LEVELS;
 
 #[derive(Component)]
-struct ScreenRoot;
+pub struct ScreenRoot;
 
 #[derive(Component)]
 pub struct MenuItem {
