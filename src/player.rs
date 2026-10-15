@@ -1,8 +1,10 @@
-//! Jugador: fisica con delta, salto (sostenido + coyote + buffer), doble salto,
-//! correr (doble-tap / zapatilla), agacharse, nadar, disparar boomerangs, dano con invencibilidad.
+//! Jugador con fisica contra la grilla exacta del TMX (solidos, one-way, dano),
+//! todo integrado con delta. Salto sostenido + coyote + buffer, doble salto,
+//! correr (doble-tap / zapatilla), agacharse, nado, boomerangs.
 
 use bevy::prelude::*;
 use crate::game::{AppState, GameProgress, PlayerDied};
+use crate::world::{collide_move, SolidGrid};
 
 #[derive(Component)]
 pub struct Player;
@@ -47,6 +49,7 @@ const MOVE_SPEED: f32 = 6.0;
 const RUN_SPEED: f32 = 9.5;
 const JUMP_VEL: f32 = 9.0;
 const SWIM_UP: f32 = 5.0;
+const HALF: Vec2 = Vec2::new(0.45, 0.6);
 
 pub fn spawn_player(commands: &mut Commands, progress: &GameProgress) {
     commands.spawn((
@@ -58,7 +61,7 @@ pub fn spawn_player(commands: &mut Commands, progress: &GameProgress) {
             anchor: bevy::sprite::Anchor::BottomCenter,
             ..default()
         },
-        Transform::from_translation(progress.checkpoint.extend(0.0)),
+        Transform::from_translation(progress.checkpoint.extend(5.0)),
     ));
 }
 
@@ -71,6 +74,7 @@ pub fn player_move_delta(
     mut died: EventWriter<PlayerDied>,
     mut commands: Commands,
     asset_server: Res<AssetServer>,
+    grid: Res<SolidGrid>,
     mut q: Query<(Entity, &mut Transform, &mut PlayerStats), With<Player>>,
     mut q_boom: Query<(Entity, &mut Transform, &mut Boomerang), Without<Player>>,
 ) {
@@ -81,7 +85,6 @@ pub fn player_move_delta(
     let t_now = time.elapsed_secs();
 
     for (_e, mut tf, mut st) in &mut q {
-        // --- input horizontal + doble-tap para correr ---
         let mut dir = 0.0;
         if keys.pressed(KeyCode::ArrowLeft) { dir -= 1.0; }
         if keys.pressed(KeyCode::ArrowRight) { dir += 1.0; }
@@ -104,14 +107,11 @@ pub fn player_move_delta(
             st.running = true;
         }
         let speed = if st.running { RUN_SPEED } else { MOVE_SPEED };
-        // Agua = mas lento en X
         let speed = if st.in_water { speed * 0.6 } else { speed };
         st.vel.x = dir * speed;
-
-        // --- agacharse ---
         st.ducking = keys.pressed(KeyCode::ArrowDown);
 
-        // --- salto con buffer + coyote + sostenido + doble salto ---
+        // salto: buffer + coyote + doble + sostenido
         let jump_pressed = keys.just_pressed(KeyCode::KeyZ) || keys.just_pressed(KeyCode::KeyS);
         if jump_pressed {
             st.jump_buffer = 0.12;
@@ -119,27 +119,24 @@ pub fn player_move_delta(
             st.jump_buffer = (st.jump_buffer - dt).max(0.0);
         }
         st.coyote = if st.on_ground { 0.1 } else { (st.coyote - dt).max(0.0) };
-
+        let jump_v = JUMP_VEL + if progress.has_sustain { 1.8 } else { 0.0 };
         let can_jump = st.coyote > 0.0 && st.jump_buffer > 0.0;
         let can_double = progress.has_double_jump && st.jumps < 2 && st.jump_buffer > 0.0 && !st.on_ground;
         if can_jump || can_double {
-            st.vel.y = JUMP_VEL;
+            st.vel.y = jump_v;
             st.jumps += 1;
             st.jump_buffer = 0.0;
             st.coyote = 0.0;
             st.on_ground = false;
             crate::audio::play_sfx(&mut commands, &asset_server, crate::audio::Sfx::Jump);
         }
-        // salto sostenido: si suelta rapido, corta la subida
         if !keys.pressed(KeyCode::KeyZ) && !keys.pressed(KeyCode::KeyS) && st.vel.y > 3.0 && !st.in_water {
             st.vel.y = 3.0;
         }
-        // agua: impulsarse con salto
         if st.in_water && (keys.pressed(KeyCode::KeyZ) || keys.pressed(KeyCode::KeyS)) {
             st.vel.y = SWIM_UP;
         }
 
-        // --- gravedad con delta ---
         if !st.in_water {
             st.vel.y -= GRAVITY * dt;
         } else {
@@ -147,28 +144,40 @@ pub fn player_move_delta(
             st.vel.y = st.vel.y.clamp(-4.0, SWIM_UP);
         }
 
-        // --- integrar ---
-        tf.translation.x += st.vel.x * dt;
-        tf.translation.y += st.vel.y * dt;
-
-        // --- piso provisorio (el terreno real del TMX viene en level) ---
+        // agua placeholder (zonas bajas del nivel) hasta detectar tiles de agua
         st.in_water = tf.translation.y < -2.0 && tf.translation.y > -6.0;
-        if tf.translation.y < 0.0 && !st.in_water {
-            if st.vel.y < -18.0 {
+
+        // integracion con colision exacta
+        let prev_bottom = tf.translation.y - HALF.y;
+        let prev_vy = st.vel.y;
+        let (np, hit_x, grounded, _bonk, hurt) = collide_move(
+            tf.translation.truncate(), HALF, st.vel * dt, prev_bottom, &grid,
+        );
+        let _ = hit_x;
+        tf.translation.x = np.x;
+        tf.translation.y = np.y;
+        if grounded {
+            if prev_vy < -18.0 {
                 damage_player(&mut progress, 10.0, &mut died);
+                crate::audio::play_sfx(&mut commands, &asset_server, crate::audio::Sfx::Fall);
             }
-            tf.translation.y = 0.0;
             st.vel.y = 0.0;
             st.on_ground = true;
             st.jumps = 0;
-        } else if tf.translation.y > 0.05 {
+        } else if tf.translation.y > prev_bottom + HALF.y + 0.05 {
             st.on_ground = false;
         }
+        if hurt && st.inv_time <= 0.0 {
+            damage_player(&mut progress, 15.0, &mut died);
+            st.inv_time = 1.0;
+            crate::audio::play_sfx(&mut commands, &asset_server, crate::audio::Sfx::Hit);
+        }
 
-        // --- disparo boomerang con delta cooldown ---
+        // boomerang (cadencia mejora con &B-Item)
         st.fire_cd = (st.fire_cd - dt).max(0.0);
+        let cd = (0.35 - 0.05 * progress.boomerang_level as f32).max(0.18);
         if (keys.just_pressed(KeyCode::KeyA) || keys.just_pressed(KeyCode::KeyX)) && st.fire_cd <= 0.0 {
-            st.fire_cd = 0.35;
+            st.fire_cd = cd;
             let dir = st.facing;
             commands.spawn((
                 Boomerang { vel: Vec2::new(dir * 12.0, 2.0), life: 2.0, returning: false },
@@ -182,35 +191,18 @@ pub fn player_move_delta(
             crate::audio::play_sfx(&mut commands, &asset_server, crate::audio::Sfx::Shoot);
         }
 
-        // --- timers ---
         st.inv_time = (st.inv_time - dt).max(0.0);
-
-        // --- caida al vacio = muerte ---
         if tf.translation.y < -12.0 {
             died.send(PlayerDied);
         }
-
-        // --- fin de nivel provisorio: llegar lejos a la derecha ---
-        if tf.translation.x > crate::level::level_def(progress.level).width_tiles as f32 * 0.5 {
-            // el jefe debe estar derrotado si el nivel tiene uno
-            if progress.boss_hp <= 0.0 {
-                // se emite desde enemy.rs al derrotar jefe; aqui solo niveles sin jefe
-                if crate::level::level_def(progress.level).boss.is_none() {
-                    // evitar spam: solo una vez
-                    progress.checkpoint.x = tf.translation.x;
-                }
-            }
-        }
     }
 
-    // --- boomerangs con delta ---
     for (e, mut tf, mut b) in &mut q_boom {
         b.life -= dt;
         if b.life <= 0.0 {
             commands.entity(e).despawn();
             continue;
         }
-        // ida y vuelta simple
         if b.life < 1.0 {
             b.returning = true;
         }
@@ -221,6 +213,9 @@ pub fn player_move_delta(
 }
 
 pub fn damage_player(progress: &mut GameProgress, amount: f32, died: &mut EventWriter<PlayerDied>) {
+    if progress.energy <= 0.0 {
+        return;
+    }
     progress.energy -= amount;
     if progress.energy <= 0.0 {
         progress.energy = progress.max_energy;

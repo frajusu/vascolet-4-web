@@ -8,6 +8,7 @@ description = "Vascolet remake jugable web (Rust + Bevy, GitHub Pages, localStor
 bevy = "0.15"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+quick-xml = "0.37"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 gloo-storage = "0.3"

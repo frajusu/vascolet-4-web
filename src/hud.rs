@@ -14,6 +14,9 @@ pub struct BossText;
 #[derive(Component)]
 pub struct MenuText;
 
+#[derive(Component)]
+pub struct TipText;
+
 pub fn spawn_hud(mut commands: Commands) {
     commands.spawn((
         HudText,
@@ -42,14 +45,27 @@ pub fn spawn_hud(mut commands: Commands) {
             ..default()
         },
     ));
+    commands.spawn((
+        TipText,
+        Text::new(""),
+        TextFont { font_size: 20.0, ..default() },
+        TextColor(Color::srgb(1.0, 0.95, 0.6)),
+        Node {
+            position_type: PositionType::Absolute,
+            left: Val::Percent(10.0), bottom: Val::Px(48.0),
+            ..default()
+        },
+    ));
 }
 
 pub fn update_hud(
     progress: Res<GameProgress>,
     state: Res<State<AppState>>,
-    mut q_hud: Query<&mut Text, (With<HudText>, Without<BossText>, Without<MenuText>)>,
-    mut q_boss: Query<&mut Text, (With<BossText>, Without<HudText>, Without<MenuText>)>,
-    mut q_menu: Query<&mut Visibility, With<MenuText>>,
+    tip: Res<crate::world::CurrentTip>,
+    mut q_hud: Query<&mut Text, (With<HudText>, Without<BossText>, Without<MenuText>, Without<TipText>)>,
+    mut q_boss: Query<&mut Text, (With<BossText>, Without<HudText>, Without<MenuText>, Without<TipText>)>,
+    mut q_menu: Query<&mut Visibility, (With<MenuText>, Without<TipText>)>,
+    mut q_tip: Query<&mut Text, (With<TipText>, Without<HudText>, Without<BossText>, Without<MenuText>)>,
 ) {
     let def = level_def(progress.level);
     for mut t in &mut q_hud {
@@ -67,5 +83,8 @@ pub fn update_hud(
     }
     for mut v in &mut q_menu {
         *v = if *state.get() == AppState::Menu { Visibility::Visible } else { Visibility::Hidden };
+    }
+    for mut t in &mut q_tip {
+        t.0 = tip.text.clone();
     }
 }

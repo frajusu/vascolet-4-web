@@ -24,6 +24,10 @@ pub struct GameProgress {
     pub checkpoint: Vec2,
     pub has_sneaker: bool,
     pub has_double_jump: bool,
+    pub has_sustain: bool,
+    pub has_jump_attack: bool,
+    pub boomerang_level: u32,
+    pub keys: u32,
     pub boss_hp: f32,
     pub boss_max: f32,
     pub boss_name: String,
@@ -41,6 +45,10 @@ impl Default for GameProgress {
             checkpoint: Vec2::new(2.0, 2.0),
             has_sneaker: false,
             has_double_jump: false,
+            has_sustain: false,
+            has_jump_attack: false,
+            boomerang_level: 0,
+            keys: 0,
             boss_hp: 0.0,
             boss_max: 1.0,
             boss_name: String::new(),
@@ -116,7 +124,26 @@ pub fn on_level_complete(
     mut ev: EventReader<LevelComplete>,
     mut progress: ResMut<GameProgress>,
     mut next: ResMut<NextState<AppState>>,
-    q_player: Query<&Transform, With<crate::player::Player>>,
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut grid: ResMut<crate::world::SolidGrid>,
+    mut texts: ResMut<crate::world::TextsDb>,
+    mut music: ResMut<crate::world::LevelMusic>,
+    mut info: ResMut<crate::world::LevelInfo>,
+    mut tip: ResMut<crate::world::CurrentTip>,
+    q_old: Query<
+        Entity,
+        Or<(
+            With<crate::world::TileSprite>,
+            With<crate::world::TriggerInfo>,
+            With<crate::world::TriggerSave>,
+            With<crate::world::MusicMarker>,
+            With<crate::player::Player>,
+            With<crate::enemy::Enemy>,
+            With<crate::items::Item>,
+            With<crate::player::Boomerang>,
+        )>,
+    >,
 ) {
     for _ in ev.read() {
         progress.unlocked = progress.unlocked.max((progress.level + 1).min(18));
@@ -132,15 +159,18 @@ pub fn on_level_complete(
             next.set(AppState::Victory);
         } else {
             progress.level += 1;
-            let def = level_def(progress.level);
-            progress.checkpoint = crate::level::player_start(progress.level);
-            progress.boss_hp = 0.0;
-            progress.boss_name = def.boss.unwrap_or("").to_string();
-            // respawn visual simple: mover jugador al inicio
-            for tf in &q_player {
-                let _ = tf;
-            }
-            next.set(AppState::Playing);
+            // Recarga explicita: OnEnter(Playing) no dispara si ya estabamos en Playing.
+            crate::world::cleanup_level(&mut commands, &q_old);
+            crate::world::setup_level(
+                &mut commands,
+                &asset_server,
+                &mut progress,
+                &mut grid,
+                &mut texts,
+                &mut music,
+                &mut info,
+                &mut tip,
+            );
         }
     }
 }

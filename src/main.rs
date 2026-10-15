@@ -1,4 +1,5 @@
-//! Vascolet-web: remake jugable para GitHub Pages.
+//! Vascolet-web: copia fiel del original para GitHub Pages.
+//! - Niveles .tmx exactos (tiles, colision solid/up/damage, spawns, items, tips, musica).
 //! - Sin limite de FPS: todo usa `delta_secs()`.
 //! - Escala en UNIDADES (1 tile = 1.0): subir PNGs a HD no rompe nada.
 //! - Guardado en localStorage (web) / archivo (nativo).
@@ -11,11 +12,14 @@ mod items;
 mod level;
 mod player;
 mod save;
+mod tmx;
+mod world;
 
 use bevy::prelude::*;
 use game::{AppState, GameProgress};
 
-/// Altura virtual siempre visible (en tiles). En 480p o 4K se ve lo mismo.
+/// Altura virtual siempre visible (en tiles). El original es 512x384 (4:3):
+/// 384px / 32px = 12 tiles de alto.
 const VIRTUAL_H: f32 = 12.0;
 
 fn main() {
@@ -32,6 +36,11 @@ fn main() {
         )
         .init_state::<AppState>()
         .init_resource::<GameProgress>()
+        .init_resource::<world::SolidGrid>()
+        .init_resource::<world::TextsDb>()
+        .init_resource::<world::CurrentTip>()
+        .init_resource::<world::LevelMusic>()
+        .init_resource::<world::LevelInfo>()
         // Fondo azul oscuro: si ves este color, la app corre (negro total = wasm muerto).
         .insert_resource(ClearColor(Color::srgb(0.08, 0.11, 0.20)))
         .add_event::<game::LevelComplete>()
@@ -49,6 +58,9 @@ fn main() {
                 player::player_move_delta,
                 enemy::enemy_ai_delta,
                 items::item_pickup,
+                world::tip_triggers,
+                world::save_triggers,
+                world::level_director,
                 hud::update_hud,
                 autosave_tick,
             ),
@@ -92,7 +104,6 @@ fn fit_camera(
     if let Projection::Orthographic(p) = &mut *proj {
         p.scale = VIRTUAL_H / h;
     }
-    // follow suave al jugador
     if let (Ok(pp), Ok(mut cp)) = (q_player.get_single(), q_cam_tf.get_single_mut()) {
         cp.translation.x += (pp.translation.x - cp.translation.x) * 0.1;
         cp.translation.y += ((pp.translation.y + 2.0).max(3.0) - cp.translation.y) * 0.1;
@@ -101,21 +112,43 @@ fn fit_camera(
 
 fn setup_level(
     mut commands: Commands,
+    asset_server: Res<AssetServer>,
     mut progress: ResMut<GameProgress>,
+    mut grid: ResMut<world::SolidGrid>,
+    mut texts: ResMut<world::TextsDb>,
+    mut music: ResMut<world::LevelMusic>,
+    mut info: ResMut<world::LevelInfo>,
+    mut tip: ResMut<world::CurrentTip>,
 ) {
-    // jugador + enemigos + items del nivel actual
-    player::spawn_player(&mut commands, &progress);
-    enemy::spawn_level_enemies(&mut commands, progress.level, &mut progress);
-    items::spawn_level_items(&mut commands, progress.level);
+    world::setup_level(
+        &mut commands,
+        &asset_server,
+        &mut progress,
+        &mut grid,
+        &mut texts,
+        &mut music,
+        &mut info,
+        &mut tip,
+    );
 }
 
 fn cleanup_level(
     mut commands: Commands,
-    q: Query<Entity, Or<(With<player::Player>, With<enemy::Enemy>, With<items::Item>, With<player::Boomerang>)>>,
+    q: Query<
+        Entity,
+        Or<(
+            With<world::TileSprite>,
+            With<world::TriggerInfo>,
+            With<world::TriggerSave>,
+            With<world::MusicMarker>,
+            With<player::Player>,
+            With<enemy::Enemy>,
+            With<items::Item>,
+            With<player::Boomerang>,
+        )>,
+    >,
 ) {
-    for e in &q {
-        commands.entity(e).despawn_recursive();
-    }
+    world::cleanup_level(&mut commands, &q);
 }
 
 fn autosave_tick(
