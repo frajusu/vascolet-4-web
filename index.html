@@ -24,7 +24,8 @@
   <canvas id="vascolet-canvas"></canvas>
   <script>
     const el = () => document.getElementById("err");
-    const show = (m) => { el().textContent += m + "\n"; };
+    const BENIGN = "Using exceptions for control flow";
+    const show = (m) => { if (!String(m).includes(BENIGN)) el().textContent += m + "\n"; };
     window.addEventListener("error", (e) => show("ERROR: " + (e.message || e.error)));
     window.addEventListener("unhandledrejection", (e) => show("REJECT: " + (e.reason && (e.reason.stack || e.reason.message || e.reason))));
     // El panic hook de Rust escribe por console.error: espejarlo al overlay.
