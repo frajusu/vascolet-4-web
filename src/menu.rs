@@ -4,7 +4,7 @@
 
 use bevy::prelude::*;
 use crate::game::{AppState, GameProgress};
-use crate::hud::{BossText, HudText, TipText};
+use crate::hud::{BossText, HudText, MenuText, TipText};
 use crate::level::LEVELS;
 
 #[derive(Component)]
@@ -52,19 +52,17 @@ fn title(commands: &mut Commands, text: &str, top_pct: f32, size: f32) {
     ));
 }
 
-type HlQuery<'w> = Query<
-    'w,
-    'w,
-    (&'w MenuItem, &'w mut Text, &'w mut TextColor),
-    (
-        Without<HudText>,
-        Without<BossText>,
-        Without<TipText>,
-        Without<crate::hud::MenuText>,
-    ),
->;
+type MenuHlFilter = (
+    Without<HudText>,
+    Without<BossText>,
+    Without<TipText>,
+    Without<MenuText>,
+);
 
-fn paint(q: &mut HlQuery, sel: usize) {
+fn paint(
+    q: &mut Query<(&MenuItem, &mut Text, &mut TextColor), MenuHlFilter>,
+    sel: usize,
+) {
     for (item, mut t, mut c) in q {
         if item.index == sel {
             t.0 = format!("> {}", item.label);
@@ -135,7 +133,7 @@ pub fn nav_menu(
     mut next: ResMut<NextState<AppState>>,
     mut nav: ResMut<MenuNav>,
     mut progress: ResMut<GameProgress>,
-    mut q_hl: HlQuery,
+    mut q_hl: Query<(&MenuItem, &mut Text, &mut TextColor), MenuHlFilter>,
 ) {
     if *state.get() != AppState::Menu {
         return;
@@ -217,7 +215,7 @@ pub fn nav_levels(
     mut next: ResMut<NextState<AppState>>,
     mut nav: ResMut<MenuNav>,
     mut progress: ResMut<GameProgress>,
-    mut q_hl: HlQuery,
+    mut q_hl: Query<(&MenuItem, &mut Text, &mut TextColor), MenuHlFilter>,
 ) {
     if *state.get() != AppState::LevelSelect {
         return;
@@ -411,7 +409,7 @@ pub fn nav_pause(
     mut music: ResMut<crate::world::LevelMusic>,
     mut info: ResMut<crate::world::LevelInfo>,
     mut tip: ResMut<crate::world::CurrentTip>,
-    mut q_hl: HlQuery,
+    mut q_hl: Query<(&MenuItem, &mut Text, &mut TextColor), MenuHlFilter>,
     q_screen: Query<Entity, With<ScreenRoot>>,
     q_old: Query<
         Entity,
