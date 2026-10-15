@@ -32,6 +32,8 @@ fn main() {
         )
         .init_state::<AppState>()
         .init_resource::<GameProgress>()
+        // Fondo azul oscuro: si ves este color, la app corre (negro total = wasm muerto).
+        .insert_resource(ClearColor(Color::srgb(0.08, 0.11, 0.20)))
         .add_event::<game::LevelComplete>()
         .add_event::<game::PlayerDied>()
         .add_event::<game::BossDefeated>()

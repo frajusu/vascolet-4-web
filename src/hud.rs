@@ -18,11 +18,15 @@ pub fn spawn_hud(mut commands: Commands) {
     commands.spawn((
         HudText,
         Text::new(""),
+        TextFont { font_size: 18.0, ..default() },
+        TextColor(Color::WHITE),
         Node { position_type: PositionType::Absolute, top: Val::Px(8.0), left: Val::Px(8.0), ..default() },
     ));
     commands.spawn((
         BossText,
         Text::new(""),
+        TextFont { font_size: 18.0, ..default() },
+        TextColor(Color::srgb(1.0, 0.4, 0.4)),
         Node { position_type: PositionType::Absolute, top: Val::Px(8.0), right: Val::Px(8.0), ..default() },
     ));
     commands.spawn((
@@ -30,6 +34,8 @@ pub fn spawn_hud(mut commands: Commands) {
         Text::new(
             "VASCOLET-WEB\n\nENTER: jugar / continuar  1-9: nivel\nFlechas moverse, doble-tap = correr\nZ/S salto (mantener = mas alto)  A/X boomerang\nAbajo agacharse  ESC/P pausa\n\nToca un checkpoint para guardar (localStorage).",
         ),
+        TextFont { font_size: 22.0, ..default() },
+        TextColor(Color::WHITE),
         Node {
             position_type: PositionType::Absolute,
             left: Val::Percent(15.0), top: Val::Percent(20.0),

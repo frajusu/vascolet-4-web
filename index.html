@@ -5,15 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vascolet-web</title>
   <style>
-    html, body { margin: 0; height: 100%; background: #101418; }
+    html, body { margin: 0; height: 100%; background: #101418; overflow: hidden; }
     #vascolet-canvas { width: 100vw; height: 100vh; display: block; }
+    #boot {
+      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+      color: #cfe3ff; font: 16px/1.5 system-ui, sans-serif; text-align: center;
+      background: #101418; z-index: 10; pointer-events: none; padding: 24px;
+    }
+    #err {
+      position: fixed; left: 8px; bottom: 8px; max-width: 90vw; z-index: 20;
+      color: #ffb4b4; font: 12px/1.4 monospace; white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
+  <div id="boot">Cargando Vascolet-web…<br/>(si esto no desaparece, el wasm no arrancó)</div>
+  <div id="err"></div>
   <canvas id="vascolet-canvas"></canvas>
-  <script type="module">
-    import init from "./vascolet-web.js";
-    init();
+  <script>
+    window.addEventListener("error", (e) => {
+      const el = document.getElementById("err");
+      el.textContent += (e.message || e.error) + "\n";
+    });
+    window.addEventListener("TrunkApplicationStarted", () => {
+      const b = document.getElementById("boot");
+      if (b) b.remove();
+    });
+    // Si Bevy tarda, no dejar el cartel para siempre cuando el canvas ya pinta
+    setTimeout(() => {
+      const b = document.getElementById("boot");
+      if (b) b.textContent = "Sigue cargando… si queda negro, revisá el texto de error abajo.";
+    }, 15000);
   </script>
 </body>
 </html>
