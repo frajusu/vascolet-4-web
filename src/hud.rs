@@ -47,13 +47,13 @@ pub fn update_hud(
 ) {
     let def = level_def(progress.level);
     for mut t in &mut q_hud {
-        **t = format!(
+        t.0 = format!(
             "Nv {} {}  |  Vidas {}  Energia {:.0}  Monedas {}  Tip: {}",
             progress.level, def.name, progress.lives, progress.energy, progress.coins, def.tip,
         );
     }
     for mut t in &mut q_boss {
-        **t = if progress.boss_hp > 0.0 {
+        t.0 = if progress.boss_hp > 0.0 {
             format!("JEFE {}: {:.0}/{:.0}", progress.boss_name, progress.boss_hp.max(0.0), progress.boss_max)
         } else {
             String::new()

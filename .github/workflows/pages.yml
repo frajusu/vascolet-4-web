@@ -3,16 +3,10 @@ name: pages
 on:
   push:
     branches: [main]
-    paths:
-      - "vascolet-web/**"
-      - ".github/workflows/pages.yml"
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: vascolet-web
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -22,12 +16,12 @@ jobs:
       - name: Install trunk
         run: cargo install trunk --locked
       - name: Build wasm
-        # El build pesado ocurre en GitHub, NO en tu PC (estable).
+        # El build pesado ocurre en GitHub, NO en tu PC.
         run: trunk build --release --public-url ./
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: vascolet-web/dist
+          path: dist
   deploy:
     needs: build
     runs-on: ubuntu-latest

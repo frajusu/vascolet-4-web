@@ -3,6 +3,9 @@
 
 use serde::{Deserialize, Serialize};
 
+#[cfg(target_arch = "wasm32")]
+use gloo_storage::Storage;
+
 #[derive(Serialize, Deserialize, Clone, Default)]
 pub struct SaveData {
     pub level: u32,
