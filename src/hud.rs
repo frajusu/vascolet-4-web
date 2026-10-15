@@ -6,13 +6,13 @@ use crate::game::{AppState, GameProgress};
 use crate::level::level_def;
 
 #[derive(Component)]
-struct HudText;
+pub struct HudText;
 
 #[derive(Component)]
-struct BossText;
+pub struct BossText;
 
 #[derive(Component)]
-struct MenuText;
+pub struct MenuText;
 
 pub fn spawn_hud(mut commands: Commands) {
     commands.spawn((
