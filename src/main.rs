@@ -72,14 +72,14 @@ fn main() {
         .add_systems(OnExit(AppState::Victory), menu::exit_screens)
         .add_systems(OnEnter(AppState::Playing), setup_level)
         .add_systems(OnExit(AppState::Playing), cleanup_level)
+        .add_systems(Update, menu::nav_menu)
+        .add_systems(Update, menu::nav_levels)
+        .add_systems(Update, menu::nav_options)
+        .add_systems(Update, menu::nav_pause)
+        .add_systems(Update, menu::back_to_menu)
         .add_systems(
             Update,
             (
-                menu::nav_menu,
-                menu::nav_levels,
-                menu::nav_options,
-                menu::nav_pause,
-                menu::back_to_menu,
                 game::pause_keys,
                 fit_camera,
                 player::player_move_delta,
