@@ -23,10 +23,18 @@
   <div id="err"></div>
   <canvas id="vascolet-canvas"></canvas>
   <script>
-    window.addEventListener("error", (e) => {
-      const el = document.getElementById("err");
-      el.textContent += (e.message || e.error) + "\n";
-    });
+    const el = () => document.getElementById("err");
+    const show = (m) => { el().textContent += m + "\n"; };
+    window.addEventListener("error", (e) => show("ERROR: " + (e.message || e.error)));
+    window.addEventListener("unhandledrejection", (e) => show("REJECT: " + (e.reason && (e.reason.stack || e.reason.message || e.reason))));
+    // El panic hook de Rust escribe por console.error: espejarlo al overlay.
+    for (const k of ["error", "warn"]) {
+      const orig = console[k].bind(console);
+      console[k] = (...a) => {
+        orig(...a);
+        try { show("CONSOLE." + k + ": " + a.map(String).join(" ").slice(0, 2000)); } catch (_) {}
+      };
+    }
     window.addEventListener("TrunkApplicationStarted", () => {
       const b = document.getElementById("boot");
       if (b) b.remove();
