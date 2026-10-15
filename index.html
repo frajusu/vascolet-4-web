@@ -26,7 +26,10 @@
     const el = () => document.getElementById("err");
     const BENIGN = "Using exceptions for control flow";
     const show = (m) => { if (!String(m).includes(BENIGN)) el().textContent += m + "\n"; };
-    window.addEventListener("error", (e) => show("ERROR: " + (e.message || e.error)));
+    window.addEventListener("error", (e) => {
+      const stack = (e.error && e.error.stack) ? "\nSTACK: " + String(e.error.stack).slice(0, 3000) : "";
+      show("ERROR: " + (e.message || e.error) + stack);
+    });
     window.addEventListener("unhandledrejection", (e) => show("REJECT: " + (e.reason && (e.reason.stack || e.reason.message || e.reason))));
     // El panic hook de Rust escribe por console.error: espejarlo al overlay.
     for (const k of ["error", "warn"]) {

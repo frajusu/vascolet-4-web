@@ -15,3 +15,7 @@ gloo-storage = "0.3"
 # getrandom 0.3 (transitivo de Bevy) exige feature + cfg en wasm:
 # https://docs.rs/getrandom/0.3/#webassembly-support
 getrandom = { version = "0.3", features = ["wasm_js"] }
+
+[profile.release]
+opt-level = "s"
+strip = true

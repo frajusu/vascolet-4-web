@@ -6,6 +6,11 @@ use bevy::prelude::*;
 pub enum AppState {
     #[default]
     Menu,
+    LevelSelect,
+    Help,
+    Options,
+    Credits,
+    Achievements,
     Playing,
     Paused,
     GameOver,
@@ -64,39 +69,6 @@ pub struct PlayerDied;
 #[derive(Event)]
 pub struct BossDefeated(pub String);
 
-pub fn menu_keys(
-    keys: Res<ButtonInput<KeyCode>>,
-    state: Res<State<AppState>>,
-    mut next: ResMut<NextState<AppState>>,
-    mut progress: ResMut<GameProgress>,
-) {
-    if *state.get() != AppState::Menu {
-        return;
-    }
-    if keys.just_pressed(KeyCode::Enter) {
-        // Continuar desde save si existe
-        if let Some(s) = crate::save::read_checkpoint() {
-            progress.level = s.level.max(1).min(18);
-            progress.lives = s.lives.max(1);
-            progress.coins = s.coins;
-            progress.unlocked = s.unlocked.max(1).min(18);
-            progress.checkpoint = Vec2::new(s.x, s.y);
-        }
-        next.set(AppState::Playing);
-    }
-    // Atajos de nivel 1-9 para debug / level select rapido
-    for (k, n) in [
-        (KeyCode::Digit1, 1), (KeyCode::Digit2, 2), (KeyCode::Digit3, 3),
-        (KeyCode::Digit4, 4), (KeyCode::Digit5, 5), (KeyCode::Digit6, 6),
-        (KeyCode::Digit7, 7), (KeyCode::Digit8, 8), (KeyCode::Digit9, 9),
-    ] {
-        if keys.just_pressed(k) && n <= progress.unlocked {
-            progress.level = n;
-            next.set(AppState::Playing);
-        }
-    }
-}
-
 pub fn pause_keys(
     keys: Res<ButtonInput<KeyCode>>,
     state: Res<State<AppState>>,
@@ -106,7 +78,8 @@ pub fn pause_keys(
         AppState::Playing if keys.just_pressed(KeyCode::Escape) || keys.just_pressed(KeyCode::KeyP) => {
             next.set(AppState::Paused);
         }
-        AppState::Paused if keys.just_pressed(KeyCode::Escape) || keys.just_pressed(KeyCode::Enter) => {
+        // En Paused, ESC vuelve (ENTER lo maneja el menu de pausa)
+        AppState::Paused if keys.just_pressed(KeyCode::Escape) || keys.just_pressed(KeyCode::KeyP) => {
             next.set(AppState::Playing);
         }
         AppState::GameOver if keys.just_pressed(KeyCode::Enter) => {

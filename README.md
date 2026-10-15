@@ -1,34 +1,71 @@
-# Vascolet-web (Rust + Bevy -> GitHub Pages)
+# Vascolet 4 — remake web jugable
 
-Remake jugable del Vascolet original (`Vascolet/vascolet4.exe`, motor `bat::` + DirectX9/OpenAL, niveles `.tmx` 449x47 de 32px).
-Sin Ghidra pesado: solo se uso analisis estatico liviano + assets abiertos.
+Remake web **no oficial** de **Vascolet 4** (`vascolet4.exe`, juego de plataformas argentino de 2013),
+hecho con **Rust + Bevy** y publicado gratis en **GitHub Pages**. Proyecto de preservación y homenaje:
+todos los niveles, personajes, música y sonidos son del juego original.
 
-## Por que esto cumple lo que pediste
+👉 **Jugar:** https://frajusu.github.io/vascolet-web/
 
-1. **GitHub Pages gratis**: todo estatico en `dist/`. El workflow `.github/workflows/pages.yml` compila a `wasm32-unknown-unknown` con Trunk en la nube, tu PC no compila nada pesado.
-2. **Local storage**: `src/save.rs` guarda checkpoint/nivel en `localStorage` (`vascolet-web-save-v1`) en web, archivo en nativo. Sin backend.
-3. **Fluido sin limite de FPS con delta**: `time.delta_secs()` en todo (`player_move_delta`, `autosave_tick`), clamp `min(dt, 1/20)` anti-hipos. Corre igual a 30/60/144Hz.
-4. **Subir calidad sin romper escalas** (tu dolor actual):
-   - Antes: posiciones en pixeles -> si cambias PNG 32->64 se desplaza todo.
-   - Ahora: mundo en UNIDADES (`1 tile = 1.0`, `BASE_PPU = 32.0`), sprites con `custom_size` en unidades y `Anchor::BottomCenter`, camara con `VIRTUAL_H = 12.0` tiles visibles.
-   - `src/level.rs::tile_uv()` recorta por `tile_px/sheet_px`: podes entregar el tileset al 2x/4x y el gid/world no cambian. Solo cambia nitidez (`ImagePlugin::default_nearest()` -> `default_linear()` para HD).
+## Qué es Vascolet
 
-## Controles (del `texts.xml` original)
+Plataformas 2D estilo clásico: corrés, saltás, disparás boomerangs, te agachás para esquivar,
+juntás llaves, energía y power-ups (zapatillas para correr, resortes de doble salto),
+peleás contra 13 jefes (escorpión gigante, topo ninja, dragón verde, Malmark...) a lo largo de
+**18 niveles**, con checkpoints de guardado y carteles de ayuda en español.
 
-Flechas moverse, doble-tap flecha = correr, `Z`/`S` = salto (mantener = mas alto), `A`/`X` = boomerang, `Abajo` = agacharse.
+## Controles
 
-## Estructura
+| Tecla | Acción |
+|---|---|
+| Flechas | Moverse (pulsar 2 veces = correr) |
+| Z / S | Saltar (mantener = más alto) |
+| A / X | Disparar boomerang |
+| Abajo | Agacharse |
+| ESC / P | Pausa |
+| ENTER | Confirmar en menús |
 
-- `src/main.rs`: ventana/canvas, camara virtual, jugador con delta, autoguardado.
-- `src/level.rs`: `tmx_tile_to_world()`, `tile_uv()` independiente de resolucion.
-- `src/save.rs`: localStorage web.
-- `index.html`: canvas `#vascolet-canvas` fullscreen.
-- `Trunk.toml` + workflow Pages.
+Menús: Jugar, Continuar, Niveles (1–18 con desbloqueo), Logros, Opciones (volumen),
+Ayuda y Créditos — como el original.
 
-## Proximo paso (liviano, sin crashear tu PC)
+## Progreso guardado
 
-1. Copiar 1 nivel + 1 tileset a `vascolet-web/assets/` (no todo junto, de a poco).
-2. `git init`, push a GitHub, activar Pages en Settings -> Pages -> GitHub Actions.
-3. El build corre en la nube. Recien despues vemos fisicas finas (salto sostenido, doble salto, agua, jefes `BigScorpion`, llaves/puertas) sacadas de los `texts.xml` y `levelX.tmx`.
+El avance se guarda en `localStorage` del navegador (sin cuenta ni servidor):
+nivel, vidas, monedas, desbloqueo y checkpoint. Cada 5 segundos + en cada punto de guardado.
 
-No corras `cargo build` con Bevy en esta PC si tiene poca RAM: Bevy + wasm es lo que te la tumbó con Ghidra. Usa el CI.
+## Fidelidad al original
+
+- Niveles `.tmx` originales tal cual: capas de tiles, colisión (`solid`/`up` one-way/`damage`),
+  36 tipos de enemigos y jefes con sus posiciones, items (`&Life`, `&P-SustainJump`,
+  `&P-JumpAttack`, `&B-Item`, llaves, energía), `Start`, carteles `*Info` con los tips
+  de `texts.xml` y checkpoints `*Save`.
+- Música por nivel (`level1–6.ogg`, `boss.ogg`, `menu.ogg`...) y efectos reales (`.ogg`).
+- Resolución original 512×384 (12 tiles de alto en cámara), sprites del atlas `av.xml`.
+
+## Técnica
+
+- **Sin límite de FPS:** toda la física y animación integran con delta time (`dt` con clamp
+  anti-hipos), así corre igual a 30, 60, 144 o 240 Hz.
+- **Texturas HD sin romper nada:** el mundo vive en *unidades* (1 tile = 1.0) con pivots por
+  `axis` del atlas; subir los PNG de 32px a 64/128px solo cambia nitidez, nunca posiciones.
+- **Build en la nube:** el workflow `pages.yml` compila a `wasm32-unknown-unknown` con Trunk
+  en GitHub Actions y despliega a Pages. No necesitás Rust local para jugar.
+
+## Desarrollo
+
+```sh
+# Requiere Rust + trunk + wasm32 target
+rustup target add wasm32-unknown-unknown
+cargo install trunk
+trunk serve   # http://127.0.0.1:8080
+```
+
+Estructura: `src/main.rs` (app/cámara), `src/world.rs` (carga TMX), `src/tmx.rs` (parser),
+`src/player.rs`, `src/enemy.rs`, `src/items.rs`, `src/menu.rs`, `src/hud.rs`,
+`src/audio.rs`, `src/game.rs`, `src/save.rs`, `src/level.rs`. Assets originales en `assets/`
+(música, mapas, personajes, GUI, videos `.mov` pendientes de conversión a webm).
+
+## Licencia y créditos
+
+Vascolet 4 y todos sus assets pertenecen a sus autores originales. Este remake es un homenaje
+sin fines de lucro, con fines educativos y de preservación. Si sos autor y querés algún cambio,
+abrí un issue.

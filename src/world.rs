@@ -293,8 +293,9 @@ pub fn setup_level(
     if texts.map.is_empty() {
         texts.map = parse_texts(include_str!("../assets/texts.xml"));
     }
-    tip.text.clear();
-    tip.timer = 0.0;
+    // Title card del nivel (como el original)
+    tip.text = format!("NIVEL {} · {}", n, crate::level::level_def(n).name);
+    tip.timer = 4.0;
 
     // --- objetos: Start / Info / Save ---
     let mut start = Vec2::new(2.0, 2.0);

@@ -10,6 +10,7 @@ mod game;
 mod hud;
 mod items;
 mod level;
+mod menu;
 mod player;
 mod save;
 mod tmx;
@@ -41,18 +42,44 @@ fn main() {
         .init_resource::<world::CurrentTip>()
         .init_resource::<world::LevelMusic>()
         .init_resource::<world::LevelInfo>()
+        .init_resource::<menu::MenuNav>()
         // Fondo azul oscuro: si ves este color, la app corre (negro total = wasm muerto).
         .insert_resource(ClearColor(Color::srgb(0.08, 0.11, 0.20)))
         .add_event::<game::LevelComplete>()
         .add_event::<game::PlayerDied>()
         .add_event::<game::BossDefeated>()
-        .add_systems(Startup, (setup_camera, hud::spawn_hud))
+        .add_systems(Startup, (setup_camera, hud::spawn_hud, apply_saved_volume))
+        .add_systems(OnEnter(AppState::Menu), menu::enter_menu)
+        .add_systems(OnEnter(AppState::LevelSelect), menu::enter_levels)
+        .add_systems(OnEnter(AppState::Help), menu::enter_help)
+        .add_systems(OnEnter(AppState::Options), menu::enter_options)
+        .add_systems(OnEnter(AppState::Credits), menu::enter_credits)
+        .add_systems(OnEnter(AppState::Achievements), menu::enter_achievements)
+        .add_systems(OnEnter(AppState::Paused), menu::enter_pause)
+        .add_systems(OnEnter(AppState::GameOver), menu::enter_gameover)
+        .add_systems(OnEnter(AppState::Victory), menu::enter_victory)
+        .add_systems(
+            OnExit(AppState::Menu),
+            menu::exit_screens,
+        )
+        .add_systems(OnExit(AppState::LevelSelect), menu::exit_screens)
+        .add_systems(OnExit(AppState::Help), menu::exit_screens)
+        .add_systems(OnExit(AppState::Options), menu::exit_screens)
+        .add_systems(OnExit(AppState::Credits), menu::exit_screens)
+        .add_systems(OnExit(AppState::Achievements), menu::exit_screens)
+        .add_systems(OnExit(AppState::Paused), menu::exit_screens)
+        .add_systems(OnExit(AppState::GameOver), menu::exit_screens)
+        .add_systems(OnExit(AppState::Victory), menu::exit_screens)
         .add_systems(OnEnter(AppState::Playing), setup_level)
         .add_systems(OnExit(AppState::Playing), cleanup_level)
         .add_systems(
             Update,
             (
-                game::menu_keys,
+                menu::nav_menu,
+                menu::nav_levels,
+                menu::nav_options,
+                menu::nav_pause,
+                menu::back_to_menu,
                 game::pause_keys,
                 fit_camera,
                 player::player_move_delta,
@@ -109,6 +136,10 @@ fn fit_camera(
         cp.translation.x += (pp.translation.x - cp.translation.x) * 0.1;
         cp.translation.y += ((pp.translation.y + 2.0).max(3.0) - cp.translation.y) * 0.1;
     }
+}
+
+fn apply_saved_volume(mut volume: ResMut<bevy::audio::GlobalVolume>) {
+    volume.volume = bevy::audio::Volume::Linear(crate::save::read_settings().volume);
 }
 
 fn setup_level(

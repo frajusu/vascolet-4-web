@@ -33,19 +33,6 @@ pub fn spawn_hud(mut commands: Commands) {
         Node { position_type: PositionType::Absolute, top: Val::Px(8.0), right: Val::Px(8.0), ..default() },
     ));
     commands.spawn((
-        MenuText,
-        Text::new(
-            "VASCOLET-WEB\n\nENTER: jugar / continuar  1-9: nivel\nFlechas moverse, doble-tap = correr\nZ/S salto (mantener = mas alto)  A/X boomerang\nAbajo agacharse  ESC/P pausa\n\nToca un checkpoint para guardar (localStorage).",
-        ),
-        TextFont { font_size: 22.0, ..default() },
-        TextColor(Color::WHITE),
-        Node {
-            position_type: PositionType::Absolute,
-            left: Val::Percent(15.0), top: Val::Percent(20.0),
-            ..default()
-        },
-    ));
-    commands.spawn((
         TipText,
         Text::new(""),
         TextFont { font_size: 20.0, ..default() },
@@ -62,29 +49,30 @@ pub fn update_hud(
     progress: Res<GameProgress>,
     state: Res<State<AppState>>,
     tip: Res<crate::world::CurrentTip>,
-    mut q_hud: Query<&mut Text, (With<HudText>, Without<BossText>, Without<MenuText>, Without<TipText>)>,
-    mut q_boss: Query<&mut Text, (With<BossText>, Without<HudText>, Without<MenuText>, Without<TipText>)>,
-    mut q_menu: Query<&mut Visibility, (With<MenuText>, Without<TipText>)>,
-    mut q_tip: Query<&mut Text, (With<TipText>, Without<HudText>, Without<BossText>, Without<MenuText>)>,
+    mut q_hud: Query<&mut Text, (With<HudText>, Without<BossText>, Without<TipText>, Without<crate::menu::MenuItem>)>,
+    mut q_boss: Query<&mut Text, (With<BossText>, Without<HudText>, Without<TipText>, Without<crate::menu::MenuItem>)>,
+    mut q_tip: Query<&mut Text, (With<TipText>, Without<HudText>, Without<BossText>, Without<crate::menu::MenuItem>)>,
 ) {
+    let in_game = matches!(*state.get(), AppState::Playing | AppState::Paused);
     let def = level_def(progress.level);
     for mut t in &mut q_hud {
-        t.0 = format!(
-            "Nv {} {}  |  Vidas {}  Energia {:.0}  Monedas {}  Tip: {}",
-            progress.level, def.name, progress.lives, progress.energy, progress.coins, def.tip,
-        );
+        t.0 = if in_game {
+            format!(
+                "Nv {} {}  |  Vidas {}  Energia {:.0}  Monedas {}  Llaves {}",
+                progress.level, def.name, progress.lives, progress.energy, progress.coins, progress.keys,
+            )
+        } else {
+            String::new()
+        };
     }
     for mut t in &mut q_boss {
-        t.0 = if progress.boss_hp > 0.0 {
+        t.0 = if in_game && progress.boss_hp > 0.0 {
             format!("JEFE {}: {:.0}/{:.0}", progress.boss_name, progress.boss_hp.max(0.0), progress.boss_max)
         } else {
             String::new()
         };
     }
-    for mut v in &mut q_menu {
-        *v = if *state.get() == AppState::Menu { Visibility::Visible } else { Visibility::Hidden };
-    }
     for mut t in &mut q_tip {
-        t.0 = tip.text.clone();
+        t.0 = if in_game { tip.text.clone() } else { String::new() };
     }
 }
