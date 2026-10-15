@@ -85,6 +85,11 @@ fn main() {
                 player::player_move_delta,
                 player::sync_boomerang_pos,
                 enemy::enemy_ai_delta,
+            ),
+        )
+        .add_systems(
+            Update,
+            (
                 items::item_pickup,
                 world::tip_triggers,
                 world::save_triggers,
@@ -139,7 +144,7 @@ fn fit_camera(
 }
 
 fn apply_saved_volume(mut volume: ResMut<bevy::audio::GlobalVolume>) {
-    volume.volume = bevy::audio::Volume::Linear(crate::save::read_settings().volume);
+    volume.volume = bevy::audio::Volume::new(crate::save::read_settings().volume);
 }
 
 fn setup_level(

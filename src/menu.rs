@@ -3,7 +3,6 @@
 //! Fondos con las imagenes GUI originales. Navegacion por teclado.
 
 use bevy::prelude::*;
-use bevy::ui::ImageNode;
 use crate::game::{AppState, GameProgress};
 use crate::hud::{BossText, HudText, TipText};
 use crate::level::LEVELS;
@@ -375,7 +374,7 @@ pub fn nav_options(
     }
     if dirty {
         crate::save::write_settings(&s);
-        volume.volume = bevy::audio::Volume::Linear(s.volume);
+        volume.volume = bevy::audio::Volume::new(s.volume);
         clear_screen(&mut commands, &q);
         refresh_options(&mut commands, s.volume);
     }
