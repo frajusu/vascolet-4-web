@@ -175,6 +175,6 @@ pub fn on_boss_defeated(
     mut complete: EventWriter<LevelComplete>,
 ) {
     for _ in ev.read() {
-        complete.write(LevelComplete);
+        complete.send(LevelComplete);
     }
 }

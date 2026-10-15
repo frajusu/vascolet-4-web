@@ -130,7 +130,7 @@ pub fn enemy_ai_delta(
         return;
     }
     let dt = time.delta_secs().min(1.0 / 20.0);
-    let Ok((ptf, pst)) = q_player.single() else { return };
+    let Ok((ptf, pst)) = q_player.get_single() else { return };
     let pp = ptf.translation.truncate();
 
     for (e, mut tf, mut en) in &mut q_enemy {
@@ -197,7 +197,7 @@ pub fn enemy_ai_delta(
             crate::audio::play_sfx(&mut commands, &asset_server, crate::audio::Sfx::EnemyDie);
             if was_boss {
                 progress.boss_hp = 0.0;
-                boss_ev.write(BossDefeated(format!("{:?}", kind)));
+                boss_ev.send(BossDefeated(format!("{:?}", kind)));
             }
             continue;
         }

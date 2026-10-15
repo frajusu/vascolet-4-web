@@ -84,14 +84,14 @@ fn fit_camera(
     q_player: Query<&Transform, With<player::Player>>,
     mut q_cam_tf: Query<&mut Transform, With<MainCamera>>,
 ) {
-    let Ok(win) = q_win.single() else { return };
-    let Ok(mut proj) = q_cam.single_mut() else { return };
+    let Ok(win) = q_win.get_single() else { return };
+    let Ok(mut proj) = q_cam.get_single_mut() else { return };
     let h = win.resolution.height().max(1.0);
     if let Projection::Orthographic(p) = &mut *proj {
         p.scale = VIRTUAL_H / h;
     }
     // follow suave al jugador
-    if let (Ok(pp), Ok(mut cp)) = (q_player.single(), q_cam_tf.single_mut()) {
+    if let (Ok(pp), Ok(mut cp)) = (q_player.get_single(), q_cam_tf.get_single_mut()) {
         cp.translation.x += (pp.translation.x - cp.translation.x) * 0.1;
         cp.translation.y += ((pp.translation.y + 2.0).max(3.0) - cp.translation.y) * 0.1;
     }
@@ -129,7 +129,7 @@ fn autosave_tick(
     *timer += time.delta_secs();
     if *timer > 5.0 {
         *timer = 0.0;
-        if let Ok(tf) = player.single() {
+        if let Ok(tf) = player.get_single() {
             save::write_checkpoint(&save::SaveData {
                 level: progress.level,
                 lives: progress.lives,

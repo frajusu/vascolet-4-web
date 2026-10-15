@@ -187,7 +187,7 @@ pub fn player_move_delta(
 
         // --- caida al vacio = muerte ---
         if tf.translation.y < -12.0 {
-            died.write(PlayerDied);
+            died.send(PlayerDied);
         }
 
         // --- fin de nivel provisorio: llegar lejos a la derecha ---
@@ -224,6 +224,6 @@ pub fn damage_player(progress: &mut GameProgress, amount: f32, died: &mut EventW
     progress.energy -= amount;
     if progress.energy <= 0.0 {
         progress.energy = progress.max_energy;
-        died.write(PlayerDied);
+        died.send(PlayerDied);
     }
 }

@@ -80,7 +80,7 @@ pub fn item_pickup(
         return;
     }
     let dt = time.delta_secs().min(1.0 / 20.0);
-    let Ok(ptf) = q_player.single() else { return };
+    let Ok(ptf) = q_player.get_single() else { return };
     let pp = ptf.translation.truncate();
 
     for (e, mut tf, mut it) in &mut q_item {
