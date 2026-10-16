@@ -29,6 +29,8 @@ class INPUT(C.Structure):
     _anonymous_ = ("u",)
     _fields_ = [("type", W.DWORD), ("u", UNION)]
 U.SendInput.argtypes = [W.UINT, C.POINTER(INPUT), C.c_int]
+U.GetForegroundWindow.restype = W.HWND
+U.SetForegroundWindow.argtypes = [W.HWND]
 U.GetDC.argtypes = [W.HWND]; U.GetDC.restype = W.HDC
 U.ReleaseDC.argtypes = [W.HWND, W.HDC]
 G.CreateCompatibleDC.argtypes = [W.HDC]; G.CreateCompatibleDC.restype = W.HDC
@@ -50,15 +52,16 @@ def window_for_pid(pid):
     U.EnumWindows(visit, 0)
     return found[0] if found else None
 
-def press(scan, duration=.2):
+def send_key(scan, up=False):
     extended = 1 if scan in (0x48, 0x50, 0x4b, 0x4d) else 0
-    def send(up):
-        event = INPUT(type=1, ki=KEYBDINPUT(wScan=scan, dwFlags=8 | extended | (2 if up else 0)))
-        if U.SendInput(1, C.byref(event), C.sizeof(INPUT)) != 1:
-            raise C.WinError(C.get_last_error())
-    send(False)
+    event = INPUT(type=1, ki=KEYBDINPUT(wScan=scan, dwFlags=8 | extended | (2 if up else 0)))
+    if U.SendInput(1, C.byref(event), C.sizeof(INPUT)) != 1:
+        raise C.WinError(C.get_last_error())
+
+def press(scan, duration=.2):
+    send_key(scan)
     try: time.sleep(duration)
-    finally: send(True)
+    finally: send_key(scan, True)
     time.sleep(.15)  # DirectInput polling must observe the released state between presses.
 
 def capture(hwnd, filename):
@@ -89,13 +92,39 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     proc = subprocess.Popen([str(GAME)], cwd=GAME.parent)
     try:
-        time.sleep(4)
-        hwnd = window_for_pid(proc.pid)
+        hwnd = None
+        deadline = time.monotonic() + 25
+        while not hwnd and proc.poll() is None and time.monotonic() < deadline:
+            time.sleep(.5)
+            hwnd = window_for_pid(proc.pid)
         if not hwnd: raise RuntimeError(f"No original window; process exit={proc.poll()}")
         U.SetForegroundWindow(hwnd)
-        time.sleep(.5)
+        time.sleep(4)
         for step in plan["steps"]:
+            hwnd = window_for_pid(proc.pid) or hwnd
+            U.ShowWindow(hwnd, 9)
+            U.SetForegroundWindow(hwnd)
+            time.sleep(.15)
             if "wait" in step: time.sleep(min(10, step["wait"]))
+            if "record" in step:
+                if U.GetForegroundWindow() != hwnd:
+                    raise RuntimeError(f"Original lost focus ({hwnd} != {U.GetForegroundWindow()}); refusing to send gameplay input")
+                scans = step.get("keys", [])
+                start = time.perf_counter()
+                samples = []
+                try:
+                    for scan in scans: send_key(scan)
+                    count = min(120, step.get("frames", 30))
+                    interval = max(.04, step.get("interval", .1))
+                    for i in range(count):
+                        time.sleep(max(0, start + i * interval - time.perf_counter()))
+                        samples.append({"frame": i, "seconds": time.perf_counter() - start})
+                        capture(hwnd, output / f"{step['record']}-{i:03d}.png")
+                        if i == step.get("releaseAt", -1):
+                            for scan in scans: send_key(scan, True)
+                finally:
+                    for scan in scans: send_key(scan, True)
+                (output / f"{step['record']}-times.json").write_text(json.dumps(samples))
             if "scan" in step: press(step["scan"], min(2, step.get("hold", .2)))
             if "shot" in step: capture(hwnd, output / (step["shot"] + ".png"))
     finally:

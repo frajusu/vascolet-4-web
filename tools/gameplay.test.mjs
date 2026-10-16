@@ -1,0 +1,137 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { JSDOM } from "jsdom";
+import { parseTMX, parseAnims, TILE_SOLID, TILE_UP } from "../js/tmx.js";
+import { AnimPlayer } from "../js/sprite.js";
+import { cameraBounds, updateCamera } from "../js/camera.js";
+import { createBoomerang, updateBoomerang } from "../js/projectiles.js";
+import { createEnemy, hitEnemy, updateEnemy } from "../js/enemies.js";
+
+const dom = new JSDOM();
+const xml = text => new dom.window.DOMParser().parseFromString(text, "text/xml");
+const asset = async name => xml(await readFile(new URL(`../assets/${name}`, import.meta.url), "utf8"));
+test.after(() => dom.window.close());
+const player = () => ({ x: 256, y: 320, face: 1, crouch: false });
+const empty = () => 0;
+const callbacks = (extra = {}) => ({ tileAt: empty, hitEnemy() {}, wallHit() {}, impact() {}, ...extra });
+
+test("standing throw decelerates, reverses around 200 logical pixels and is caught within the observed time window", () => {
+  const p = player(), b = createBoomerang(p);
+  let peak = b.x, elapsed = 0;
+  for (; elapsed < 3 && b.life > 0; elapsed += 1 / 60) {
+    updateBoomerang(b, p, [], 1 / 60, callbacks()); peak = Math.max(peak, b.x);
+  }
+  assert.ok(peak - p.x > 180 && peak - p.x < 240, `range ${peak - p.x}`);
+  assert.ok(elapsed > 1.0 && elapsed < 1.5, `catch time ${elapsed}`);
+  assert.equal(b.life, 0);
+});
+
+test("return catches a player who has changed height and keeps moving", () => {
+  const p = player(), b = createBoomerang(p);
+  for (let i = 0; i < 360 && b.life > 0; i++) {
+    p.x += 100 / 60; p.y = i < 40 ? 260 : 320;
+    updateBoomerang(b, p, [], 1 / 60, callbacks());
+  }
+  assert.equal(b.life, 0);
+  assert.equal(b.state, "return");
+});
+
+test("a one-way leaf does not destroy a horizontal throw; a solid wall knocks it down", () => {
+  for (const [flags, expected] of [[TILE_UP, "out"], [TILE_SOLID, "falling"]]) {
+    const p = player(), b = createBoomerang(p); let wallSounds = 0;
+    updateBoomerang(b, p, [], .1, callbacks({ tileAt: x => x === 10 ? flags : 0, wallHit() { wallSounds++; } }));
+    assert.equal(b.state, expected); assert.equal(wallSounds, flags === TILE_SOLID ? 1 : 0);
+    if (expected === "falling") assert.ok(b.life > 0, "impact must leave a falling boomerang");
+  }
+});
+
+test("swept boomerang collision hits only the nearest enemy and cannot damage through a wall", () => {
+  const enemies = [createEnemy({ name: "Fly", x: 320, y: 300 }), createEnemy({ name: "Fly", x: 288, y: 300 })];
+  const hits = [], b = createBoomerang(player());
+  updateBoomerang(b, player(), enemies, .2, callbacks({ hitEnemy(e) { hits.push(e); } }));
+  assert.deepEqual(hits, [enemies[1]]); assert.equal(b.life, 0);
+  const blocked = createBoomerang(player()); hits.length = 0;
+  updateBoomerang(blocked, player(), [enemies[0]], .2, callbacks({ tileAt: x => x === 9 ? TILE_SOLID : 0,
+    hitEnemy(e) { hits.push(e); } }));
+  assert.deepEqual(hits, []); assert.equal(blocked.state, "falling");
+});
+
+test("level 1 Camera barrier caps the screen bottom at 480 and releases it in the boss pit", async () => {
+  const map = parseTMX(await asset("data/maps/level1.tmx"));
+  const line = map.groups.find(g => g.name === "Camera").objects[0];
+  assert.equal(line.h, 0, "omitted height is a line, not a default 32px rectangle");
+  const p = { x: 272, y: 416 };
+  assert.equal(cameraBounds(map, p).maxY, 96);
+  const g = { map, player: p, camX: 999, camY: 999 };
+  for (let i = 0; i < 120; i++) { updateCamera(g, 1 / 60); assert.ok(g.camY + 384 <= 480); }
+  Object.assign(p, { x: 13792, y: 1300 });
+  updateCamera(g, 1 / 60, true);
+  assert.ok(g.camY > 96, "boss arena below the barrier must remain reachable");
+  assert.ok(g.camX >= 13056 && g.camX + 512 <= 14112);
+});
+
+test("Camera point markers in scrolling levels must not be interpreted as barriers", async () => {
+  const map = parseTMX(await asset("data/maps/level2.tmx"));
+  const b = cameraBounds(map, { x: 400, y: 300 });
+  assert.equal(b.maxY, Math.max(0, map.h * 32 - 384));
+});
+
+const floorPhysics = (b, dt, gravity = 1500) => {
+  b.vy += gravity * dt; b.x += b.vx * dt; b.y += b.vy * dt;
+  b.ground = b.y >= 320;
+  if (b.ground) { b.y = 320; b.vy = 0; }
+};
+const services = { moveBody: floorPhysics, tileAt: () => TILE_SOLID, shoot() {} };
+async function enemy(kind, x = 320) {
+  const e = createEnemy({ name: kind, x, y: 304 });
+  const anims = parseAnims(await asset(`characters/${kind.toLowerCase()}/animData/${kind}.xml`));
+  e.anim = new AnimPlayer(anims); e.anim.set("normal"); e.cur = e.anim.frame; e.ground = true;
+  return e;
+}
+
+test("frog waits for its animation PhysicEvent, jumps with gravity, then lands and waits", async () => {
+  const e = await enemy("Frog"), p = player(); e.cooldown = 0;
+  for (let i = 0; i < 10; i++) updateEnemy(e, p, 1 / 60, services);
+  assert.equal(e.state, "windup"); assert.equal(e.y, 320);
+  for (let i = 0; i < 7; i++) updateEnemy(e, p, 1 / 60, services);
+  assert.equal(e.state, "jump"); assert.ok(e.vy < 0);
+  for (let i = 0; i < 45; i++) updateEnemy(e, p, 1 / 60, services);
+  assert.equal(e.y, 320); assert.equal(e.state, "normal"); assert.ok(e.cooldown > 0);
+});
+
+test("flower stays rooted and shoots once at the Custom attack frame", async () => {
+  const e = await enemy("Flower"), x = e.x, p = player(); e.cooldown = 0;
+  const shots = [];
+  for (let i = 0; i < 90; i++) updateEnemy(e, p, 1 / 60, { ...services, shoot: e => shots.push(e) });
+  assert.equal(e.x, x); assert.equal(e.y, 320); assert.equal(shots.length, 1);
+});
+
+test("beetle and snail turn at a ledge and a wall instead of walking in mid-air", async () => {
+  for (const kind of ["Beetle", "Snail"]) {
+    const e = await enemy(kind); const before = e.dir;
+    updateEnemy(e, player(), 1 / 60, { ...services, tileAt: empty });
+    assert.equal(e.dir, -before);
+    updateEnemy(e, player(), 1 / 60, { ...services, moveBody(b) { b.hitWall = true; } });
+    assert.equal(e.dir, before);
+  }
+});
+
+test("fly patrol has a fixed home position and damage produces a finite death state", async () => {
+  const e = await enemy("Fly"), p = { x: 2000, y: 320 };
+  for (let i = 0; i < 1800; i++) updateEnemy(e, p, 1 / 60, { ...services,
+    moveBody(b, dt) { b.x += b.vx * dt; b.y += b.vy * dt; } });
+  assert.ok(Math.abs(e.x - e.homeX) < 50 && Math.abs(e.y - e.homeY) < 30);
+  assert.equal(hitEnemy(e), true); assert.equal(e.hp, 0); assert.equal(e.state, "dead");
+  assert.equal(hitEnemy(e), false);
+  updateEnemy(e, p, 1, services); assert.ok(e.deadT >= 1);
+});
+
+test("unstudied swimming enemies and bosses accept hits without being forced into land physics", () => {
+  for (const [kind, boss] of [["Fish", false], ["BigScorpion", true]]) {
+    const e = createEnemy({ name: kind, x: 320, y: 304 }, boss);
+    assert.equal(hitEnemy(e), true); assert.equal(e.hp, e.maxhp - 1);
+    updateEnemy(e, player(), 1 / 60, { ...services, moveBody() { assert.fail("unverified species must not receive patrol gravity"); } });
+    assert.ok(Math.abs(e.y - e.homeY) <= 4);
+  }
+});

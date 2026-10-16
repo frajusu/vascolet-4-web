@@ -1,11 +1,13 @@
 {
   "name": "vascolet",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test tools/core.test.mjs tools/integration.test.mjs tools/gameplay.test.mjs",
     "serve": "node tools/serve.mjs",
-    "test:browser": "node tools/browser-smoke.mjs"
+    "test:browser": "node tools/browser-smoke.mjs",
+    "test:gameplay": "node tools/browser-gameplay.mjs"
   },
   "keywords": [],
   "author": "",

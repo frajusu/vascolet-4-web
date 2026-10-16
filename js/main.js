@@ -212,14 +212,11 @@ function drawEnd(ctx, path, fallback) {
   ctx.fillText(fallback + "   (ENTER: continuar)", 60, 360);
 }
 
-// Existing volume overlay is provisional until the menu's options API is wired.
 function drawStatic(kind) {
   const bg = img(STATIC[kind]);
   if (!bg) throw new Error(`Static screen was not loaded: ${kind}`);
   ctx.imageSmoothingEnabled = true;
   ctx.drawImage(bg, 0, 0, 512, 384, 0, 0, 512, 384);
-  ctx.font = "bold 14px sans-serif"; ctx.fillStyle = "#ffd75e";
-  ctx.fillText("Cualquier tecla: volver", 20, 370);
 }
 
 function staticUpdate(kind) {

@@ -6,7 +6,9 @@ import { A } from "../js/assets.js";
 import { Input } from "../js/input.js";
 import { Audio2 } from "../js/audio.js";
 import { Game, loadLevel, gameUpdate, gameDraw } from "../js/game.js";
-import { TILE_SOLID, TILE_UP, TILE_DAMAGE } from "../js/tmx.js";
+import { parseAnims, TILE_SOLID, TILE_UP, TILE_DAMAGE } from "../js/tmx.js";
+import { AnimPlayer } from "../js/sprite.js";
+import { createEnemy } from "../js/enemies.js";
 
 const dom = new JSDOM('<canvas id="game" width="512" height="384"></canvas><div id="boot"></div><div id="err"></div>', {
   url: "https://integration.test/", pretendToBeVisual: true,
@@ -213,6 +215,44 @@ test("animation drains every simultaneous/crossed event exactly once", async () 
   assert.equal(sounds.filter(path => path.includes("footStep")).length, 2);
   assert.equal(Game.parts.length, 5); assert.equal(anim.events.length, 0);
   tick(); assert.equal(sounds.filter(path => path.includes("footStep")).length, 2);
+  Input.reset();
+});
+
+test("enemy contact removes one heart and invulnerability prevents damage every simulation tick", async () => {
+  await freshLevel(); tick();
+  const p = Game.player;
+  const fly = createEnemy({ name: "Fly", x: p.x - 16, y: p.y - 30 });
+  fly.active = true; Game.enemies = [fly];
+  tick();
+  assert.ok(Math.abs(Game.energy - (100 - 100 / 7)) < 1e-8);
+  const energy = Game.energy;
+  tick(30); assert.equal(Game.energy, energy); assert.ok(p.inv > 0);
+});
+
+test("attack releases at the original XML flag, crouch uses its own pose, and rapid fire respects two boomerangs", async () => {
+  const doc = new dom.window.DOMParser().parseFromString(await readFile(new URL(
+    "../assets/characters/vascolet/animData/Vascolet.xml", import.meta.url), "utf8"), "text/xml");
+  const anims = parseAnims(doc);
+  await freshLevel(); tick();
+  Game.player.anim = new AnimPlayer(anims); Game.player.anim.set("stand");
+  Input.pressed.add("x"); tick();
+  assert.equal(Game.booms.length, 0, "no shot on initial attack pose");
+  tick(3); assert.equal(Game.booms.length, 0);
+  tick(); assert.equal(Game.booms.length, 1, "Custom flag releases the shot after 2/24 seconds");
+  assert.equal(Game.booms[0].y, Game.player.y - 30);
+  let peak = 1;
+  for (let i = 0; i < 70; i++) {
+    if (i % 3 === 0) Input.pressed.add("x");
+    tick(); peak = Math.max(peak, Game.booms.length);
+    assert.ok(Game.booms.length <= 2);
+  }
+  assert.equal(peak, 2);
+  await freshLevel(); tick();
+  Game.player.anim = new AnimPlayer(anims); Game.player.anim.set("stand");
+  Input.held.add("down"); Input.pressed.add("x");
+  tick(); assert.equal(Game.player.animName, "crouchAttack");
+  tick(10); assert.equal(Game.booms.length, 1);
+  assert.equal(Game.booms[0].y, Game.player.y - 8);
   Input.reset();
 });
 

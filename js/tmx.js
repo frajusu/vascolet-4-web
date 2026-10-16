@@ -58,7 +58,9 @@ export function parseTMX(doc) {
       const obj = {
         name: o.getAttribute("name") || "", type: o.getAttribute("type") || "",
         x: number(o, "x"), y: number(o, "y"),
-        w: number(o, "width", 32), h: number(o, "height", 32),
+        // Camera barriers are zero-thickness lines; missing sizes must stay zero.
+        w: number(o, "width", g.getAttribute("name") === "Camera" ? 0 : 32),
+        h: number(o, "height", g.getAttribute("name") === "Camera" ? 0 : 32),
         props: properties(o),
       };
       grp.objects.push(obj);

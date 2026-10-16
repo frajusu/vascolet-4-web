@@ -33,15 +33,15 @@ checkpoints. Sin cuenta ni servidor.
 - **Motor data-driven:** todo sale de los archivos originales en `assets/`
   (18 niveles `.tmx`, tilesets con colisión `solid`/`up`/`damage`, 76 personajes con
   atlas + animaciones y eventos `PlaySound`/`MakeEffect`, 214 textos, música `.ogg`,
-  videos `.mp4`, GUI completa). Nada hardcodeado salvo constantes físicas en
-  recuperación.
+  videos `.mp4`, GUI). Física, reglas y parte de la IA todavía usan ajustes del
+  port mientras se recupera el comportamiento original.
 - **60 Hz fijos + render libre:** la simulación avanza a paso fijo con acumulador
   (igual a cualquier refresh rate) e interpola el render.
 - **Texturas HD sin romper nada:** el mundo vive en píxeles del juego (512×384);
   los atlas se recortan por rect + pivot y el escalado es uniforme.
 - **Sin build:** HTML+JS estático, deploy directo a Pages. Tests:
-  `node --test tools/core.test.mjs tools/integration.test.mjs`,
-  smoke de browser: `node tools/browser-smoke.mjs`.
+  `npm test`; smoke de navegador: `npm run test:browser`;
+  recorrido y combate con teclado: `npm run test:gameplay`.
 
 ## Desarrollo local
 
@@ -58,10 +58,12 @@ Estructura: `js/main.js` (estados/boot), `js/game.js` (nivel/jugador/enemigos/HU
 
 ## Estado del port
 
-Fiel en datos y presentación (menús, capítulos, parallax, diálogos con retrato,
-HUD, sonidos por evento, videos de entrada). En recuperación desde el binario
-original (ver `tools/elf_funcs.txt`, `tools/factory.json`): física exacta del
-jugador, IA por tipo de enemigo y jefes con patrones.
+Port en desarrollo: usa mapas, arte, animaciones, audio y textos originales.
+Se ajustaron boomerang y cámara comparando el ejecutable, y se implementaron
+comportamientos separados de mosca, rana, flor, escarabajo y caracol tomando
+también como referencia el proyecto Godot del usuario. La física exacta,
+presentación, especies posteriores y patrones de jefes siguen en recuperación.
+Fuentes, observaciones y ajustes provisionales: [notas de comportamiento](docs/behavior-notes.md).
 
 ## Licencia y créditos
 

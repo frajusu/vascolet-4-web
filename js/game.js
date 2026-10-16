@@ -1,11 +1,14 @@
-// Asset-driven prototype. Physics, enemy AI/HP, HUD rules, sound mappings, effects and dialogue
-// presentation below remain provisional; original runtime behavior is unverified.
+// Asset-driven port. First-area combat combines original runtime observations and
+// the user's Godot reference; exact physics, other AI and presentation remain provisional.
 import { img, loadImage, loadXML } from "./assets.js";
 import { parseTMX, parseTSX, group, layer, parseAtlas, parseAnims, TILE_SOLID, TILE_UP, TILE_DAMAGE } from "./tmx.js";
 import { drawAtlas, drawAnimFrame, AnimPlayer, pixel } from "./sprite.js";
 import { Input, jumpHeld, jumpPressed, firePressed } from "./input.js";
 import { Save } from "./save.js";
 import { Audio2 } from "./audio.js";
+import { updateCamera } from "./camera.js";
+import { createBoomerang, updateBoomerang, terrainHit, segmentBox } from "./projectiles.js";
+import { createEnemy, hitEnemy, updateEnemy } from "./enemies.js";
 
 const W = 512, H = 384, TILE = 32;
 const SFX = "assets/audio/fx/win/", MUS = "assets/audio/music/win/";
@@ -15,7 +18,7 @@ export const Game = {
   map: null, tsx: [], grid: null, gw: 0, gh: 0,
   bgs: [], // {tilesets, layers:[{w,h,hScale,vScale,visible,opacity,data}]}
   player: null, enemies: [], items: [], infos: [], saves: [],
-  booms: [], parts: [],
+  booms: [], parts: [], shots: [], effects: [],
   camX: 0, camY: 0, prevCamX: 0, prevCamY: 0, time: 0,
   tip: "", tipT: 0, level: 1, coins: 0, lives: 5, energy: 100,
   dlg: null, // {text, shown, t, portrait}
@@ -123,7 +126,7 @@ export async function loadLevel(n, fresh = true) {
   if (!Number.isInteger(n) || n < 1) throw new RangeError(`Invalid level: ${n}`);
   const G = Game;
   G.level = n; G.enemies = []; G.items = []; G.infos = []; G.saves = [];
-  G.booms = []; G.parts = []; G.dlg = null;
+  G.booms = []; G.parts = []; G.shots = []; G.effects = []; G.dlg = null;
   G.coins = 0; G.energy = 100; G.tip = ""; G.tipT = 0;
   if (fresh) G.lives = 5;
   G.start = null; G.player = null; G.time = 0;
@@ -164,20 +167,19 @@ export async function loadLevel(n, fresh = true) {
   const foes = group(G.map, "Enemies");
   for (const o of foes.length ? foes : group(G.map, "Scenes")) {
     const isBoss = BOSSES.has(o.name);
-    const php = isBoss ? 100 : 10; // TODO-RE: HP exactos por tipo
-    G.enemies.push({ kind: o.name, boss: isBoss, fwd: o.type === "forward", x: o.x + 16, y: o.y + 16, vx: 0, vy: 0, dir: -1, t: Math.random() * 5, hp: php, maxhp: php, anim: null, cur: null });
+    G.enemies.push(createEnemy(o, isBoss));
   }
   for (const o of group(G.map, "Items"))
     G.items.push({ kind: o.name, x: o.x + 16, y: o.y + 16, taken: false, t: 0 });
   G.player = {
     x: (G.start || { x: 256 }).x, y: (G.start || { y: 352 }).y,
     vx: 0, vy: 0, w: 28, h: 56, face: 1, ground: false, coyote: 0, buffer: 0,
-    inv: 0, fireCd: 0, run: false, tapD: 0, tapT: -9, crouch: false,
+    inv: 0, fireCd: 0, attack: null, run: false, tapD: 0, tapT: -9, crouch: false,
     anim: null, animName: "", cur: null,
   };
   G.checkpoint = G.start ? { x: G.start.x, y: G.start.y } : { x: 256, y: 352 };
   await ensureChar("Vascolet");
-  await ensureChar("Boomerang").catch(() => null);
+  await Promise.all(["Boomerang", "effects", "bola-de-pinchos"].map(ensureChar));
   G.player.anim = new AnimPlayer(Game.charCache.get("Vascolet").anims);
   // carteles de ayuda/guardado (signposts del original)
   try {
@@ -204,8 +206,7 @@ export async function loadLevel(n, fresh = true) {
   const mus = (selector && G.map.props[`music,${selector}`]) || G.map.props["music,normal"]
     || (selector?.endsWith(".ogg") ? selector : "");
   void Audio2.music(mus ? MUS + mus : null);
-  G.camX = Math.max(0, Math.min(G.player.x - W / 2, G.gw * TILE - W));
-  G.camY = Math.max(0, Math.min(G.player.y - H / 2 - 40, G.gh * TILE - H));
+  updateCamera(G, 0, true);
   snapshotPositions();
   G.tip = `NIVEL ${n}`; G.tipT = 3;
   // condicion de victoria desde props del mapa
@@ -234,9 +235,9 @@ export function tileAt(tx, ty) {
 // Provisional tuning, not recovered original constants.
 const GRAV = 1500, MOVE = 170, RUN = 300, JUMP = 560;
 const EPS = 1e-7;
-function moveBody(b, dt) {
+function moveBody(b, dt, gravity = GRAV) {
   b.hitWall = false;
-  b.vy += GRAV * dt;
+  b.vy += gravity * dt;
   if (b.vy > 900) b.vy = 900;
   const prevX = b.x;
   b.x += b.vx * dt;
@@ -296,7 +297,7 @@ function moveBody(b, dt) {
 function snapshotPositions() {
   const G = Game;
   G.prevCamX = G.camX; G.prevCamY = G.camY;
-  for (const b of [G.player, ...G.enemies, ...G.booms, ...G.parts]) {
+  for (const b of [G.player, ...G.enemies, ...G.booms, ...G.parts, ...G.shots, ...G.effects]) {
     if (b) { b.prevX = b.x; b.prevY = b.y; }
   }
 }
@@ -343,9 +344,10 @@ export function gameUpdate(dt) {
     p.tapD = d; p.tapT = now;
   }
   if (dir === 0) p.run = false;
-  else p.face = dir;
+  else if (!p.attack) p.face = dir;
   p.vx = dir * (p.run ? RUN : MOVE);
   p.crouch = Input.down("down") && p.ground;
+  if (p.crouch || (p.attack && p.ground)) p.vx = 0;
   if (jumpPressed()) p.buffer = 0.12; else p.buffer = Math.max(0, p.buffer - dt);
   p.coyote = p.ground ? 0.1 : Math.max(0, p.coyote - dt);
   if (p.coyote > 0 && p.buffer > 0) {
@@ -360,45 +362,38 @@ export function gameUpdate(dt) {
   if (!wasGround && p.ground && fallV > 300) dust(p.x, p.y, 9);
   if (p.hurt && p.inv <= 0) { G.energy -= 15; p.inv = 1; Audio2.sfx(SFX + "enemy_hit.ogg"); }
   p.inv = Math.max(0, p.inv - dt);
-  if (firePressed() && p.fireCd <= 0) {
-    p.fireCd = 0.35;
-    G.booms.push({ x: p.x + p.face * 20, y: p.y - 30, vx: p.face * 420, life: 2.2, ret: false, t: 0 });
-    Audio2.sfx(SFX + "boomerang.ogg");
-    if (p.anim.has("standAttack")) {
-      p.animName = "standAttack"; p.anim.set("standAttack");
-      // duracion real de la animacion de ataque
-      const a = p.anim.anims.find(a => a.name === "standAttack");
-      p.attackT = a ? a.frames.reduce((s, f) => s + Math.max(1, f.dur) / Math.max(1, a.fps || 12), 0) : 0.35;
+  if (firePressed() && p.fireCd <= 0 && !p.attack && G.booms.length < 2) {
+    const name = p.crouch && p.anim.has("crouchAttack") ? "crouchAttack" : "standAttack";
+    if (p.anim.has(name)) {
+      p.attack = { name, released: false, crouch: p.crouch, face: p.face };
+      p.animName = name; p.anim.set(name, { restart: true });
+      p.fireCd = .15;
     }
   }
   p.fireCd = Math.max(0, p.fireCd - dt);
-  p.attackT = Math.max(0, (p.attackT || 0) - dt);
+  for (const e of G.enemies) {
+    if (!e.active && Math.abs(e.x - p.x) < 512 && Math.abs(e.y - p.y) < 420) e.active = true;
+    if (!e.active || Math.abs(e.x - p.x) > 900 || Math.abs(e.y - p.y) > 700) continue;
+    updateEnemy(e, p, dt, { moveBody, tileAt, shoot: enemyShoot });
+    if (e.y > G.gh * TILE + 160 && e.hp > 0) { e.hp = 0; e.deadT = 2; }
+  }
   for (const b of G.booms) {
-    b.life -= dt;
-    b.t = (b.t || 0) + dt;
-    if (b.life < 1.1) b.ret = true;
-    if (b.ret) {
-      // el boomerang vuelve al jugador
-      const dx = p.x - b.x, dy = (p.y - 30) - b.y, d = Math.hypot(dx, dy) || 1;
-      b.x += dx / d * 460 * dt; b.y += dy / d * 460 * dt;
-      if (d < 18) b.life = 0;
-    } else {
-      const nx = b.x + Math.sign(b.vx) * 420 * dt;
-      const tx = Math.floor(nx / TILE), ty = Math.floor(b.y / TILE);
-      if (tileAt(tx, ty) & (TILE_SOLID | TILE_UP)) {
-        Audio2.sfx(SFX + "boomerang_wall_hit.ogg", 0.7);
-        b.life = 0;
-      } else b.x = nx;
+    updateBoomerang(b, p, G.enemies, dt, { tileAt, hitEnemy: (e, boom) => damageEnemy(e, Math.sign(boom.vx)),
+      wallHit: () => Audio2.sfx(SFX + "boomerang_wall_hit.ogg", .7), impact });
+    if (b.anim) {
+      b.anim.update(dt);
+      for (const event of b.anim.drainEvents()) flagSound(event.animation, event.type);
     }
   }
   G.booms = G.booms.filter(b => b.life > 0);
-  // polvo de pasos (MakeEffect de walk/run)
-  // camara con clamp al mapa (nunca muestra fuera de los bordes)
-  const maxCamX = Math.max(0, G.gw * TILE - W), maxCamY = Math.max(0, G.gh * TILE - H);
-  const tx = Math.max(0, Math.min(p.x - W / 2, maxCamX));
-  const ty = Math.max(0, Math.min(p.y - H / 2 - 40, maxCamY));
-  G.camX = Math.max(0, Math.min(maxCamX, G.camX + (tx - G.camX) * Math.min(1, dt * 8)));
-  G.camY = Math.max(0, Math.min(maxCamY, G.camY + (ty - G.camY) * Math.min(1, dt * 8)));
+  updateEnemyShots(dt);
+  for (const e of G.enemies) {
+    if (e.hp <= 0 || Math.abs(p.x - e.x) >= (p.w + e.w) / 2 || p.y <= e.y - e.h || p.y - (p.crouch ? 28 : p.h) >= e.y) continue;
+    if (!e.boss && e.behavior !== "flower" && p.vy > 0 && p.prevY <= e.y - e.h + 10) {
+      damageEnemy(e, p.face); p.vy = -280; p.ground = false;
+    } else hurtPlayer();
+  }
+  updateCamera(G, dt);
   G.tipT = Math.max(0, G.tipT - dt);
   for (const i of G.infos) {
     // Los carteles los explica Lampi (help.jpg original). Sin pausa.
@@ -417,18 +412,6 @@ export function gameUpdate(dt) {
       s.x = -99999;
     }
   }
-  for (const e of G.enemies) {
-    // Existing generic chase/bob AI is a provisional prototype only.
-    e.t += dt;
-    const dx = p.x - e.x;
-    if (Math.abs(dx) < 260) { e.x += Math.sign(dx) * 40 * dt; e.dir = Math.sign(dx) || e.dir; }
-    e.y += Math.sin(e.t * 3) * 12 * dt;
-    if (e.anim) {
-      const r = e.anim.update(dt);
-      e.cur = r.frame;
-      for (const event of e.anim.drainEvents()) flagSound(event.animation, event.type);
-    }
-  }
   // barra de jefe: maximo hp entre jefes vivos, visible solo cerca del jefe
   G.bossHP = 0; G.bossMax = 1; G.bossHead = null;
   for (const e of G.enemies) {
@@ -439,20 +422,26 @@ export function gameUpdate(dt) {
   // particulas de polvo
   for (const q of G.parts) { q.life -= dt; q.x += q.vx * dt; q.y += q.vy * dt; }
   G.parts = G.parts.filter(q => q.life > 0);
+  for (const fx of G.effects) fx.anim.update(dt);
+  G.effects = G.effects.filter(fx => !fx.anim.finished);
   // anim jugador con NOMBRES REALES (ataque tiene prioridad mientras dura)
   let want = "stand";
-  if ((p.attackT || 0) > 0 && p.anim.has("standAttack")) want = "standAttack";
+  if (p.attack) want = p.attack.name;
   else if (!p.ground) want = p.vy < -50 ? (p.run && p.anim.has("runJump") ? "runJump" : "standJump") : "fall";
   else if (p.crouch && p.anim.has("crouch")) want = "crouch";
   else if (dir !== 0) want = p.run ? "run" : "walk";
-  if (p.inv > 0 && p.anim.has("damage")) want = "damage";
+  if (p.inv > .8 && p.anim.has("damage")) { want = "damage"; p.attack = null; }
   if (want !== p.animName && p.anim.has(want)) { p.animName = want; p.anim.set(want); }
   const r = p.anim.update(dt);
   p.cur = r.frame;
   for (const event of p.anim.drainEvents()) {
     flagSound(event.animation, event.type);
     if (event.type === "MakeEffect") dust(p.x, p.y - 4);
+    if (p.attack && event.animation === p.attack.name && event.type === "Custom") releaseBoomerang();
   }
+  // Crouch XML lacks Custom; its extended throw pose is frame 4.
+  if (p.attack?.name === "crouchAttack" && p.anim.i >= 4) releaseBoomerang();
+  if (p.attack && p.anim.finished) p.attack = null;
   // muerte: energia o caida al vacio -> pierde vida, respawn o game over
   if ((G.energy <= 0 || p.y > G.gh * TILE + 80) && !G.won) {
     G.lives -= 1;
@@ -463,8 +452,8 @@ export function gameUpdate(dt) {
       G.energy = 100;
       const s = G.checkpoint || G.start;
       p.x = s.x; p.y = s.y; p.vx = 0; p.vy = 0; p.inv = 2;
-      G.camX = Math.max(0, Math.min(p.x - W / 2, Math.max(0, G.gw * TILE - W)));
-      G.camY = Math.max(0, Math.min(p.y - H / 2, Math.max(0, G.gh * TILE - H)));
+      p.attack = null; G.booms = []; G.shots = [];
+      updateCamera(G, 0, true); snapshotPositions();
     }
   }
   // victoria segun props del mapa
@@ -488,6 +477,59 @@ export function gameUpdate(dt) {
 function dust(x, y) {
   for (let i = 0; i < 5; i++)
     Game.parts.push({ x: x + (Math.random() - 0.5) * 20, y, vx: (Math.random() - 0.5) * 60, vy: -30 - Math.random() * 40, life: 0.4 });
+}
+
+function releaseBoomerang() {
+  const G = Game, p = G.player, attack = p.attack;
+  if (!attack || attack.released) return;
+  attack.released = true;
+  if (G.booms.length >= 2) return;
+  const c = G.charCache.get("Boomerang"), anim = c?.anims.length ? new AnimPlayer(c.anims) : null;
+  if (anim?.has("normal")) anim.set("normal");
+  G.booms.push(createBoomerang({ ...p, face: attack.face, crouch: attack.crouch }, anim));
+  Audio2.sfx(SFX + "boomerang.ogg");
+}
+
+function impact(x, y) {
+  const c = Game.charCache.get("effects");
+  if (!c?.anims.some(a => a.name === "shot_impact")) return;
+  const anim = new AnimPlayer(c.anims); anim.set("shot_impact");
+  Game.effects.push({ x, y, prevX: x, prevY: y, anim });
+}
+
+function damageEnemy(e, direction) {
+  if (!hitEnemy(e, direction)) return;
+  Audio2.sfx(SFX + (e.boss && e.hp <= 0 ? "boss_death.ogg" : "enemy_boomerang_hit.ogg"));
+}
+
+function hurtPlayer() {
+  const G = Game, p = G.player;
+  if (p.inv > 0 || G.won) return;
+  G.energy = Math.max(0, G.energy - 100 / 7); p.inv = 1;
+  p.attack = null;
+  Audio2.sfx(SFX + "enemy_hit.ogg");
+}
+
+function enemyShoot(e) {
+  const c = Game.charCache.get("bola-de-pinchos");
+  const anim = c?.anims.length ? new AnimPlayer(c.anims) : null;
+  const x = e.x + e.dir * 34, y = e.y - (e.behavior === "flower" ? 58 : 25);
+  Game.shots.push({ x, y, prevX: x, prevY: y, vx: e.dir * 180, life: 4, anim });
+}
+
+function updateEnemyShots(dt) {
+  const G = Game, p = G.player;
+  for (const shot of G.shots) {
+    shot.life -= dt;
+    const nx = shot.x + shot.vx * dt;
+    const wall = terrainHit(shot.x, shot.y, nx, shot.y, tileAt, 6);
+    const player = segmentBox(shot.x, shot.y, nx, shot.y,
+      p.x - p.w / 2 - 6, p.y - (p.crouch ? 28 : p.h) - 6, p.x + p.w / 2 + 6, p.y + 6);
+    if (player !== null && (wall === null || player < wall)) { hurtPlayer(); shot.life = 0; }
+    else if (wall !== null) shot.life = 0;
+    shot.x = nx; shot.anim?.update(dt);
+  }
+  G.shots = G.shots.filter(s => s.life > 0);
 }
 
 function openDialog(text, portrait) {
@@ -568,9 +610,11 @@ export function gameDraw(ctx, alpha = 1) {
   }
   // enemigos con sprites reales
   for (const e of G.enemies) {
+    if (e.hp <= 0 && e.deadT > 1.2) continue;
     const c = Game.charCache.get(e.kind);
     if (c?.img && e.anim) {
-      drawAnimFrame(ctx, c.img, c.atlas, e.cur, x(e) - cx, y(e) - cy, { flip: e.dir > 0, round: false });
+      drawAnimFrame(ctx, c.img, c.atlas, e.cur, x(e) - cx, y(e) - cy,
+        { flip: e.dir > 0, round: false, alpha: e.hp <= 0 ? Math.max(0, 1 - e.deadT / 1.2) : e.hurtT > 0 ? .65 : 1 });
     } else {
       ctx.fillStyle = "#ffd75e";
       ctx.fillRect(x(e) - cx - 3, y(e) - cy - 3, 6, 6);
@@ -587,21 +631,21 @@ export function gameDraw(ctx, alpha = 1) {
       ctx.fillStyle = "#f66"; ctx.fillRect(x(p) - cx - 8, y(p) - cy - 28, 16, 28);
     }
     const bc = Game.charCache.get("Boomerang");
-    const banim = bc && bc.anims.find(a => a.name === "fast") || bc && bc.anims[0];
     for (const b of G.booms) {
-      // sprite real del boomerang, girando con el vuelo
-      const fr = banim ? banim.frames[Math.floor(b.t * banim.fps) % banim.frames.length] : null;
-      const ent = fr && fr.img && bc.atlas[fr.img];
-      if (bc.img && ent) {
-        pixel(ctx, () => drawAtlas(ctx, bc.img,
-          { ...ent, ax: ent.ax + (fr.ox || 0), ay: ent.ay + (fr.oy || 0) },
-          x(b) - cx, y(b) - cy, { rot: b.t * 12 }));
+      // The atlas already contains the rotation; do not rotate it a second time.
+      if (bc?.img && b.anim) {
+        drawAnimFrame(ctx, bc.img, bc.atlas, b.anim.frame, x(b) - cx, y(b) - cy, { round: false, flip: b.face < 0 });
       } else {
         ctx.fillStyle = "#fc6";
         ctx.fillRect(x(b) - cx - 4, y(b) - cy - 4, 8, 8);
       }
     }
   }
+  const shotChar = G.charCache.get("bola-de-pinchos"), effectChar = G.charCache.get("effects");
+  for (const shot of G.shots) if (shotChar?.img && shot.anim)
+    drawAnimFrame(ctx, shotChar.img, shotChar.atlas, shot.anim.frame, x(shot) - cx, y(shot) - cy + 7.6, { scale: .4, round: false });
+  for (const fx of G.effects) if (effectChar?.img)
+    drawAnimFrame(ctx, effectChar.img, effectChar.atlas, fx.anim.frame, fx.x - cx, fx.y - cy, { round: false });
   // polvo
   ctx.fillStyle = "rgba(255,255,255,0.7)";
   for (const q of G.parts) ctx.fillRect(x(q) - cx - 1, y(q) - cy - 1, 3, 3);
@@ -641,7 +685,7 @@ function drawHUD(ctx) {
   ctx.fillText("x" + G.lives, 100, 30);
   // 7 corazones de energia (como el original)
   for (let i = 0; i < 7; i++)
-    put(G.energy > (i + 1) * (100 / 7) ? "colorHeart" : "blackHeart", 150 + i * 20, 8);
+    put(i < Math.ceil(Math.max(0, G.energy - 1e-7) * 7 / 100) ? "colorHeart" : "blackHeart", 150 + i * 20, 8);
   // barra de jefe con cabeza (arte real del atlas)
   if (G.bossHP > 0) {
     const bx = (W - 226) / 2, by = H - 40;
