@@ -1,6 +1,6 @@
 # Vascolet 4 — Tierra de Gigantes (port web abierto)
 
-Remake web **no oficial** de **Vascolet 4** (`vascolet4.exe`, plataformas 2D argentino de 2013,
+Remake web **no oficial** de **Vascolet 4** (`vascolet4.exe`, plataformas 2D uruguayo de 2013,
 motor `bat::` + DirectX9/OpenAL), hecho en **JavaScript + Canvas** y publicado en **GitHub Pages**.
 Proyecto de preservación y homenaje: lee en vivo los archivos de datos originales
 (mapas TMX, tilesets, atlas de sprites, animaciones, música, textos, GUI).
