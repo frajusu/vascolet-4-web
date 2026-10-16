@@ -1,53 +1,27 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Vascolet-web</title>
-  <style>
-    html, body { margin: 0; height: 100%; background: #101418; overflow: hidden; }
-    #vascolet-canvas { width: 100vw; height: 100vh; display: block; }
-    #boot {
-      position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
-      color: #cfe3ff; font: 16px/1.5 system-ui, sans-serif; text-align: center;
-      background: #101418; z-index: 10; pointer-events: none; padding: 24px;
-    }
-    #err {
-      position: fixed; left: 8px; bottom: 8px; max-width: 90vw; z-index: 20;
-      color: #ffb4b4; font: 12px/1.4 monospace; white-space: pre-wrap;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vascolet 4 — Tierra de Gigantes (port web)</title>
+<style>
+  html,body{margin:0;height:100%;background:#0a0a0c;overflow:hidden}
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  canvas{image-rendering:pixelated;image-rendering:crisp-edges;background:#000}
+  #err{position:fixed;left:8px;bottom:8px;max-width:90vw;color:#ffb4b4;
+       font:12px/1.4 monospace;white-space:pre-wrap;z-index:20}
+  #boot{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+        color:#cfe3ff;font:16px system-ui;text-align:center;z-index:10;pointer-events:none}
+</style>
 </head>
 <body>
-  <div id="boot">Cargando Vascolet-web…<br/>(si esto no desaparece, el wasm no arrancó)</div>
-  <div id="err"></div>
-  <canvas id="vascolet-canvas"></canvas>
-  <script>
-    const el = () => document.getElementById("err");
-    const BENIGN = "Using exceptions for control flow";
-    const show = (m) => { if (!String(m).includes(BENIGN)) el().textContent += m + "\n"; };
-    window.addEventListener("error", (e) => {
-      const stack = (e.error && e.error.stack) ? "\nSTACK: " + String(e.error.stack).slice(0, 3000) : "";
-      show("ERROR: " + (e.message || e.error) + stack);
-    });
-    window.addEventListener("unhandledrejection", (e) => show("REJECT: " + (e.reason && (e.reason.stack || e.reason.message || e.reason))));
-    // El panic hook de Rust escribe por console.error: espejarlo al overlay.
-    for (const k of ["error", "warn"]) {
-      const orig = console[k].bind(console);
-      console[k] = (...a) => {
-        orig(...a);
-        try { show("CONSOLE." + k + ": " + a.map(String).join(" ").slice(0, 2000)); } catch (_) {}
-      };
-    }
-    window.addEventListener("TrunkApplicationStarted", () => {
-      const b = document.getElementById("boot");
-      if (b) b.remove();
-    });
-    // Si Bevy tarda, no dejar el cartel para siempre cuando el canvas ya pinta
-    setTimeout(() => {
-      const b = document.getElementById("boot");
-      if (b) b.textContent = "Sigue cargando… si queda negro, revisá el texto de error abajo.";
-    }, 15000);
-  </script>
+<div id="wrap"><canvas id="game" width="512" height="384"></canvas></div>
+<div id="boot">Cargando…</div>
+<div id="err"></div>
+<script>
+window.addEventListener("error",e=>{document.getElementById("err").textContent+="ERROR: "+(e.message||e.error)+"\n";});
+window.addEventListener("unhandledrejection",e=>{document.getElementById("err").textContent+="REJECT: "+(e.reason&&(e.reason.stack||e.reason.message||e.reason))+"\n";});
+</script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>

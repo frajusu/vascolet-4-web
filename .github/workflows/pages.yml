@@ -5,29 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@v2
-      - name: Install trunk
-        run: cargo install trunk --locked
-      - name: Build wasm
-        # getrandom 0.3 exige este backend en wasm32-unknown-unknown
-        # (ver https://docs.rs/getrandom/0.3/#webassembly-support)
-        env:
-          RUSTFLAGS: --cfg getrandom_backend="wasm_js"
-        # El build pesado ocurre en GitHub, NO en tu PC.
-        run: trunk build --release --public-url ./
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -36,5 +14,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
       - id: deployment
         uses: actions/deploy-pages@v4

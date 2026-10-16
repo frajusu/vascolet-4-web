@@ -1,0 +1,786 @@
+{
+".?AVEvents@@": [
+[
+"0x686e14",
+15
+]
+],
+".?AVAppEvent@bat@@": [
+[
+"0x686e6c",
+15
+]
+],
+".?AVAppStateEvent@bat@@": [
+[
+"0x686eb0",
+9
+]
+],
+".?AVEmptyState@@": [
+[
+"0x686ef4",
+10
+],
+[
+"0x686f24",
+18
+]
+],
+".?AVerror_category@system@boost@@": [
+[
+"0x66622c",
+5
+]
+],
+".?AVmisc_category@detail@error@asio@boost@@": [
+[
+"0x687388",
+5
+]
+],
+".?AVsp_counted_base@detail@boost@@": [
+[
+"0x6873d0",
+3
+]
+],
+".?AV?$basic_streambuf@DU?$char_traits@D@std@@": [
+[
+"0x68759c",
+13
+]
+],
+".?AV?$basic_streambuf@V?$allocator@D@std@@": [
+[
+"0x687404",
+13
+]
+],
+".?AV?$num_get@DV?$istreambuf_iterator@DU?$char_traits@D@std@@": [
+[
+"0x687320",
+11
+]
+],
+".?AV?$sp_counted_impl_pd@PAXUnoop_deleter@socket_ops@detail@asio@boost@@": [
+[
+"0x6874ec",
+3
+]
+],
+".?AV?$sp_counted_impl_p@V?$vector@V?$basic_resolver_entry@Vtcp@ip@asio@boost@@": [
+[
+"0x687500",
+3
+]
+],
+".?AV?$ctype@D@std@@": [
+[
+"0x6875e8",
+10
+]
+],
+".?AV?$numpunct@D@std@@": [
+[
+"0x687640",
+5
+]
+],
+".?AV?$num_put@DV?$ostreambuf_iterator@DU?$char_traits@D@std@@": [
+[
+"0x687618",
+8
+]
+],
+".?AVVideoController@@": [
+[
+"0x687694",
+18
+]
+],
+".?AVSprite@bat@@": [
+[
+"0x69bd20",
+11
+]
+],
+".?AVxml_tree_walker@pugi@@": [
+[
+"0x688510",
+3
+]
+],
+".?AV?$ctype@_W@std@@": [
+[
+"0x66384c",
+14
+]
+],
+".?AVBatFont@@": [
+[
+"0x688588",
+6
+]
+],
+".?AVFont@bat@@": [
+[
+"0x688568",
+6
+]
+],
+".?AVTiXmlDocument@@": [
+[
+"0x6885dc",
+17
+]
+],
+".?AV?$basic_stringbuf@_WU?$char_traits@_W@std@@": [
+[
+"0x6888a8",
+13
+]
+],
+".?AV?$basic_streambuf@_WU?$char_traits@_W@std@@": [
+[
+"0x66388c",
+13
+]
+],
+".?AVMultiVirtualController@@": [
+[
+"0x6888fc",
+7
+]
+],
+".?AVVirtualController@@": [
+[
+"0x68893c",
+6
+]
+],
+".?AVVirtualControllerDecoy@@": [
+[
+"0x68895c",
+6
+]
+],
+".?AVAnimationPlayer@@": [
+[
+"0x688a1c",
+18
+]
+],
+".?AVSpriteAnim@@": [
+[
+"0x688b44",
+16
+]
+],
+".?AV?$numpunct@_W@std@@": [
+[
+"0x68ec04",
+5
+]
+],
+".?AV?$num_put@_WV?$ostreambuf_iterator@_WU?$char_traits@_W@std@@": [
+[
+"0x68ebdc",
+8
+]
+],
+".?AVDebugVisualizer@@": [
+[
+"0x694c70",
+11
+]
+],
+".?AVTextField@@": [
+[
+"0x694ed0",
+13
+]
+],
+".?AVTransitionState@@": [
+[
+"0x694ccc",
+10
+],
+[
+"0x694cfc",
+18
+]
+],
+".?AV?$basic_stringbuf@DU?$char_traits@D@std@@": [
+[
+"0x694e84",
+13
+]
+],
+".?AVVideoTestState@@": [
+[
+"0x698648",
+10
+],
+[
+"0x69867c",
+18
+]
+],
+".?AVTestState@@": [
+[
+"0x6987d4",
+10
+],
+[
+"0x698804",
+18
+]
+],
+".?AVLevelState@@": [
+[
+"0x6988e0",
+10
+],
+[
+"0x698914",
+18
+]
+],
+".?AVTitleCard@@": [
+[
+"0x6989b8",
+10
+],
+[
+"0x6989ec",
+18
+]
+],
+".?AVLoadingState@@": [
+[
+"0x698b08",
+10
+],
+[
+"0x698b3c",
+18
+],
+[
+"0x698b98",
+3
+]
+],
+".?AVGameOver@@": [
+[
+"0x698bf0",
+10
+],
+[
+"0x698c24",
+18
+]
+],
+".?AVWin@@": [
+[
+"0x698c9c",
+10
+],
+[
+"0x698ccc",
+18
+]
+],
+".?AVInfoState@@": [
+[
+"0x698d3c",
+10
+],
+[
+"0x698d6c",
+18
+]
+],
+".?AVGameSubject@@": [
+[
+"0x6993bc",
+18
+]
+],
+".?AVCutSceneConsumer@@": [
+[
+"0x699838",
+5
+]
+],
+".?AVStage@@": [
+[
+"0x699854",
+18
+],
+[
+"0x6998a4",
+5
+]
+],
+".?AVDrawableGameTileMap@@": [
+[
+"0x699bb4",
+18
+]
+],
+".?AVGameTileMap@@": [
+[
+"0x699c40",
+5
+]
+],
+".?AV?$ITileMap@VGameTile@@": [
+[
+"0x699c5c",
+5
+]
+],
+".?AV?$basic_filebuf@_WU?$char_traits@_W@std@@": [
+[
+"0x6638c8",
+13
+]
+],
+".?AVcodecvt_base@std@@": [
+[
+"0x663904",
+3
+]
+],
+".?AV?$codecvt@_WDH@std@@": [
+[
+"0x663918",
+7
+]
+],
+".?AVMenuObject@@": [
+[
+"0x69aa44",
+23
+]
+],
+".?AVIDisplayObjectMouseListener@bat@@": [
+[
+"0x69ab34",
+7
+]
+],
+".?AVCheckbox@@": [
+[
+"0x69aaac",
+23
+],
+[
+"0x69ab10",
+7
+]
+],
+".?AVCredits@@": [
+[
+"0x69ab5c",
+18
+]
+],
+".?AVHelp@@": [
+[
+"0x69abac",
+18
+]
+],
+".?AVMenuPopUp@@": [
+[
+"0x69b22c",
+18
+]
+],
+".?AVLevelSelect@@": [
+[
+"0x69adcc",
+18
+]
+],
+".?AVMainMenuState@@": [
+[
+"0x69af34",
+10
+],
+[
+"0x69af64",
+18
+]
+],
+".?AVMenuButton@@": [
+[
+"0x69afd4",
+23
+],
+[
+"0x69b038",
+7
+]
+],
+".?AVMenuHelpItem@@": [
+[
+"0x69b05c",
+18
+]
+],
+".?AVMenuObjectManager@@": [
+[
+"0x69b1dc",
+18
+]
+],
+".?AVOptions@@": [
+[
+"0x69b3cc",
+18
+]
+],
+".?AVPauseMenu@@": [
+[
+"0x69b44c",
+18
+]
+],
+".?AVQuitConfirmDialog@@": [
+[
+"0x69b57c",
+18
+]
+],
+".?AVSlider@@": [
+[
+"0x69b5cc",
+23
+],
+[
+"0x69b630",
+7
+]
+],
+".?AVHud@@": [
+[
+"0x69b6c4",
+18
+]
+],
+".?AVSkip@@": [
+[
+"0x69b714",
+18
+]
+],
+".?AVAchievementsItem@@": [
+[
+"0x69b764",
+12
+]
+],
+".?AVAchievementsState@@": [
+[
+"0x69b984",
+10
+],
+[
+"0x69b9b4",
+18
+]
+],
+".?AVInfoscreenState@@": [
+[
+"0x69ba5c",
+10
+],
+[
+"0x69ba8c",
+18
+]
+],
+".?AVAppState@bat@@": [
+[
+"0x69bb00",
+10
+],
+[
+"0x69bb34",
+18
+]
+],
+".?AVEntity@bat@@": [
+[
+"0x69bb9c",
+18
+]
+],
+".?AVAudio@bat@@": [
+[
+"0x69bc1c",
+5
+]
+],
+".?AVDisplay@bat@@": [
+[
+"0x69bc40",
+7
+]
+],
+".?AVRenderer@bat@@": [
+[
+"0x69bc6c",
+6
+]
+],
+".?AV?$num_get@_WV?$istreambuf_iterator@_WU?$char_traits@_W@std@@": [
+[
+"0x69bcc8",
+11
+]
+],
+".?AVTexture@bat@@": [
+[
+"0x69bdb0",
+6
+]
+],
+".?AVD3DTexture9@bat@@": [
+[
+"0x69bd54",
+6
+]
+],
+".?AVDisplayObject@bat@@": [
+[
+"0x69bd74",
+11
+]
+],
+".?AVTiXmlVisitor@@": [
+[
+"0x69c07c",
+8
+]
+],
+".?AVTiXmlComment@@": [
+[
+"0x69bf2c",
+17
+]
+],
+".?AVTiXmlText@@": [
+[
+"0x69bfdc",
+17
+]
+],
+".?AVTiXmlDeclaration@@": [
+[
+"0x69c02c",
+18
+]
+],
+".?AVTiXmlUnknown@@": [
+[
+"0x69bf7c",
+17
+]
+],
+".?AVTiXmlPrinter@@": [
+[
+"0x69c100",
+8
+]
+],
+".?AVTiXmlNode@@": [
+[
+"0x69c0b4",
+17
+]
+],
+".?AVTiXmlElement@@": [
+[
+"0x69bedc",
+17
+]
+],
+".?AVSound@bat@@": [
+[
+"0x69c18c",
+9
+]
+],
+".?AVButton@bat@@": [
+[
+"0x69c1b8",
+11
+]
+],
+".?AVPlatformConfiguration@bat@@": [
+[
+"0x69c204",
+4
+]
+],
+".?AVWinDX9PlatformConfiguration@bat@@": [
+[
+"0x69c224",
+4
+]
+],
+".?AVTextSprite@bat@@": [
+[
+"0x69c254",
+13
+]
+],
+".?AVShape@bat@@": [
+[
+"0x69c2a0",
+11
+]
+],
+".?AVMouse@bat@@": [
+[
+"0x69c2d4",
+11
+]
+],
+".?AVD3DRenderer9@bat@@": [
+[
+"0x69c360",
+6
+]
+],
+".?AVTextureManager@bat@@": [
+[
+"0x69c380",
+9
+]
+],
+".?AVAudioBuffer@bat@@": [
+[
+"0x69c5d0",
+4
+]
+],
+".?AVDateAndTime@bat@@": [
+[
+"0x69c66c",
+5
+]
+],
+".?AVWinPlatformUtils@bat@@": [
+[
+"0x69c6ec",
+4
+]
+],
+".?AVStandardCDateAndTime@bat@@": [
+[
+"0x69c690",
+5
+]
+],
+".?AVD3DTextureManager9@bat@@": [
+[
+"0x69c868",
+10
+]
+],
+".?AVPlatformUtils@bat@@": [
+[
+"0x69c6cc",
+4
+]
+],
+".?AVTextLineSprite@bat@@": [
+[
+"0x69c704",
+13
+]
+],
+".?AVParticleEffect@bat@@": [
+[
+"0x69c740",
+11
+]
+],
+".?AVWinDisplay@bat@@": [
+[
+"0x69c7bc",
+7
+]
+],
+".?AVFileSystem@bat@@": [
+[
+"0x69c800",
+5
+]
+],
+".?AVWinFileSystem@bat@@": [
+[
+"0x69c824",
+5
+]
+],
+".?AVDIKeyboard8@bat@@": [
+[
+"0x69c8a0",
+8
+]
+],
+".?AVWinMouse@bat@@": [
+[
+"0x69c8c8",
+11
+]
+],
+".?AVOpenALAudio@bat@@": [
+[
+"0x69c910",
+5
+]
+],
+".?AVOpenALSound@bat@@": [
+[
+"0x69c9d8",
+9
+]
+],
+".?AVParticleEmitter@bat@@": [
+[
+"0x69c938",
+11
+]
+],
+".?AVTextureMapManager@bat@@": [
+[
+"0x69c974",
+10
+]
+],
+".?AVKeyboard@bat@@": [
+[
+"0x69c9a4",
+8
+]
+],
+".?AVsystem_error_category@?A0x6d1e355f@@": [
+[
+"0x666248",
+5
+]
+],
+".?AVgeneric_error_category@?A0x6d1e355f@@": [
+[
+"0x666274",
+5
+]
+]
+}

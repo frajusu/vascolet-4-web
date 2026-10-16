@@ -1,0 +1,382 @@
+{
+"anguila-child": {
+"png": "assets/characters\\anguila-child/images\\anguila-child.png",
+"xml": "assets/characters\\anguila-child/images\\anguila-child.xml",
+"anim": "assets/characters\\anguila-child/animData\\Anguila-child.xml"
+},
+"anguila2": {
+"png": "assets/characters\\anguila2/images\\anguila.png",
+"xml": "assets/characters\\anguila2/images\\anguila2.xml",
+"anim": "assets/characters\\anguila2/animData\\Anguila2.xml"
+},
+"axe": {
+"png": "assets/characters\\axe/images\\axe.png",
+"xml": "assets/characters\\axe/images\\axe.xml",
+"anim": "assets/characters\\axe/animData\\Axe.xml"
+},
+"bee": {
+"png": "assets/characters\\bee/images\\bee.png",
+"xml": "assets/characters\\bee/images\\bee.xml",
+"anim": "assets/characters\\bee/animData\\Bee.xml"
+},
+"beetle": {
+"png": "assets/characters\\beetle/images\\beetle.png",
+"xml": "assets/characters\\beetle/images\\beetle.xml",
+"anim": "assets/characters\\beetle/animData\\Beetle.xml"
+},
+"big-bat": {
+"png": "assets/characters\\big-bat/images\\big-bat.png",
+"xml": "assets/characters\\big-bat/images\\big-bat.xml",
+"anim": "assets/characters\\big-bat/animData\\Big-bat.xml"
+},
+"big-bat-child": {
+"png": "assets/characters\\big-bat-child/images\\big-bat-child.png",
+"xml": "assets/characters\\big-bat-child/images\\big-bat-child.xml",
+"anim": "assets/characters\\big-bat-child/animData\\Big-bat-child.xml"
+},
+"big-bird": {
+"png": "assets/characters\\big-bird/images\\big-bird.png",
+"xml": "assets/characters\\big-bird/images\\big-bird.xml",
+"anim": "assets/characters\\big-bird/animData\\Big-bird.xml"
+},
+"big-pirana": {
+"png": "assets/characters\\big-pirana/images\\big-pirana.png",
+"xml": "assets/characters\\big-pirana/images\\big-pirana.xml",
+"anim": "assets/characters\\big-pirana/animData\\Big-pirana.xml"
+},
+"big-scorpion": {
+"png": "assets/characters\\big-scorpion/images\\big-scorpion.png",
+"xml": "assets/characters\\big-scorpion/images\\big-scorpion.xml",
+"anim": "assets/characters\\big-scorpion/animData\\BigScorpion.xml"
+},
+"big-scorpion-v02": {
+"png": "assets/characters\\big-scorpion-v02/images\\big-scorpion-v02.png",
+"xml": "assets/characters\\big-scorpion-v02/images\\big-scorpion-v02.xml",
+"anim": "assets/characters\\big-scorpion-v02/animData\\Big-scorpion-v02.xml"
+},
+"big-snake": {
+"png": "assets/characters\\big-snake/images\\big-snake.png",
+"xml": "assets/characters\\big-snake/images\\big-snake.xml",
+"anim": "assets/characters\\big-snake/animData\\Big-snake.xml"
+},
+"big-spider": {
+"png": "assets/characters\\big-spider/images\\big-spider.png",
+"xml": "assets/characters\\big-spider/images\\big-spider.xml",
+"anim": "assets/characters\\big-spider/animData\\Big-spider.xml"
+},
+"big-spider-child": {
+"png": "assets/characters\\big-spider-child/images\\big-spider-child.png",
+"xml": "assets/characters\\big-spider-child/images\\big-spider-child.xml",
+"anim": "assets/characters\\big-spider-child/animData\\Big-spider-child.xml"
+},
+"blowfish": {
+"png": "assets/characters\\blowfish/images\\blowfish.png",
+"xml": "assets/characters\\blowfish/images\\blowfish.xml",
+"anim": "assets/characters\\blowfish/animData\\Blowfish.xml"
+},
+"blowfish2": {
+"png": "assets/characters\\blowfish2/images\\blowfish.png",
+"xml": "assets/characters\\blowfish2/images\\blowfish2.xml",
+"anim": "assets/characters\\blowfish2/animData\\Blowfish2.xml"
+},
+"bola-de-pinchos": {
+"png": "assets/characters\\bola-de-pinchos/images\\bola-de-pinchos.png",
+"xml": "assets/characters\\bola-de-pinchos/images\\bola-de-pinchos.xml",
+"anim": "assets/characters\\bola-de-pinchos/animData\\Spykes.xml"
+},
+"boomerang": {
+"png": "assets/characters\\boomerang/images\\boomerang.png",
+"xml": "assets/characters\\boomerang/images\\boomerang.xml",
+"anim": "assets/characters\\boomerang/animData\\Boomerang.xml"
+},
+"carteles-ayuda-guardar": {
+"png": "assets/characters\\carteles-ayuda-guardar/images\\carteles-ayuda-guardar.png",
+"xml": "assets/characters\\carteles-ayuda-guardar/images\\carteles-ayuda-guardar.xml",
+"anim": "assets/characters\\carteles-ayuda-guardar/animData\\Signs.xml"
+},
+"center-column": {
+"png": "assets/characters\\center-column/images\\center-column.png",
+"xml": "assets/characters\\center-column/images\\center-column.xml",
+"anim": "assets/characters\\center-column/animData\\CenterColumn.xml"
+},
+"dragon-fly": {
+"png": "assets/characters\\dragon-fly/images\\dragon-fly.png",
+"xml": "assets/characters\\dragon-fly/images\\dragon-fly.xml",
+"anim": "assets/characters\\dragon-fly/animData\\Dragonfly.xml"
+},
+"effects": {
+"png": "assets/characters\\effects/images\\effects.png",
+"xml": "assets/characters\\effects/images\\effects.xml",
+"anim": "assets/characters\\effects/animData\\Effects.xml"
+},
+"energia": {
+"png": "assets/characters\\energia/images\\energia.png",
+"xml": "assets/characters\\energia/images\\energia.xml",
+"anim": "assets/characters\\energia/animData\\Energy.xml"
+},
+"escorpion": {
+"png": "assets/characters\\escorpion/images\\escorpion.png",
+"xml": "assets/characters\\escorpion/images\\escorpion.xml",
+"anim": "assets/characters\\escorpion/animData\\Scorpion.xml"
+},
+"fireball": {
+"png": "assets/characters\\fireball/images\\fireball.png",
+"xml": "assets/characters\\fireball/images\\fireball.xml",
+"anim": "assets/characters\\fireball/animData\\Fireball.xml"
+},
+"fireball2": {
+"png": "assets/characters\\fireball2/images\\fireball2.png",
+"xml": "assets/characters\\fireball2/images\\fireball2.xml",
+"anim": "assets/characters\\fireball2/animData\\Fireball2.xml"
+},
+"fish": {
+"png": "assets/characters\\fish/images\\fish.png",
+"xml": "assets/characters\\fish/images\\fish.xml",
+"anim": "assets/characters\\fish/animData\\Fish.xml"
+},
+"flower": {
+"png": "assets/characters\\flower/images\\flower.png",
+"xml": "assets/characters\\flower/images\\flower.xml",
+"anim": "assets/characters\\flower/animData\\Flower.xml"
+},
+"fly": {
+"png": "assets/characters\\fly/images\\fly.png",
+"xml": "assets/characters\\fly/images\\fly.xml",
+"anim": "assets/characters\\fly/animData\\Fly.xml"
+},
+"fly2": {
+"png": "assets/characters\\fly2/images\\fly.png",
+"xml": "assets/characters\\fly2/images\\fly2.xml",
+"anim": "assets/characters\\fly2/animData\\Fly2.xml"
+},
+"fork": {
+"png": "assets/characters\\fork/images\\fork.png",
+"xml": "assets/characters\\fork/images\\fork.xml",
+"anim": "assets/characters\\fork/animData\\Fork.xml"
+},
+"frog": {
+"png": "assets/characters\\frog/images\\frog.png",
+"xml": "assets/characters\\frog/images\\frog.xml",
+"anim": "assets/characters\\frog/animData\\Frog.xml"
+},
+"furry-critter": {
+"png": "assets/characters\\furry-critter/images\\furry-critter.png",
+"xml": "assets/characters\\furry-critter/images\\furry-critter.xml",
+"anim": "assets/characters\\furry-critter/animData\\Furry-critter.xml"
+},
+"furry-critter-child": {
+"png": "assets/characters\\furry-critter-child/images\\furry-critter-child.png",
+"xml": "assets/characters\\furry-critter-child/images\\furry-critter-child.xml",
+"anim": "assets/characters\\furry-critter-child/animData\\Furry-critter-child.xml"
+},
+"ghost-child": {
+"png": "assets/characters\\ghost-child/images\\ghost-child.png",
+"xml": "assets/characters\\ghost-child/images\\ghost-child.xml",
+"anim": "assets/characters\\ghost-child/animData\\Ghost-child.xml"
+},
+"ghost2": {
+"png": "assets/characters\\ghost2/images\\ghost.png",
+"xml": "assets/characters\\ghost2/images\\ghost2.xml",
+"anim": "assets/characters\\ghost2/animData\\Ghost2.xml"
+},
+"giant-dragonfly": {
+"png": "assets/characters\\giant-dragonfly/images\\giant-dragonfly.png",
+"xml": "assets/characters\\giant-dragonfly/images\\giant-dragonfly.xml",
+"anim": "assets/characters\\giant-dragonfly/animData\\Giant-dragonfly.xml"
+},
+"itemCereals": {
+"png": "assets/characters\\itemCereals/images\\bowl.png",
+"xml": "assets/characters\\itemCereals/images\\bowl.xml",
+"anim": "assets/characters\\itemCereals/animData\\ItemCereals.xml"
+},
+"items": {
+"png": "assets/characters\\items/images\\items.png",
+"xml": "assets/characters\\items/images\\items.xml",
+"anim": "assets/characters\\items/animData\\Items.xml"
+},
+"knife": {
+"png": "assets/characters\\knife/images\\knife.png",
+"xml": "assets/characters\\knife/images\\knife.xml",
+"anim": "assets/characters\\knife/animData\\Knife.xml"
+},
+"light-bug": {
+"png": "assets/characters\\light-bug/images\\light-bug.png",
+"xml": "assets/characters\\light-bug/images\\light-bug.xml",
+"anim": "assets/characters\\light-bug/animData\\Light-bug.xml"
+},
+"little-spider": {
+"png": "assets/characters\\little-spider/images\\little-spider.png",
+"xml": "assets/characters\\little-spider/images\\little-spider.xml",
+"anim": "assets/characters\\little-spider/animData\\Little-spider.xml"
+},
+"llave-azul": {
+"png": "assets/characters\\llave-azul/images\\llave-azul.png",
+"xml": "assets/characters\\llave-azul/images\\llave-azul.xml",
+"anim": "assets/characters\\llave-azul/animData\\BlueKey.xml"
+},
+"llave-roja": {
+"png": "assets/characters\\llave-roja/images\\llave-roja.png",
+"xml": "assets/characters\\llave-roja/images\\llave-roja.xml",
+"anim": "assets/characters\\llave-roja/animData\\RedKey.xml"
+},
+"llave-verde": {
+"png": "assets/characters\\llave-verde/images\\llave-verde.png",
+"xml": "assets/characters\\llave-verde/images\\llave-verde.xml",
+"anim": "assets/characters\\llave-verde/animData\\GreenKey.xml"
+},
+"malmark2": {
+"png": "assets/characters\\malmark2/images\\malmark.png",
+"xml": "assets/characters\\malmark2/images\\malmark2.xml",
+"anim": "assets/characters\\malmark2/animData\\Malmark2.xml"
+},
+"mina": {
+"png": "assets/characters\\mina\\minaImages\\Mina.png",
+"xml": "assets/characters\\mina\\minaImages\\Mina.xml",
+"anim": "assets/characters\\mina/animData\\Mina.xml"
+},
+"moneda": {
+"png": "assets/characters\\moneda/images\\bowl.png",
+"xml": "assets/characters\\moneda/images\\bowl.xml",
+"anim": "assets/characters\\moneda/animData\\Coin.xml"
+},
+"mosquito": {
+"png": "assets/characters\\mosquito/images\\mosquito.png",
+"xml": "assets/characters\\mosquito/images\\mosquito.xml",
+"anim": "assets/characters\\mosquito/animData\\Mosquito.xml"
+},
+"mouse": {
+"png": "assets/characters\\mouse/images\\mouse.png",
+"xml": "assets/characters\\mouse/images\\mouse.xml",
+"anim": "assets/characters\\mouse/animData\\Mouse.xml"
+},
+"particles": {
+"png": "assets/characters\\particles/images\\particles.png",
+"xml": "assets/characters\\particles/images\\particles.xml",
+"anim": "assets/characters\\particles/animData\\Particles.xml"
+},
+"pirana": {
+"png": "assets/characters\\pirana/images\\pirana.png",
+"xml": "assets/characters\\pirana/images\\pirana.xml",
+"anim": "assets/characters\\pirana/animData\\Piranha.xml"
+},
+"pirana-lava": {
+"png": "assets/characters\\pirana-lava/images\\pirana-lava.png",
+"xml": "assets/characters\\pirana-lava/images\\pirana-lava.xml",
+"anim": "assets/characters\\pirana-lava/animData\\Pirana-lava.xml"
+},
+"pirana2": {
+"png": "assets/characters\\pirana2/images\\pirana.png",
+"xml": "assets/characters\\pirana2/images\\pirana2.xml",
+"anim": "assets/characters\\pirana2/animData\\Pirana2.xml"
+},
+"plataforma": {
+"png": "assets/characters\\plataforma/images\\plataforma.png",
+"xml": "assets/characters\\plataforma/images\\plataforma.xml",
+"anim": "assets/characters\\plataforma/animData\\Platform.xml"
+},
+"puerta-azul": {
+"png": "assets/characters\\puerta-azul/images\\puerta-azul.png",
+"xml": "assets/characters\\puerta-azul/images\\puerta-azul.xml",
+"anim": "assets/characters\\puerta-azul/animData\\BlueDoor.xml"
+},
+"puerta-calavera": {
+"png": "assets/characters\\puerta-calavera/images\\puerta-calavera.png",
+"xml": "assets/characters\\puerta-calavera/images\\puerta-calavera.xml",
+"anim": "assets/characters\\puerta-calavera/animData\\SkullDoor.xml"
+},
+"puerta-roja": {
+"png": "assets/characters\\puerta-roja/images\\puerta-roja.png",
+"xml": "assets/characters\\puerta-roja/images\\puerta-roja.xml",
+"anim": "assets/characters\\puerta-roja/animData\\RedDoor.xml"
+},
+"puerta-verde": {
+"png": "assets/characters\\puerta-verde/images\\puerta-verde.png",
+"xml": "assets/characters\\puerta-verde/images\\puerta-verde.xml",
+"anim": "assets/characters\\puerta-verde/animData\\GreenDoor.xml"
+},
+"raton": {
+"png": "assets/characters\\raton/images\\raton.png",
+"xml": "assets/characters\\raton/images\\raton.xml",
+"anim": "assets/characters\\raton/animData\\Mouse.xml"
+},
+"shell": {
+"png": "assets/characters\\shell/images\\shell.png",
+"xml": "assets/characters\\shell/images\\shell.xml",
+"anim": "assets/characters\\shell/animData\\Shell.xml"
+},
+"side-column": {
+"png": "assets/characters\\side-column/images\\side-column.png",
+"xml": "assets/characters\\side-column/images\\side-column.xml",
+"anim": "assets/characters\\side-column/animData\\Side-column.xml"
+},
+"skull-pirana": {
+"png": "assets/characters\\skull-pirana/images\\skull-pirana.png",
+"xml": "assets/characters\\skull-pirana/images\\skull-pirana.xml",
+"anim": "assets/characters\\skull-pirana/animData\\Skull-pirana.xml"
+},
+"skull-pirana-v02": {
+"png": "assets/characters\\skull-pirana-v02/images\\skull-pirana-v02.png",
+"xml": "assets/characters\\skull-pirana-v02/images\\skull-pirana-v02.xml",
+"anim": "assets/characters\\skull-pirana-v02/animData\\Skull-pirana-v02.xml"
+},
+"skullkey": {
+"png": "assets/characters\\skullkey/images\\skullkey.png",
+"xml": "assets/characters\\skullkey/images\\skullkey.xml",
+"anim": "assets/characters\\skullkey/animData\\SkullKey.xml"
+},
+"snail": {
+"png": "assets/characters\\snail/images\\snail.png",
+"xml": "assets/characters\\snail/images\\snail.xml",
+"anim": "assets/characters\\snail/animData\\Snail.xml"
+},
+"sneaker": {
+"png": "assets/characters\\sneaker/images\\sneaker.png",
+"xml": "assets/characters\\sneaker/images\\sneaker.xml",
+"anim": "assets/characters\\sneaker/animData\\Sneaker.xml"
+},
+"spore": {
+"png": "assets/characters\\spore/images\\spore.png",
+"xml": "assets/characters\\spore/images\\spore.xml",
+"anim": "assets/characters\\spore/animData\\Spore.xml"
+},
+"spring": {
+"png": "assets/characters\\spring/images\\spring.png",
+"xml": "assets/characters\\spring/images\\spring.xml",
+"anim": "assets/characters\\spring/animData\\Spring.xml"
+},
+"topo-ninja": {
+"png": "assets/characters\\topo-ninja/images\\topo-ninja.png",
+"xml": "assets/characters\\topo-ninja/images\\topo-ninja.xml",
+"anim": "assets/characters\\topo-ninja/animData\\TopoNinja.xml"
+},
+"ugly-dragon": {
+"png": "assets/characters\\ugly-dragon/images\\ugly-dragon.png",
+"xml": "assets/characters\\ugly-dragon/images\\ugly-dragon.xml",
+"anim": "assets/characters\\ugly-dragon/animData\\Ugly-dragon.xml"
+},
+"uglyDragon": {
+"png": "assets/characters\\uglyDragon/images\\uglyDragon.png",
+"xml": "assets/characters\\uglyDragon/images\\uglyDragon.xml",
+"anim": "assets/characters\\uglyDragon/animData\\UglyDragon.xml"
+},
+"vascolet": {
+"png": "assets/characters\\vascolet/images\\av.png",
+"xml": "assets/characters\\vascolet/images\\av.xml",
+"anim": "assets/characters\\vascolet/animData\\Vascolet.xml"
+},
+"vaso": {
+"png": "assets/characters\\vaso/images\\vaso.png",
+"xml": "assets/characters\\vaso/images\\vaso.xml",
+"anim": "assets/characters\\vaso/animData\\ItemVascolet.xml"
+},
+"vida-extra": {
+"png": "assets/characters\\vida-extra/images\\vida-extra.png",
+"xml": "assets/characters\\vida-extra/images\\vida-extra.xml",
+"anim": "assets/characters\\vida-extra/animData\\ExtraLive.xml"
+},
+"volcano-flower": {
+"png": "assets/characters\\volcano-flower/images\\volcano-flower.png",
+"xml": "assets/characters\\volcano-flower/images\\volcano-flower.xml",
+"anim": "assets/characters\\volcano-flower/animData\\Volcano-flower.xml"
+}
+}

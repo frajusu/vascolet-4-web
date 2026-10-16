@@ -1,71 +1,70 @@
-# Vascolet 4 — remake web jugable
+# Vascolet 4 — Tierra de Gigantes (port web abierto)
 
-Remake web **no oficial** de **Vascolet 4** (`vascolet4.exe`, juego de plataformas argentino de 2013),
-hecho con **Rust + Bevy** y publicado gratis en **GitHub Pages**. Proyecto de preservación y homenaje:
-todos los niveles, personajes, música y sonidos son del juego original.
+Remake web **no oficial** de **Vascolet 4** (`vascolet4.exe`, plataformas 2D argentino de 2013,
+motor `bat::` + DirectX9/OpenAL), hecho en **JavaScript + Canvas** y publicado en **GitHub Pages**.
+Proyecto de preservación y homenaje: lee en vivo los archivos de datos originales
+(mapas TMX, tilesets, atlas de sprites, animaciones, música, textos, GUI).
 
 👉 **Jugar:** https://frajusu.github.io/vascolet-web/
 
-## Qué es Vascolet
-
-Plataformas 2D estilo clásico: corrés, saltás, disparás boomerangs, te agachás para esquivar,
-juntás llaves, energía y power-ups (zapatillas para correr, resortes de doble salto),
-peleás contra 13 jefes (escorpión gigante, topo ninja, dragón verde, Malmark...) a lo largo de
-**18 niveles**, con checkpoints de guardado y carteles de ayuda en español.
-
 ## Controles
 
-| Tecla | Acción |
+| Tecla / mouse | Acción |
 |---|---|
-| Flechas | Moverse (pulsar 2 veces = correr) |
+| Flechas | Moverse (pulsar 2 veces = correr), navegar menús |
 | Z / S | Saltar (mantener = más alto) |
-| A / X | Disparar boomerang |
+| A / X | Disparar boomerang (vuelve solo) |
 | Abajo | Agacharse |
-| ESC / P | Pausa |
-| ENTER | Confirmar en menús |
+| ENTER / click | Confirmar, avanzar diálogos, saltear videos |
+| ESC | Pausa / volver |
+| Mouse | Botones, nodos de capítulo, sliders, papelera |
 
-Menús: Jugar, Continuar, Niveles (1–18 con desbloqueo), Logros, Opciones (volumen),
-Ayuda y Créditos — como el original.
+Menús como el original: Jugar (mapa de capítulos 1-1…6-3 con desbloqueo), Opciones
+(volumen música/efectos, pantalla completa, estirar), Ayuda, Créditos, Logros,
+papelera para borrar el guardado, pausa con Volver/Opciones/Salir.
 
 ## Progreso guardado
 
-El avance se guarda en `localStorage` del navegador (sin cuenta ni servidor):
-nivel, vidas, monedas, desbloqueo y checkpoint. Cada 5 segundos + en cada punto de guardado.
-
-## Fidelidad al original
-
-- Niveles `.tmx` originales tal cual: capas de tiles, colisión (`solid`/`up` one-way/`damage`),
-  36 tipos de enemigos y jefes con sus posiciones, items (`&Life`, `&P-SustainJump`,
-  `&P-JumpAttack`, `&B-Item`, llaves, energía), `Start`, carteles `*Info` con los tips
-  de `texts.xml` y checkpoints `*Save`.
-- Música por nivel (`level1–6.ogg`, `boss.ogg`, `menu.ogg`...) y efectos reales (`.ogg`).
-- Resolución original 512×384 (12 tiles de alto en cámara), sprites del atlas `av.xml`.
+En `localStorage` del navegador: nivel, vidas, monedas, capítulos desbloqueados y
+checkpoints. Sin cuenta ni servidor.
 
 ## Técnica
 
-- **Sin límite de FPS:** toda la física y animación integran con delta time (`dt` con clamp
-  anti-hipos), así corre igual a 30, 60, 144 o 240 Hz.
-- **Texturas HD sin romper nada:** el mundo vive en *unidades* (1 tile = 1.0) con pivots por
-  `axis` del atlas; subir los PNG de 32px a 64/128px solo cambia nitidez, nunca posiciones.
-- **Build en la nube:** el workflow `pages.yml` compila a `wasm32-unknown-unknown` con Trunk
-  en GitHub Actions y despliega a Pages. No necesitás Rust local para jugar.
+- **Motor data-driven:** todo sale de los archivos originales en `assets/`
+  (18 niveles `.tmx`, tilesets con colisión `solid`/`up`/`damage`, 76 personajes con
+  atlas + animaciones y eventos `PlaySound`/`MakeEffect`, 214 textos, música `.ogg`,
+  videos `.mp4`, GUI completa). Nada hardcodeado salvo constantes físicas en
+  recuperación.
+- **60 Hz fijos + render libre:** la simulación avanza a paso fijo con acumulador
+  (igual a cualquier refresh rate) e interpola el render.
+- **Texturas HD sin romper nada:** el mundo vive en píxeles del juego (512×384);
+  los atlas se recortan por rect + pivot y el escalado es uniforme.
+- **Sin build:** HTML+JS estático, deploy directo a Pages. Tests:
+  `node --test tools/core.test.mjs tools/integration.test.mjs`,
+  smoke de browser: `node tools/browser-smoke.mjs`.
 
-## Desarrollo
+## Desarrollo local
 
 ```sh
-# Requiere Rust + trunk + wasm32 target
-rustup target add wasm32-unknown-unknown
-cargo install trunk
-trunk serve   # http://127.0.0.1:8080
+# servir la carpeta (los módulos ES y fetch exigen http, no file://)
+python -m http.server 8123
+# abrir http://127.0.0.1:8123/
 ```
 
-Estructura: `src/main.rs` (app/cámara), `src/world.rs` (carga TMX), `src/tmx.rs` (parser),
-`src/player.rs`, `src/enemy.rs`, `src/items.rs`, `src/menu.rs`, `src/hud.rs`,
-`src/audio.rs`, `src/game.rs`, `src/save.rs`, `src/level.rs`. Assets originales en `assets/`
-(música, mapas, personajes, GUI, videos `.mov` pendientes de conversión a webm).
+Estructura: `js/main.js` (estados/boot), `js/game.js` (nivel/jugador/enemigos/HUD),
+`js/menu.js` (menús/capítulos/opciones/pausa/videos), `js/tmx.js` (parsers),
+`js/sprite.js` (atlas+animaciones), `js/audio.js`, `js/input.js`, `js/save.js`.
+`tools/` trae tests y utilidades de ingeniería inversa (capstone/pefile/pyelftools).
+
+## Estado del port
+
+Fiel en datos y presentación (menús, capítulos, parallax, diálogos con retrato,
+HUD, sonidos por evento, videos de entrada). En recuperación desde el binario
+original (ver `tools/elf_funcs.txt`, `tools/factory.json`): física exacta del
+jugador, IA por tipo de enemigo y jefes con patrones.
 
 ## Licencia y créditos
 
-Vascolet 4 y todos sus assets pertenecen a sus autores originales. Este remake es un homenaje
-sin fines de lucro, con fines educativos y de preservación. Si sos autor y querés algún cambio,
-abrí un issue.
+Vascolet 4 y todos sus assets pertenecen a sus autores originales (Batoví Studio).
+Este remake es un homenaje sin fines de lucro, con fines educativos y de
+preservación. Si sos autor y querés algún cambio, abrí un issue.

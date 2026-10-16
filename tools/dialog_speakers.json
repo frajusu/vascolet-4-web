@@ -1,0 +1,242 @@
+{
+ "cs1-msg001": [
+  "dialogBannerFriend03",
+  "dialogBanner"
+ ],
+ "cs1-msg002": [
+  "dialogBannerFriend03",
+  "dialogBanner"
+ ],
+ "cs1-msg003": [
+  "dialogBannerFriend02",
+  "dialogBanner"
+ ],
+ "cs1-msg004": [
+  "dialogBannerFriend01",
+  "dialogBanner"
+ ],
+ "cs1-msg005": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs1-msg006": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs1-msg007": [
+  "dialogBannerFriend03",
+  "dialogBanner"
+ ],
+ "cs1-msg008": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs1-msg009": [
+  "dialogBannerFriend01",
+  "dialogBanner"
+ ],
+ "cs1-msg010": [
+  "dialogBannerFriend01",
+  "dialogBanner"
+ ],
+ "cs1-msg011": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs1-msg012": [
+  "dialogBannerMalmark",
+  "dialogBanner"
+ ],
+ "cs1-msg013": [
+  "dialogBannerMalmark",
+  "dialogBanner"
+ ],
+ "cs1-msg014": [
+  "dialogBannerMalmark",
+  "dialogBanner"
+ ],
+ "cs1-msg015": [
+  "dialogBannerMalmark",
+  "dialogBanner"
+ ],
+ "cs2-msg002": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs2-msg003": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs2-msg004": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs3-msg002": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs3-msg003": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs3-msg004": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs3-msg005": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs3-msg006": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs3-msg007": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs3-msg008": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs3-msg009": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs3-msg010": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs3-msg011": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs3-msg012": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs3-msg013": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs3-msg014": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs3-msg015": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs4-msg002": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs4-msg003": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs4-msg004": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs4-msg005": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs4-msg006": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs4-msg007": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs4-msg008": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs5-msg002": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs5-msg003": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs5-msg004": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs5-msg005": [
+  "dialogBannerMalmark",
+  "dialogBanner"
+ ],
+ "cs5-msg006": [
+  "dialogBannerMalmark",
+  "dialogBanner"
+ ],
+ "cs5-msg007": [
+  "dialogBannerMalmark",
+  "dialogBanner"
+ ],
+ "cs5-msg008": [
+  "dialogBannerMalmark",
+  "dialogBanner"
+ ],
+ "cs6-msg002": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs6-msg003": [
+  "dialogBannerFriend03",
+  "dialogBanner"
+ ],
+ "cs6-msg004": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs6-msg005": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs6-msg006": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs6-msg007": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs6-msg008": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs6-msg009": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs6-msg010": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs6-msg011": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs6-msg012": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs6-msg013": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ],
+ "cs6-msg014": [
+  "dialogBannerAle",
+  "dialogBanner"
+ ],
+ "cs6-msg015": [
+  "dialogBannerWilly",
+  "dialogBanner"
+ ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "vascolet",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node tools/serve.mjs",
+    "test:browser": "node tools/browser-smoke.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "jsdom": "^29.1.1"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.64.1"
+  }
+}

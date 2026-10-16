@@ -1,5 +1,11 @@
-/target
-/dist
-**/*.rs.bk
+node_modules/
+analysis/
+dist/
+target/
+*.log
+imm_index.json
+elf_imm.json
 vascolet-save.json
 vascolet-settings.json
+.DS_Store
+Thumbs.db

@@ -1,0 +1,106 @@
+"""Bounded original-game observations using Win32 scan-code input.
+
+Only captures the selected game's client area; never the rest of the desktop.
+Usage: python tools/observe_original.py analysis/observe.plan.json
+"""
+import ctypes as C
+from ctypes import wintypes as W
+import json
+from pathlib import Path
+import subprocess
+import sys
+import time
+from PIL import Image
+
+ROOT = Path(__file__).resolve().parents[1]
+GAME = ROOT.parent / "Vascolet" / "vascolet4.exe"
+U = C.WinDLL("user32", use_last_error=True)
+G = C.WinDLL("gdi32", use_last_error=True)
+
+class KEYBDINPUT(C.Structure):
+    _fields_ = [("wVk", W.WORD), ("wScan", W.WORD), ("dwFlags", W.DWORD),
+                ("time", W.DWORD), ("dwExtraInfo", C.c_size_t)]
+class MOUSEINPUT(C.Structure):
+    _fields_ = [("dx", W.LONG), ("dy", W.LONG), ("mouseData", W.DWORD),
+                ("dwFlags", W.DWORD), ("time", W.DWORD), ("dwExtraInfo", C.c_size_t)]
+class UNION(C.Union):
+    _fields_ = [("ki", KEYBDINPUT), ("mi", MOUSEINPUT)]
+class INPUT(C.Structure):
+    _anonymous_ = ("u",)
+    _fields_ = [("type", W.DWORD), ("u", UNION)]
+U.SendInput.argtypes = [W.UINT, C.POINTER(INPUT), C.c_int]
+U.GetDC.argtypes = [W.HWND]; U.GetDC.restype = W.HDC
+U.ReleaseDC.argtypes = [W.HWND, W.HDC]
+G.CreateCompatibleDC.argtypes = [W.HDC]; G.CreateCompatibleDC.restype = W.HDC
+G.CreateCompatibleBitmap.argtypes = [W.HDC, C.c_int, C.c_int]; G.CreateCompatibleBitmap.restype = W.HBITMAP
+G.SelectObject.argtypes = [W.HDC, W.HANDLE]; G.SelectObject.restype = W.HANDLE
+G.BitBlt.argtypes = [W.HDC, C.c_int, C.c_int, C.c_int, C.c_int, W.HDC, C.c_int, C.c_int, W.DWORD]
+G.GetDIBits.argtypes = [W.HDC, W.HBITMAP, W.UINT, W.UINT, C.c_void_p, C.c_void_p, W.UINT]
+G.DeleteObject.argtypes = [W.HANDLE]; G.DeleteDC.argtypes = [W.HDC]
+
+def window_for_pid(pid):
+    found = []
+    callback_type = C.WINFUNCTYPE(W.BOOL, W.HWND, W.LPARAM)
+    @callback_type
+    def visit(hwnd, _):
+        p = W.DWORD()
+        U.GetWindowThreadProcessId(hwnd, C.byref(p))
+        if p.value == pid and U.IsWindowVisible(hwnd): found.append(hwnd)
+        return True
+    U.EnumWindows(visit, 0)
+    return found[0] if found else None
+
+def press(scan, duration=.2):
+    extended = 1 if scan in (0x48, 0x50, 0x4b, 0x4d) else 0
+    def send(up):
+        event = INPUT(type=1, ki=KEYBDINPUT(wScan=scan, dwFlags=8 | extended | (2 if up else 0)))
+        if U.SendInput(1, C.byref(event), C.sizeof(INPUT)) != 1:
+            raise C.WinError(C.get_last_error())
+    send(False)
+    try: time.sleep(duration)
+    finally: send(True)
+    time.sleep(.15)  # DirectInput polling must observe the released state between presses.
+
+def capture(hwnd, filename):
+    rect = W.RECT(); U.GetClientRect(hwnd, C.byref(rect))
+    width, height = rect.right, rect.bottom
+    dc = U.GetDC(hwnd); mem = G.CreateCompatibleDC(dc)
+    bitmap = G.CreateCompatibleBitmap(dc, width, height)
+    old = G.SelectObject(mem, bitmap)
+    try:
+        G.BitBlt(mem, 0, 0, width, height, dc, 0, 0, 0x00CC0020)
+        G.SelectObject(mem, old)
+        # BITMAPINFOHEADER + RGBQUAD slots; negative height requests top-down rows.
+        header = C.create_string_buffer(40 + 1024)
+        import struct
+        struct.pack_into("<IiiHHIIiiII", header, 0, 40, width, -height, 1, 32, 0,
+                         width * height * 4, 0, 0, 0, 0)
+        bits = C.create_string_buffer(width * height * 4)
+        rows = G.GetDIBits(mem, bitmap, 0, height, bits, header, 0)
+        if not rows: raise C.WinError(C.get_last_error())
+        Image.frombuffer("RGB", (width, height), bits, "raw", "BGRX", 0, 1).save(filename)
+        print("CAPTURE", str(filename), width, height, flush=True)
+    finally:
+        G.DeleteObject(bitmap); G.DeleteDC(mem); U.ReleaseDC(hwnd, dc)
+
+def main():
+    plan = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+    output = ROOT / "analysis" / "original"
+    output.mkdir(parents=True, exist_ok=True)
+    proc = subprocess.Popen([str(GAME)], cwd=GAME.parent)
+    try:
+        time.sleep(4)
+        hwnd = window_for_pid(proc.pid)
+        if not hwnd: raise RuntimeError(f"No original window; process exit={proc.poll()}")
+        U.SetForegroundWindow(hwnd)
+        time.sleep(.5)
+        for step in plan["steps"]:
+            if "wait" in step: time.sleep(min(10, step["wait"]))
+            if "scan" in step: press(step["scan"], min(2, step.get("hold", .2)))
+            if "shot" in step: capture(hwnd, output / (step["shot"] + ".png"))
+    finally:
+        proc.terminate()
+        try: proc.wait(timeout=4)
+        except subprocess.TimeoutExpired: proc.kill()
+
+if __name__ == "__main__": main()
