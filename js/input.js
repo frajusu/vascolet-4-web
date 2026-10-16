@@ -1,7 +1,7 @@
 // Edges persist until a simulation step consumes them, independently of rendering.
 export const Input = {
   held: new Set(), pressed: new Set(), released: new Set(),
-  mouse: { x: 0, y: 0, inside: false },
+  mouse: { x: 0, y: 0, inside: false, revision: 0 },
   _keys: new Map(), _target: null, _handlers: null,
   init(target = globalThis.window ?? globalThis) {
     if (this._target === target) return this;
@@ -27,6 +27,7 @@ export const Input = {
       this.mouse.x = (e.clientX - r.left) / (r.width || 1) * 512;
       this.mouse.y = (e.clientY - r.top) / (r.height || 1) * 384;
       this.mouse.inside = true;
+      this.mouse.revision++;
     };
     const leave = () => { this.mouse.inside = false; };
     const click = e => {

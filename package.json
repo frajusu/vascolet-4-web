@@ -4,10 +4,11 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "node --test tools/core.test.mjs tools/integration.test.mjs tools/gameplay.test.mjs",
+    "test": "node --test tools/core.test.mjs tools/integration.test.mjs tools/gameplay.test.mjs tools/menu.test.mjs",
     "serve": "node tools/serve.mjs",
     "test:browser": "node tools/browser-smoke.mjs",
-    "test:gameplay": "node tools/browser-gameplay.mjs"
+    "test:gameplay": "node tools/browser-gameplay.mjs",
+    "test:menus": "node tools/browser-menus.mjs"
   },
   "keywords": [],
   "author": "",

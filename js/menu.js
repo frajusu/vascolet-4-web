@@ -1,6 +1,6 @@
 // Menu principal identico al original: fondo + botones del atlas menu.png
 // (jugarUp/Over, opcionesUp/Over...) + footer + version.
-// Capítulos: mapa con 18 nodos en elipse, banner ln-lvl, LOGROS/VOLVER.
+// Capítulos: 18 posiciones manuales recuperadas, fondo de progreso y título vertical.
 // Opciones reales: crop opciones + sliders + checks + VOLVER.
 // Videos: overlay <video> con skip.
 import { img, loadXML, loadAssets } from "./assets.js";
@@ -8,6 +8,8 @@ import { parseAtlas } from "./tmx.js";
 import { Input } from "./input.js";
 import { Save } from "./save.js";
 import { Audio2 } from "./audio.js";
+import { loadBitmapFont, drawBitmapText } from "./bitmap-font.js";
+import { TROPHIES } from "./trophies.js";
 
 const W = 512, H = 384;
 // layout medido (binario: pitch 40, ultimo gap 60 + screenshots CV):
@@ -52,13 +54,13 @@ export function menuUpdate() {
       if (inRect(m.x, m.y, { x: 316, y: 220, w: 110, h: 30 })) confirmSel = 1;
       if (Input.pressed.has("click")) {
         if (!inRect(m.x, m.y, { x: 196, y: 220, w: 110, h: 30 }) && !inRect(m.x, m.y, { x: 316, y: 220, w: 110, h: 30 })) return;
-        if (confirmSel === 0) { try { localStorage.clear(); } catch {} }
+        if (confirmSel === 0) Save.clear();
         confirming = false;
         return;
       }
     }
     if (Input.pressed.has("enter")) {
-      if (confirmSel === 0) { try { localStorage.clear(); } catch {} }
+      if (confirmSel === 0) Save.clear();
       confirming = false;
     }
     if (Input.pressed.has("esc")) confirming = false;
@@ -133,78 +135,86 @@ export function menuDraw(ctx) {
 }
 
 // ---------- Capítulos ----------
-// Mapa con 18 nodos en elipse, banner con ln-lvlN, LOGROS/VOLVER.
-let chAtlas = null, chSel = 0, onPickLevel = null;
-const CH_CX = 256, CH_CY = 215, CH_RX = 195, CH_RY = 140;
+// Exact manual anchor arrays from LevelSelect::init ELF 0x081b7cfc–0x081b7e57.
+export const CHAPTER_POINTS = Object.freeze([
+  [19, 231], [31, 271], [59, 299], [95, 325], [146, 343], [200, 348],
+  [249, 343], [303, 333], [352, 317], [396, 300], [433, 278], [463, 248],
+  [482, 211], [480, 174], [466, 139], [444, 106], [411, 79], [375, 63],
+].map(([x, y]) => Object.freeze({ x, y })));
+let chAtlas = null, chSel = 0, chUnlocked = 1, chArea = 1, chFont = null, onPickLevel = null;
+let chMouseRevision = 0, chTitleIndex = 0, chTitleOffset = 0, chTitlePhase = "idle";
+let chLogrosHover = false, chVolverHover = false;
 export function chPos(i) {
-  const a = (135 - i * 20) * Math.PI / 180;
-  return { x: CH_CX + CH_RX * Math.cos(a), y: CH_CY + CH_RY * Math.sin(a) };
+  return CHAPTER_POINTS[i];
 }
 
-export async function chaptersInit(pick) {
+export async function chaptersInit(pick, { preserve = false } = {}) {
   onPickLevel = pick;
-  chSel = Math.max(0, Math.min(17, (Save.unlocked() || 1) - 1));
-  chSlideT = 1; chLogrosHover = chVolverHover = false;
+  chUnlocked = Save.unlocked();
+  if (!preserve) {
+    chSel = chUnlocked - 1;
+    // Snapshot the progression background ONCE. Selection never changes it.
+    chArea = Math.min(6, 1 + Math.floor((chUnlocked - 1) / 3));
+  } else chSel = Math.min(chSel, chUnlocked - 1);
+  chTitleIndex = chSel; chTitleOffset = 0; chTitlePhase = "idle";
+  chLogrosHover = chVolverHover = false; chMouseRevision = Input.mouse.revision;
   if (!chAtlas) chAtlas = parseAtlas(await loadXML("assets/gui/level/level.xml"));
-  await loadAssets(["assets/gui/level/level.png"]);
-  const area = 1 + Math.floor(chSel / 3);
-  await loadAssets([`assets/gui/level/area0${area}.jpg`]).catch(() => {});
+  if (!chFont) chFont = await loadBitmapFont("winnie14-ob");
+  await loadAssets(["assets/gui/level/level.png", `assets/gui/level/area0${chArea}.jpg`]);
 }
 
-export function chaptersUpdate() {
+function selectChapter(index) {
+  if (index < 0 || index >= chUnlocked || index === chSel) return;
+  chSel = index; chTitlePhase = "out";
+  Audio2.sfx("assets/audio/button.wav");
+}
+
+export function chaptersUpdate(dt = 1 / 60) {
   const m = Input.mouse;
-  let changed = false;
-  const move = (d) => { chSel = (chSel + d + 18) % 18; Audio2.sfx("assets/audio/button.wav"); changed = true; };
-  if (Input.pressed.has("left")) move(17);
-  if (Input.pressed.has("right")) move(1);
-  if (Input.pressed.has("up")) move(15);
-  if (Input.pressed.has("down")) move(3);
+  if (Input.pressed.has("left") || Input.pressed.has("up")) selectChapter(chSel - 1);
+  if (Input.pressed.has("right") || Input.pressed.has("down")) selectChapter(chSel + 1);
   if (m.inside) {
-    for (let i = 0; i < 18; i++) {
-      const p = chPos(i);
-      if (Math.hypot(m.x - p.x, m.y - p.y) < 22 && chSel !== i) {
-        chSel = i; Audio2.sfx("assets/audio/button.wav"); changed = true;
-      }
+    let node = -1;
+    for (let i = 0; i < chUnlocked; i++) {
+      const p = chPos(i), e = chAtlas.levelUp;
+      if (inRect(m.x, m.y, { x: p.x - e.ax, y: p.y - e.ay, w: e.w, h: e.h })) node = i;
     }
-    if (inRect(m.x, m.y, { x: 394, y: 12, w: 110, h: 30 })) chLogrosHover = true; else chLogrosHover = false;
-    if (inRect(m.x, m.y, { x: 394, y: 342, w: 110, h: 30 })) chVolverHover = true; else chVolverHover = false;
+    // An idle pointer must not undo keyboard selection every rendered frame.
+    if (m.revision !== chMouseRevision || Input.pressed.has("click")) {
+      chMouseRevision = m.revision;
+      if (node >= 0) selectChapter(node);
+    }
+    chLogrosHover = inRect(m.x, m.y, { x: 394, y: 9, w: 110, h: 30 });
+    chVolverHover = inRect(m.x, m.y, { x: 394, y: 345, w: 110, h: 30 });
     if (Input.pressed.has("click")) {
-      for (let i = 0; i < 18; i++) {
-        const p = chPos(i);
-        if (Math.hypot(m.x - p.x, m.y - p.y) < 22) {
-          if (chSel === i) { tryEnterLevel(); return; }
-          chSel = i; Audio2.sfx("assets/audio/button.wav"); changed = true;
-        }
-      }
+      if (node >= 0) { tryEnterLevel(); return; }
       if (chLogrosHover) { onPickLevel && onPickLevel(-2); return; }
       if (chVolverHover) { onPickLevel && onPickLevel(-1); return; }
     }
   } else { chLogrosHover = chVolverHover = false; }
   if (Input.pressed.has("esc")) { onPickLevel && onPickLevel(-1); return; }
   if (Input.pressed.has("enter")) { tryEnterLevel(); return; }
-  if (changed) chSlideT = 0;
-  const area = 1 + Math.floor(chSel / 3);
-  const p = `assets/gui/level/area0${area}.jpg`;
-  if (!img(p)) loadAssets([p]).catch(() => {});
+  if (chTitlePhase === "out") {
+    chTitleOffset = Math.max(-46, chTitleOffset - 300 * dt);
+    if (chTitleOffset === -46) { chTitleIndex = chSel; chTitlePhase = "in"; }
+  } else if (chTitlePhase === "in") {
+    chTitleOffset = Math.min(0, chTitleOffset + 300 * dt);
+    if (chTitleOffset === 0) chTitlePhase = "idle";
+  }
 }
 
 function tryEnterLevel() {
-  if (chSel + 1 <= Save.unlocked()) onPickLevel && onPickLevel(chSel + 1);
-  else Audio2.sfx("assets/audio/error.wav");
+  if (chSel + 1 <= chUnlocked) onPickLevel && onPickLevel(chSel + 1);
 }
-
-let chLogrosHover = false, chVolverHover = false, chSlideT = 1;
 
 export function chaptersDraw(ctx, texts) {
   ctx.imageSmoothingEnabled = true;
-  const area = 1 + Math.floor(chSel / 3);
-  const bg = img(`assets/gui/level/area0${area}.jpg`);
-  if (bg) ctx.drawImage(bg, 0, 0, bg.width, bg.height, 0, 0, W, H);
+  const bg = img(`assets/gui/level/area0${chArea}.jpg`);
+  if (bg) ctx.drawImage(bg, 0, 0, W, H, 0, 0, W, H);
   const sheet = img("assets/gui/level/level.png");
-  const unlocked = Save.unlocked();
   for (let i = 0; i < 18; i++) {
     const p = chPos(i);
-    const open = i + 1 <= unlocked;
+    const open = i < chUnlocked;
     const key = !open ? "levelDisabled" : (i === chSel ? "levelOver" : "levelUp");
     const e = chAtlas && chAtlas[key];
     if (sheet && e) {
@@ -212,22 +222,13 @@ export function chaptersDraw(ctx, texts) {
       ctx.drawImage(sheet, e.x, e.y, e.w, e.h, p.x - e.ax, p.y - e.ay, e.w, e.h);
       ctx.imageSmoothingEnabled = true;
     }
-    if (i === chSel && chAtlas && chAtlas.levelIndicator && sheet) {
-      // Sin indicador: el original no muestra flecha sobre el nodo.
-    }
   }
   const b = chAtlas && chAtlas.banner;
-  // titulo con deslizamiento al cambiar de capitulo
-  chSlideT = Math.min(1, chSlideT + 1 / 15);
-  const slide = Math.round((1 - chSlideT) * 40);
   if (sheet && b) {
     ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(sheet, b.x, b.y, b.w, b.h, 8 + slide, 8, b.w, b.h);
-    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(sheet, b.x, b.y, b.w, b.h, -20, chTitleOffset, b.w, b.h);
   }
-  ctx.font = "bold 20px sans-serif";
-  ctx.fillStyle = "#ffd75e";
-  ctx.fillText(texts[`ln-lvl${chSel + 1}`] || `Capítulo ${chSel + 1}`, 24 + slide, 38);
+  if (chFont) drawBitmapText(ctx, chFont, texts[`ln-lvl${chTitleIndex + 1}`] || `Capítulo ${chTitleIndex + 1}`, 12, 18 + chTitleOffset);
   const msheet = img("assets/gui/menu/menu.png");
   const drawBtn = (key, x, y) => {
     const e = atlas && atlas[key];
@@ -237,8 +238,8 @@ export function chaptersDraw(ctx, texts) {
       ctx.imageSmoothingEnabled = true;
     }
   };
-  drawBtn(chLogrosHover ? "logrosOver" : "logrosUp", 394, 12);
-  drawBtn(chVolverHover ? "volverOver" : "volverUp", 394, 342);
+  drawBtn(chLogrosHover ? "logrosOver" : "logrosUp", 394, 9);
+  drawBtn(chVolverHover ? "volverOver" : "volverUp", 394, 345);
 }
 
 // ---------- Opciones reales ----------
@@ -380,33 +381,36 @@ export function optionsDraw(ctx) {
 }
 
 // ---------- Logros ----------
-// Fondo achievements + lista simple de progreso.
+// Original twenty-card atlas layout over its 512x384 background region.
+let achAtlas = null, achHover = false, achItems = new Set();
+const ACH_BACK = { x: 201, y: 325, w: 110, h: 30 };
 export async function achInit() {
-  await loadAssets(["assets/images/achievements/background.jpg", "assets/images/achievements/trofeos.png"]).catch(() => {});
+  if (!achAtlas) achAtlas = parseAtlas(await loadXML("assets/images/achievements/trofeos.xml"));
+  if (!atlas) atlas = parseAtlas(await loadXML("assets/gui/menu/menu.xml"));
+  await loadAssets(["assets/images/achievements/background.jpg", "assets/images/achievements/trofeos.png", "assets/gui/menu/menu.png"]);
+  achHover = false;
+  const items = Save.read()?.items;
+  achItems = new Set(Array.isArray(items) ? items : []);
 }
 
 export function achUpdate(goBack) {
-  if (Input.pressed.size) goBack();
+  const m = Input.mouse;
+  achHover = m.inside && inRect(m.x, m.y, ACH_BACK);
+  if (Input.pressed.has("esc") || Input.pressed.has("enter") || (Input.pressed.has("click") && achHover)) goBack();
 }
 
 export function achDraw(ctx) {
   ctx.imageSmoothingEnabled = true;
   const bg = img("assets/images/achievements/background.jpg");
-  if (bg) ctx.drawImage(bg, 0, 0, bg.width, bg.height, 0, 0, W, H);
-  else { ctx.fillStyle = "#1a0d08"; ctx.fillRect(0, 0, W, H); }
+  if (bg) ctx.drawImage(bg, 0, 0, W, H, 0, 0, W, H);
   const tr = img("assets/images/achievements/trofeos.png");
-  if (tr) {
-    ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(tr, 0, 0, Math.min(tr.width, 300), Math.min(tr.height, 120), 20, 60, Math.min(tr.width, 300), Math.min(tr.height, 120));
-    ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingEnabled = false;
+  if (tr && achAtlas) for (const trophy of TROPHIES) {
+    const e = achAtlas[`${trophy.key}_${achItems.has(trophy.item) ? "enabled" : "disabled"}`];
+    if (e) ctx.drawImage(tr, e.x, e.y, e.w, e.h, trophy.x - e.ax, trophy.y - e.ay, e.w, e.h);
   }
-  ctx.font = "bold 22px sans-serif"; ctx.fillStyle = "#ffd75e";
-  ctx.fillText("LOGROS", 24, 40);
-  ctx.font = "bold 16px sans-serif"; ctx.fillStyle = "#fff";
-  const un = Save.unlocked();
-  ctx.fillText(`Capítulos desbloqueados: ${un}/18`, 24, 220);
-  ctx.font = "bold 14px sans-serif"; ctx.fillStyle = "#ffd75e";
-  ctx.fillText("Cualquier tecla o click: volver", 24, 360);
+  const buttons = img("assets/gui/menu/menu.png"), back = atlas?.[achHover ? "volverOver" : "volverUp"];
+  if (buttons && back) ctx.drawImage(buttons, back.x, back.y, back.w, back.h, ACH_BACK.x, ACH_BACK.y, back.w, back.h);
 }
 
 // ---------- Pausa ----------

@@ -170,7 +170,7 @@ export async function loadLevel(n, fresh = true) {
     G.enemies.push(createEnemy(o, isBoss));
   }
   for (const o of group(G.map, "Items"))
-    G.items.push({ kind: o.name, x: o.x + 16, y: o.y + 16, taken: false, t: 0 });
+    G.items.push({ kind: o.name, x: o.x + 16, y: o.y + 16, taken: Save.hasItem(o.name), t: 0 });
   G.player = {
     x: (G.start || { x: 256 }).x, y: (G.start || { y: 352 }).y,
     vx: 0, vy: 0, w: 28, h: 56, face: 1, ground: false, coyote: 0, buffer: 0,
@@ -394,6 +394,13 @@ export function gameUpdate(dt) {
     } else hurtPlayer();
   }
   updateCamera(G, dt);
+  for (const item of G.items) {
+    if (item.taken || Math.abs(p.x - item.x) > 24 || p.y < item.y - 18 || p.y - p.h > item.y + 18) continue;
+    if (Save.collectItem(item.kind)) {
+      item.taken = true;
+      Audio2.sfx(SFX + (item.kind.startsWith("&Key") ? "key.ogg" : "energy.ogg"));
+    }
+  }
   G.tipT = Math.max(0, G.tipT - dt);
   for (const i of G.infos) {
     // Los carteles los explica Lampi (help.jpg original). Sin pausa.
@@ -486,7 +493,7 @@ function releaseBoomerang() {
   if (G.booms.length >= 2) return;
   const c = G.charCache.get("Boomerang"), anim = c?.anims.length ? new AnimPlayer(c.anims) : null;
   if (anim?.has("normal")) anim.set("normal");
-  G.booms.push(createBoomerang({ ...p, face: attack.face, crouch: attack.crouch }, anim));
+  G.booms.push(createBoomerang({ x: p.x, y: p.y, face: attack.face, crouch: attack.crouch }, anim));
   Audio2.sfx(SFX + "boomerang.ogg");
 }
 
@@ -594,6 +601,7 @@ export function gameDraw(ctx, alpha = 1) {
   const F = layer(G.map, "foreground");
   // items
   for (const i of G.items) {
+    if (i.taken) continue;
     ctx.fillStyle = "#7dff9a";
     ctx.fillRect(i.x - cx - 3, i.y - cy - 3, 6, 6);
   }

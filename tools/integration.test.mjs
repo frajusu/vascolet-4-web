@@ -9,6 +9,7 @@ import { Game, loadLevel, gameUpdate, gameDraw } from "../js/game.js";
 import { parseAnims, TILE_SOLID, TILE_UP, TILE_DAMAGE } from "../js/tmx.js";
 import { AnimPlayer } from "../js/sprite.js";
 import { createEnemy } from "../js/enemies.js";
+import { Save } from "../js/save.js";
 
 const dom = new JSDOM('<canvas id="game" width="512" height="384"></canvas><div id="boot"></div><div id="err"></div>', {
   url: "https://integration.test/", pretendToBeVisual: true,
@@ -227,6 +228,15 @@ test("enemy contact removes one heart and invulnerability prevents damage every 
   assert.ok(Math.abs(Game.energy - (100 - 100 / 7)) < 1e-8);
   const energy = Game.energy;
   tick(30); assert.equal(Game.energy, energy); assert.ok(p.inv > 0);
+});
+
+test("collecting a trophy in gameplay is persisted and checkpoints preserve both trophy and chapter progress", async () => {
+  Save.clear(); Save.unlock(6); await freshLevel(); tick();
+  Game.items = [{ kind: "&B-Item1", x: Game.player.x, y: Game.player.y - 10, taken: false }];
+  tick(); assert.equal(Game.items[0].taken, true); assert.equal(Save.hasItem("&B-Item1"), true);
+  Save.write({ level: 1, x: 300, y: 320 });
+  assert.equal(Save.unlocked(), 6); assert.equal(Save.hasItem("&B-Item1"), true);
+  Save.clear();
 });
 
 test("attack releases at the original XML flag, crouch uses its own pose, and rapid fire respects two boomerangs", async () => {

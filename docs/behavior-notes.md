@@ -74,3 +74,34 @@ el recorrido del boomerang. Su encuentro final con una mosca tiene una colocaci�
 controlada y se identifica explícitamente como tal. Los informes se escriben en
 el directorio temporal `opencode`. Estas verificaciones prueban funcionalidad y
 regresiones específicas; no certifican equivalencia completa con el original.
+
+## Segunda corrección: retorno, selector y trofeos
+
+El caso anterior de retorno sólo cubría movimiento simple. Alternar carrera a
+300 px/s y saltos reprodujo un boomerang que seguía al jugador durante 4,5 s.
+Se reemplazó el controlador de ejes independientes por velocidad vectorial y se
+comprueba la recogida con el movimiento relativo de ambos cuerpos entre pasos.
+La salida conserva sus coordenadas de mundo sin consultar la posición del dueño;
+las pruebas comparan dos lanzamientos idénticos con dueños que se mueven distinto.
+La prueba de saltos/cambios rápidos ahora lo recoge en unos 2,1 s, y la secuencia
+real de teclado en Chromium de salto/cambio de dirección en unos 1,17 s. Esto
+resuelve esos casos reproducidos, sin afirmar que sea la física exacta del original.
+
+`LevelSelect::init`, ELF `0x081b7cfc`–`0x081b7e57`, contiene dos tablas de 18
+coordenadas manuales. Se trasladaron a `CHAPTER_POINTS`: ya no se aproxima el
+mapa con una elipse. Se recorta sólo el área útil 512×384 de los fondos de 512².
+El área se fija al entrar usando el progreso y se conserva al ir/volver de Logros.
+La navegación sólo selecciona capítulos accesibles; el título sale hacia arriba,
+cambia oculto y vuelve a entrar, con tiempo independiente de la frecuencia de dibujo.
+La tipografía se toma de `winnie14-ob.xml/png`.
+
+`AchievementsState` (`0x08258790`) define dos listas paralelas: 20 nombres de
+sprites y 20 identificadores únicos de objetos. También define origen `(13,120)`,
+paso horizontal 45, separación de grupos 22 y paso de fila 113. Se recuperó esa
+disposición y el botón Volver centrado en `(256,340)`. Se comparó con una captura
+del original a 800×600. Los objetos recogidos se guardan en `Save.items`; sólo esos
+trofeos se muestran en color. Los checkpoints ahora conservan objetos y capítulos
+desbloqueados. La papelera borra únicamente el guardado del juego.
+
+La comparación visual adicional se ejecuta con `npm run test:menus` y genera
+capturas del selector, fondo fijo al navegar y trofeos gris/color.

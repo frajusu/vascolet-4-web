@@ -93,6 +93,22 @@ try {
   const killed = await page.evaluate(async () => (await import("/js/game.js")).Game.enemies[0].hp === 0);
   assert.ok(killed, "boomerang must kill the controlled fly encounter");
   await shot("controlled-fly-hit"); report.checks.push("Encuentro controlado: impacto y muerte de mosca");
+  await key("Escape");
+  await page.evaluate(async () => {
+    const { Game: g, loadLevel } = await import("/js/game.js"); await loadLevel(1); g.infos = []; g.dlg = null;
+  });
+  await key("Escape"); await key("x");
+  await page.waitForFunction(async () => (await import("/js/game.js")).Game.booms.length === 1);
+  await page.evaluate(async () => { window.__movingBoom = (await import("/js/game.js")).Game.booms[0]; });
+  await page.keyboard.down("ArrowRight"); await page.keyboard.down("z");
+  await page.waitForTimeout(250); await shot("moving-boomerang-out");
+  await page.keyboard.up("ArrowRight"); await page.keyboard.up("z"); await page.keyboard.down("ArrowLeft");
+  await page.waitForTimeout(300); await page.keyboard.up("ArrowLeft");
+  await shot("moving-boomerang-turn"); await page.waitForTimeout(1900);
+  report.movingThrow = await page.evaluate(() => ({ caught: window.__movingBoom.caught, t: window.__movingBoom.t,
+    launchX: window.__movingBoom.launchX, launchY: window.__movingBoom.launchY }));
+  assert.equal(report.movingThrow.caught, true, "moving throw must be caught rather than expire or trail the player");
+  report.checks.push("Lanzamiento con salto y cambio de dirección: retorno y recogida reales");
   assert.deepEqual(errors, []); assert.equal(await page.locator("#err").textContent(), "");
   report.ok = true;
 } catch (e) { report.ok = false; report.failure = e.stack; process.exitCode = 1; }

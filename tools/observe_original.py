@@ -31,6 +31,7 @@ class INPUT(C.Structure):
 U.SendInput.argtypes = [W.UINT, C.POINTER(INPUT), C.c_int]
 U.GetForegroundWindow.restype = W.HWND
 U.SetForegroundWindow.argtypes = [W.HWND]
+U.ClientToScreen.argtypes = [W.HWND, C.POINTER(W.POINT)]
 U.GetDC.argtypes = [W.HWND]; U.GetDC.restype = W.HDC
 U.ReleaseDC.argtypes = [W.HWND, W.HDC]
 G.CreateCompatibleDC.argtypes = [W.HDC]; G.CreateCompatibleDC.restype = W.HDC
@@ -106,10 +107,21 @@ def main():
             U.SetForegroundWindow(hwnd)
             time.sleep(.15)
             if "wait" in step: time.sleep(min(10, step["wait"]))
+            if "click" in step:
+                if U.GetForegroundWindow() != hwnd: raise RuntimeError("Original is not focused")
+                point = W.POINT(*step["click"])
+                U.ClientToScreen(hwnd, C.byref(point))
+                U.SetCursorPos(point.x, point.y)
+                time.sleep(.2)
+                event = INPUT(type=0, mi=MOUSEINPUT(dwFlags=2))
+                U.SendInput(1, C.byref(event), C.sizeof(INPUT)); time.sleep(.15)
+                event.mi.dwFlags = 4
+                U.SendInput(1, C.byref(event), C.sizeof(INPUT)); time.sleep(.2)
             if "record" in step:
                 if U.GetForegroundWindow() != hwnd:
                     raise RuntimeError(f"Original lost focus ({hwnd} != {U.GetForegroundWindow()}); refusing to send gameplay input")
                 scans = step.get("keys", [])
+                used = set(scans)
                 start = time.perf_counter()
                 samples = []
                 try:
@@ -118,12 +130,16 @@ def main():
                     interval = max(.04, step.get("interval", .1))
                     for i in range(count):
                         time.sleep(max(0, start + i * interval - time.perf_counter()))
+                        for event in step.get("events", []):
+                            if event["frame"] != i: continue
+                            for scan in event.get("up", []): send_key(scan, True)
+                            for scan in event.get("down", []): send_key(scan); used.add(scan)
                         samples.append({"frame": i, "seconds": time.perf_counter() - start})
                         capture(hwnd, output / f"{step['record']}-{i:03d}.png")
                         if i == step.get("releaseAt", -1):
                             for scan in scans: send_key(scan, True)
                 finally:
-                    for scan in scans: send_key(scan, True)
+                    for scan in used: send_key(scan, True)
                 (output / f"{step['record']}-times.json").write_text(json.dumps(samples))
             if "scan" in step: press(step["scan"], min(2, step.get("hold", .2)))
             if "shot" in step: capture(hwnd, output / (step["shot"] + ".png"))

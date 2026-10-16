@@ -108,7 +108,7 @@ async function startLevel(n) {
   setBoot(null); state = "game";
 }
 
-async function showChapters() {
+async function showChapters(preserve = false) {
   state = "loading"; resetClock();
   Audio2.stopMusic();
   setBoot("Cargando mapa…");
@@ -119,7 +119,7 @@ async function showChapters() {
     if (n === -1) returnToMenu();
     else if (n === -2) void showAchievements().catch(fatal);
     else void startLevel(n).catch(fatal);
-  });
+  }, { preserve });
   if (state === "fatal") return;
   Input.endStep(); setBoot(null); state = "chapters";
 }
@@ -226,6 +226,8 @@ function staticUpdate(kind) {
 function frame(ts) {
   if (state === "fatal") return;
   try {
+    const paintedUI = ["menu", "chapters", "logros", "help", "credits", "options", "paused"].includes(state);
+    canvas.style.imageRendering = paintedUI ? "auto" : "pixelated";
     const dt = last === null ? 0 : Math.max(0, Math.min(MAX_DELTA, (ts - last) / 1000));
     last = ts;
     if (document.hidden) { resetClock(); requestAnimationFrame(frame); return; }
@@ -233,11 +235,11 @@ function frame(ts) {
       try { menuUpdate(); } finally { Input.endStep(); }
       menuDraw(ctx);
     } else if (state === "chapters") {
-      try { chaptersUpdate(); } finally { Input.endStep(); }
+      try { chaptersUpdate(dt); } finally { Input.endStep(); }
       if (state === "chapters") chaptersDraw(ctx, Game.texts);
       else if (state === "menu") menuDraw(ctx);
     } else if (state === "logros") {
-      try { achUpdate(() => { if (state === "logros") void showChapters().catch(fatal); }); } finally { Input.endStep(); }
+      try { achUpdate(() => { if (state === "logros") void showChapters(true).catch(fatal); }); } finally { Input.endStep(); }
       if (state === "logros") achDraw(ctx);
       else if (state === "menu") menuDraw(ctx);
     } else if (state === "options") {

@@ -25,6 +25,7 @@ test("standing throw decelerates, reverses around 200 logical pixels and is caug
   assert.ok(peak - p.x > 180 && peak - p.x < 240, `range ${peak - p.x}`);
   assert.ok(elapsed > 1.0 && elapsed < 1.5, `catch time ${elapsed}`);
   assert.equal(b.life, 0);
+  assert.equal(b.caught, true, "must be caught, not expire");
 });
 
 test("return catches a player who has changed height and keeps moving", () => {
@@ -35,6 +36,31 @@ test("return catches a player who has changed height and keeps moving", () => {
   }
   assert.equal(b.life, 0);
   assert.equal(b.state, "return");
+  assert.equal(b.caught, true);
+});
+
+test("outbound world trajectory is independent of running, jumping, facing and crouching after release", () => {
+  const still = player(), moving = player(), a = createBoomerang(still), b = createBoomerang(moving);
+  for (let i = 0; i < 32; i++) {
+    moving.x += 5; moving.y -= 4; moving.face *= -1; moving.crouch = i % 2 === 0;
+    updateBoomerang(a, still, [], 1 / 60, callbacks());
+    updateBoomerang(b, moving, [], 1 / 60, callbacks());
+    assert.equal(a.x, b.x); assert.equal(a.y, b.y);
+  }
+  assert.notEqual(a.x - still.x, b.x - moving.x, "must not retain a parent-relative offset");
+});
+
+test("rapid running reversals and repeated jumps are caught instead of trailing for 4+ seconds", () => {
+  const p = player(), b = createBoomerang(p);
+  let i = 0;
+  for (; i < 180 && b.life > 0; i++) {
+    const t = i / 60;
+    p.prevX = p.x; p.prevY = p.y;
+    p.x += (Math.floor(t * 2) % 2 ? -300 : 300) / 60;
+    p.y = 320 - 160 * Math.abs(Math.sin(t * 4));
+    updateBoomerang(b, p, [], 1 / 60, callbacks());
+  }
+  assert.equal(b.caught, true); assert.ok(i / 60 < 2.5, `catch took ${i / 60}s`);
 });
 
 test("a one-way leaf does not destroy a horizontal throw; a solid wall knocks it down", () => {
