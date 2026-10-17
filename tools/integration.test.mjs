@@ -10,6 +10,7 @@ import { parseAnims, TILE_SOLID, TILE_UP, TILE_DAMAGE } from "../js/tmx.js";
 import { AnimPlayer } from "../js/sprite.js";
 import { createEnemy } from "../js/enemies.js";
 import { Save } from "../js/save.js";
+import { PLAYER_PHYSICS, itemDefinition, progressFromItems } from "../js/progression.js";
 
 const dom = new JSDOM('<canvas id="game" width="512" height="384"></canvas><div id="boot"></div><div id="err"></div>', {
   url: "https://integration.test/", pretendToBeVisual: true,
@@ -94,7 +95,8 @@ function clearAssets() {
   for (const cache of [A.images, A.texts, A.imagePromises, A.xmlPromises]) cache.clear();
   Game.charCache.clear(); Game.hudAtlas = null;
 }
-async function freshLevel() {
+async function freshLevel({ preserveSave = false } = {}) {
+  if (!preserveSave) Save.clear();
   Input.reset(); Game.chars = { vascolet: charEntry }; Game.texts = {};
   await loadLevel(1);
 }
@@ -226,7 +228,7 @@ test("enemy contact removes one heart and invulnerability prevents damage every 
   const fly = createEnemy({ name: "Fly", x: p.x - 16, y: p.y - 30 });
   fly.active = true; Game.enemies = [fly];
   tick();
-  assert.ok(Math.abs(Game.energy - (100 - 100 / 7)) < 1e-8);
+  assert.ok(Math.abs(Game.energy - (100 - 100 / 5)) < 1e-8);
   const energy = Game.energy;
   tick(30); assert.equal(Game.energy, energy); assert.ok(p.inv > 0);
 });
@@ -241,11 +243,11 @@ test("damage launches the player backward/upward, input cannot cancel it, and re
   assert.ok(p.x < startX - 10); assert.ok(p.y < startY - 15); assert.equal(p.face, 1);
   assert.equal(p.vx, -60, "normal movement must not overwrite recoil");
   Input.reset(); tick(60); assert.equal(p.damage, null); assert.equal(p.ground, true);
-  assert.ok(Math.abs(Game.energy - (100 - 100 / 7)) < 1e-8);
+  assert.ok(Math.abs(Game.energy - (100 - 100 / 5)) < 1e-8);
 });
 
 test("collecting a trophy in gameplay is persisted and checkpoints preserve both trophy and chapter progress", async () => {
-  Save.clear(); Save.unlock(6); await freshLevel(); tick();
+  Save.clear(); Save.unlock(6); await freshLevel({ preserveSave: true }); tick();
   Game.items = [{ kind: "&B-Item1", x: Game.player.x, y: Game.player.y - 10, taken: false }];
   tick(); assert.equal(Game.items[0].taken, true); assert.equal(Save.hasItem("&B-Item1"), true);
   Save.write({ level: 1, x: 300, y: 320 });
@@ -258,6 +260,7 @@ test("attack releases at the original XML flag, crouch uses its own pose, and ra
     "../assets/characters/vascolet/animData/Vascolet.xml", import.meta.url), "utf8"), "text/xml");
   const anims = parseAnims(doc);
   await freshLevel(); tick();
+  Game.items = [{ kind: "&B-Item1", x: Game.player.x, y: Game.player.y - 10, taken: false }]; tick();
   Game.player.anim = new AnimPlayer(anims); Game.player.anim.set("stand");
   Input.pressed.add("x"); tick();
   assert.equal(Game.booms.length, 0, "no shot on initial attack pose");
@@ -308,6 +311,110 @@ test("help/save signs meet the floor, Lampi returns on re-entry, dialogues stay 
   Input.reset(); clearAssets();
 });
 
+test("a new game gates running, sustained height, double jump and stomping by collected powers", async () => {
+  await freshLevel(); tick();
+  assert.equal(Game.maxHearts, 5); assert.equal(Game.abilities.maxBoomerangs, 1);
+  Input.held.add("right"); Input.pressed.add("right"); tick(3); Input.reset(); tick();
+  Input.held.add("right"); Input.pressed.add("right"); tick(6);
+  assert.equal(Game.player.run, false); assert.equal(Game.player.vx, 160);
+  const apex = async (powered, held = true) => {
+    await freshLevel(); tick();
+    if (powered) { Game.items = [{kind:"&P-SustainJump",x:Game.player.x,y:300}]; tick(); }
+    Input.held.add("z"); Input.pressed.add("z"); tick(); if (!held) Input.reset();
+    let minY = Game.player.y;
+    for (let i=0;i<60;i++) { tick(); minY=Math.min(minY,Game.player.y); }
+    return 320-minY;
+  };
+  const shortJump=await apex(false), sustained=await apex(true);
+  assert.ok(shortJump>25 && shortJump<45, `short jump ${shortJump}`);
+  assert.ok(sustained>80 && sustained<90, `sustained ${sustained}`);
+  assert.ok((await apex(true,false))<45,"releasing still cuts the upgraded jump");
+  await freshLevel(); tick(); Input.held.add("z"); Input.pressed.add("z"); tick(8); Input.reset();
+  const before=Game.player.vy; Input.pressed.add("z"); tick();
+  assert.ok(Game.player.vy>before, "no extra jump without DoubleJump");
+  Save.collectItem("&P-Run"); Save.collectItem("&P-DoubleJump"); Save.collectItem("&P-SustainJump");
+  await freshLevel({preserveSave:true}); tick();
+  Input.held.add("right"); Input.pressed.add("right"); tick(); Input.reset(); tick();
+  Input.held.add("right"); Input.pressed.add("right"); tick(8);
+  assert.equal(Game.player.run,true); assert.equal(Game.player.vx,280);
+  Input.held.add("z"); Input.pressed.add("z"); tick(8); Input.held.delete("z"); tick();
+  Input.held.add("z"); Input.pressed.add("z"); tick(); assert.ok(Game.player.vy < -350);
+  assert.equal(Game.player.doubleUsed,true);
+  Input.pressed.add("z"); const second=Game.player.vy; tick(); assert.ok(Game.player.vy>second);
+  assert.equal(progressFromItems(null).run,false);
+});
+
+test("jump-attack pickup enables stomping; touching an enemy from above before it still hurts", async () => {
+  for (const owned of [false,true]) {
+    await freshLevel(); tick();
+    if (owned) { Game.items=[{kind:"&P-JumpAttack",x:Game.player.x,y:300}]; tick(); }
+    Object.assign(Game.player,{y:270,vy:120,ground:false,coyote:0,inv:0});
+    const fly=createEnemy({name:"Fly",x:Game.player.x-16,y:304}); fly.active=true;Game.enemies=[fly];
+    tick();
+    assert.equal(fly.hp,owned?0:1); assert.equal(Game.energy,owned?100:80);
+    if (owned) assert.equal(Game.player.vy,-280);
+  }
+});
+
+test("an open map bottom loses a life and restores the checkpoint instead of creating an invisible floor", async () => {
+  await freshLevel(); Game.grid.fill(0);
+  for(let i=0;i<180 && Game.lives===5;i++) tick();
+  assert.equal(Game.lives,4);assert.equal(Game.player.y,Game.checkpoint.y);
+  assert.equal(Save.run().lives,4);assert.equal(Game.energy,100);
+});
+
+test("down+jump drops through one-way leaves but never through solid terrain", async () => {
+  for (const doubleJump of [false,true]) for (const flags of [TILE_UP,TILE_SOLID,TILE_UP|TILE_SOLID]) {
+    await freshLevel(); Game.grid.fill(0); Game.grid.fill(flags,10*Game.gw,11*Game.gw); tick();
+    Game.abilities.doubleJump=doubleJump;
+    Input.held.add("down"); Input.held.add("z"); Input.pressed.add("z"); tick();
+    assert.equal(Game.player.y>320,flags===TILE_UP, `flags=${flags}`);
+  }
+});
+
+test("every real level-1 item has animated art, consumables work, and checkpoint/death/reload preserve progress", async () => {
+  Save.clear(); Input.reset(); clearAssets();
+  const fixture=fixtures.get("assets/data/maps/level1.tmx"); fixtures.delete("assets/data/maps/level1.tmx");
+  try {
+    Game.chars=JSON.parse(await readFile(new URL("../assets/chars.json",import.meta.url),"utf8"));
+    await loadLevel(1); tick();
+    assert.equal(Game.items.length,13); assert.ok(Game.items.every(i=>i.definition && i.anim));
+    assert.equal(Game.items.some(i=>i.kind==="&P-Run"),false);
+    const ctx=context(); gameDraw(ctx);
+    assert.ok(ctx.draws.filter(d=>d.image===Game.charCache.get("Items").img).length>=13);
+    const expectedEnemies=Game.enemies.length;
+    const take=kind=>{
+      const item=Game.items.find(i=>i.kind===kind && !i.taken);
+      Object.assign(Game.player,{x:item.x,y:item.y+16,vy:0,vx:0,inv:1e6,damage:null}); tick();
+      assert.equal(item.taken,true,kind); return item;
+    };
+    take("&P-SustainJump"); take("&P-JumpAttack");
+    take("&Life1"); take("&Life2"); take("&B-Item1"); take("&B-Item2"); take("&Key1");
+    assert.equal(Game.maxHearts,7); assert.equal(Game.abilities.maxBoomerangs,3);
+    assert.equal(Game.abilities.run,false); assert.equal(Game.abilities.jumpAttack,true);
+    Game.energy=100-200/7;
+    const energy=take("Energy"); assert.ok(Math.abs(Game.energy-(100-100/7))<1e-7);
+    take("FullEnergy"); assert.equal(Game.energy,100);
+    const checkpoint=Game.saves[0];
+    Object.assign(Game.player,{x:checkpoint.x,y:checkpoint.y,vx:0,vy:0}); tick();
+    assert.equal(checkpoint.used,true); assert.ok(Save.run().consumed.includes(energy.id));
+    Game.energy=0; Game.enemies[0].hp=0; tick();
+    assert.equal(Game.lives,4); assert.equal(Game.player.x,checkpoint.x);
+    assert.equal(Game.enemies.length,expectedEnemies); assert.ok(Game.enemies.every(e=>e.hp===e.maxhp));
+    assert.equal(Game.booms.length,0); assert.equal(Game.shots.length,0);
+    assert.equal(Game.enemies.find(e=>e.kind==="BigScorpion").fight,false);
+    await loadLevel(1);
+    assert.equal(Game.player.x,checkpoint.x); assert.equal(Game.lives,4);
+    assert.equal(Game.items.find(i=>i.id===energy.id).taken,true);
+    assert.equal(Game.abilities.sustainJump,true); assert.equal(Game.maxHearts,7);
+    Game.items.push({kind:"ExtraLive",definition:itemDefinition("ExtraLive"),x:Game.player.x,y:Game.player.y-16});
+    tick(); assert.equal(Game.lives,5);
+    Game.lives=0; Game.energy=0; tick(4);
+    assert.equal(Game.events.filter(e=>e.type==="gameover").length,1); assert.equal(Save.run(),null);
+    assert.equal(Save.hasItem("&P-SustainJump"),true);
+  } finally { fixtures.set("assets/data/maps/level1.tmx",fixture); clearAssets(); Save.clear(); Input.reset(); }
+});
+
 test("main boots menu-only, keeps 144 Hz input queued, consumes once during catchup, caps pauses and crops pages", async () => {
   clearAssets(); requests.length = imageRequests.length = frames.length = 0;
   Game.map = null; Game.player = null; dom.window.localStorage.clear();
@@ -330,7 +437,7 @@ test("main boots menu-only, keeps 144 Hz input queued, consumes once during catc
   render(141); // Two ticks of catchup; same edge cannot count as a double tap.
   assert.equal(Game.time, 2 / 60); assert.equal(Game.player.run, false);
   assert.equal(Input.pressed.size, 0);
-  assert.ok(Math.abs(Game.player.x - (256 + 170 * 2 / 60)) < 1e-8);
+  assert.ok(Math.abs(Game.player.x - (256 + PLAYER_PHYSICS.acceleration * 3 / 3600)) < 1e-8);
   const time = Game.time; render(10_141);
   assert.ok(Math.abs(Game.time - time - 5 / 60) < 1e-8, "Resume cannot simulate the full pause");
   key("keyup", "ArrowRight", "ArrowRight");

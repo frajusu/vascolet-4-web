@@ -11,10 +11,11 @@ Proyecto de preservación y homenaje: lee en vivo los archivos de datos original
 
 | Tecla / mouse | Acción |
 |---|---|
-| Flechas | Moverse (pulsar 2 veces = correr), navegar menús |
-| Z / S | Saltar (mantener = más alto) |
+| Flechas | Moverse y navegar menús; doble toque para correr tras obtener esa habilidad |
+| Z / S | Saltar; mantener permite saltar más alto tras recoger la mejora de salto |
 | A / X | Disparar boomerang (vuelve solo) |
 | Abajo | Agacharse |
+| Abajo + Z / S | Bajar de una plataforma de una sola cara |
 | ENTER / click | Confirmar, avanzar diálogos, saltear videos |
 | ESC | Pausa / volver |
 | Mouse | Botones, nodos de capítulo, sliders, papelera |
@@ -29,8 +30,9 @@ preferencia queda guardada en el navegador.
 
 ## Progreso guardado
 
-En `localStorage` del navegador: nivel, vidas, monedas, capítulos desbloqueados y
-checkpoints. Sin cuenta ni servidor.
+En `localStorage` del navegador: objetos/habilidades, capítulos completados y
+desbloqueados, checkpoint activo y vidas de esa partida. Recargar o volver a entrar
+en ese nivel permite reanudar desde el checkpoint. Sin cuenta ni servidor.
 
 ## Técnica
 
@@ -66,8 +68,14 @@ Port en desarrollo: usa mapas, arte, animaciones, audio y textos originales.
 Se ajustaron boomerang y cámara comparando el ejecutable, y se implementaron
 comportamientos separados de mosca, rana, flor, escarabajo y caracol tomando
 también como referencia el proyecto Godot del usuario. La física exacta,
-presentación, especies posteriores y patrones de jefes siguen en recuperación.
+presentación, especies posteriores y otros patrones de jefes siguen en recuperación.
 Fuentes, observaciones y ajustes provisionales: [notas de comportamiento](docs/behavior-notes.md).
+
+El nivel 1 incorpora sus 13 objetos con animaciones, habilidades obtenidas durante
+la partida, cinco corazones iniciales ampliables, reanudación y el escorpión con
+saltos/refuerzos y secuencia de derrota que desbloquea el nivel 2.
+[Estado y alcance de su validación](docs/level1-status.md): todavía está pendiente
+cerrar un recorrido continuo completo y la equivalencia exacta con el original.
 
 ### Pulido de animales
 
@@ -79,6 +87,8 @@ estados y capturas; `npm run test:animals -- Frog` aísla la rana.
 centrado del canvas durante las cinemáticas.
 `npm run test:help-rendering` comprueba carteles, Lampi, retratos/diálogos completos,
 orientación de moscas y filtrado persistente con capturas de ambos modos.
+`npm run test:level1` comprueba los objetos, reanudación y pelea/victoria del
+escorpión sobre el mapa real mediante colocaciones controladas explícitas.
 
 ## Licencia y créditos
 

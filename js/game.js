@@ -13,6 +13,7 @@ import { beginPlayerDamage, advancePlayerDamage, DAMAGE_MOTION } from "./player-
 import { loadBitmapFont, drawBitmapText, measureBitmapText, wrapBitmapText } from "./bitmap-font.js";
 import { createLampi, updateLampi, signTouchesPlayer, dialogueLayout, HELP_DIALOG } from "./help.js";
 import { RenderSettings } from "./render-settings.js";
+import { progressFromItems, itemDefinition, PLAYER_PHYSICS } from "./progression.js";
 
 const W = 512, H = 384, TILE = 32;
 const SFX = "assets/audio/fx/win/", MUS = "assets/audio/music/win/";
@@ -30,6 +31,7 @@ export const Game = {
   charCache: new Map(),
   chars: {}, texts: {},
   hudAtlas: null,
+  abilities: progressFromItems(), maxHearts: 5, checkpointConsumed: [], shakeT: 0,
 };
 
 function resolveRel(base, rel) {
@@ -87,7 +89,7 @@ async function loadChar(tmxName) {
 function tmxDir(n) {
   const map = {
     Vascolet: "vascolet", Fly: "fly", Frog: "frog", Flower: "flower", Beetle: "beetle",
-    Snail: "snail", BigScorpion: "big-scorpion", TopoNinja: "topo-ninja", BigBird: "big-bird",
+    Snail: "snail", BigScorpion: "big-scorpion-v02", Scorpion: "escorpion", Items: "items", TopoNinja: "topo-ninja", BigBird: "big-bird",
     BigSnake: "big-snake", VolcanoFlower: "volcano-flower", Panal: "fly", Bat: "big-bat",
     LittleSpider: "little-spider", Fish: "fish", Piranha: "pirana", Pirana2: "pirana2",
     Blowfish: "blowfish", Shell: "shell", Mosquito: "mosquito", DragonFly: "dragon-fly",
@@ -133,11 +135,13 @@ export async function loadLevel(n, fresh = true) {
   G.level = n; G.enemies = []; G.items = []; G.infos = []; G.saves = [];
   G.booms = []; G.parts = []; G.shots = []; G.effects = []; G.dlg = null;
   G.helper = null; G.helperSerial = 0;
-  G.coins = 0; G.energy = 100; G.tip = ""; G.tipT = 0;
-  if (fresh) G.lives = 5;
+  G.coins = 0; G.energy = 100; G.tip = ""; G.tipT = 0; G.shakeT = 0; G.winTimer = 0;
+  const run = Save.run(), savedRun = fresh && run?.level === n ? run : null;
+  if (fresh) G.lives = Number.isInteger(savedRun?.lives) ? savedRun.lives : 5;
+  G.abilities = progressFromItems(Save.read()?.items); G.maxHearts = G.abilities.maxHearts;
   G.start = null; G.player = null; G.time = 0;
   G.camX = G.camY = G.prevCamX = G.prevCamY = 0;
-  G.bossHP = 0; G.bossMax = 1; G.bossHead = null;
+  G.bossHP = 0; G.bossMax = 1; G.bossHead = null; G.bossVisible = false;
   const levelPath = `assets/data/maps/level${n}.tmx`;
   const doc = await loadXML(levelPath);
   G.map = parseTMX(doc);
@@ -171,21 +175,34 @@ export async function loadLevel(n, fresh = true) {
     if (o.name === "*Save") G.saves.push({ x: o.x + 16, y: o.y + 32, tip: o.props.info, used: false, anim: null });
   }
   const foes = group(G.map, "Enemies");
+  G.spawnDescriptors = (foes.length ? foes : group(G.map, "Scenes")).map(o => ({ ...o }));
   for (const o of foes.length ? foes : group(G.map, "Scenes")) {
     const isBoss = BOSSES.has(o.name);
     G.enemies.push(createEnemy(o, isBoss));
   }
-  for (const o of group(G.map, "Items"))
-    G.items.push({ kind: o.name, x: o.x + 16, y: o.y + 16, taken: Save.hasItem(o.name), t: 0 });
+  G.checkpointConsumed = [...(savedRun?.consumed || [])];
+  for (const o of group(G.map, "Items")) {
+    const id = `${n}:${o.name}:${o.x}:${o.y}`, definition = itemDefinition(o.name);
+    G.items.push({ id, kind: o.name, definition, x: o.x + 16, y: o.y + 16,
+      taken: Save.hasItem(o.name) || G.checkpointConsumed.includes(id), t: 0, anim: null });
+  }
   G.player = {
     x: (G.start || { x: 256 }).x, y: (G.start || { y: 352 }).y,
-    vx: 0, vy: 0, w: 28, h: 56, face: 1, ground: false, coyote: 0, buffer: 0,
+    vx: 0, vy: 0, w: 8, h: 60, face: 1, ground: false, coyote: 0, buffer: 0, doubleUsed: false, dropT: 0,
     inv: 0, fireCd: 0, attack: null, damage: null, run: false, tapD: 0, tapT: -9, crouch: false,
     anim: null, animName: "", cur: null,
   };
   G.checkpoint = G.start ? { x: G.start.x, y: G.start.y } : { x: 256, y: 352 };
+  if (savedRun && savedRun.checkpoint.x >= 0 && savedRun.checkpoint.x < G.gw * TILE &&
+    savedRun.checkpoint.y >= 0 && savedRun.checkpoint.y < G.gh * TILE) {
+    G.checkpoint = { ...savedRun.checkpoint }; G.player.x = G.checkpoint.x; G.player.y = G.checkpoint.y;
+  }
   await ensureChar("Vascolet");
-  await Promise.all(["Boomerang", "effects", "fireball", "LightBug"].map(ensureChar));
+  await Promise.all(["Boomerang", "effects", "fireball", "LightBug", "Items", "Scorpion"].map(ensureChar));
+  const itemChar = G.charCache.get("Items");
+  for (const item of G.items) if (itemChar?.anims.some(a => a.name === item.definition?.animation)) {
+    item.anim = new AnimPlayer(itemChar.anims); item.anim.set(item.definition.animation);
+  }
   if (!G.dialogFont) G.dialogFont = await loadBitmapFont("winnie14-or");
   G.player.anim = new AnimPlayer(Game.charCache.get("Vascolet").anims);
   // carteles de ayuda/guardado (signposts del original)
@@ -199,6 +216,9 @@ export async function loadLevel(n, fresh = true) {
     G.signInfo = frameOf("info");
     G.signSave = frameOf("saveStale");
     for (const save of G.saves) { save.anim = new AnimPlayer(sc.anims); save.anim.set("saveStale"); }
+    for (const save of G.saves) if (savedRun && Math.hypot(save.x - G.checkpoint.x, save.y - G.checkpoint.y) < 2) {
+      save.used = true; save.anim?.set("savePoint");
+    }
   } catch { G.signInfo = null; G.signSave = null; }
   G.player.cur = G.player.anim.frame;
   await Promise.all(G.enemies.map(async e => {
@@ -218,7 +238,7 @@ export async function loadLevel(n, fresh = true) {
   snapshotPositions();
   G.tip = `NIVEL ${n}`; G.tipT = 3;
   // condicion de victoria desde props del mapa
-  G.win = null; G.won = false; G.events = [];
+  G.win = null; G.won = false; G.winSent = false; G.gameover = false; G.events = [];
   for (const k of Object.keys(G.map.props)) {
     if (k === "winCondition,boss") G.win = { kind: "boss", target: (G.map.props[k].split(",")[0] || "").replace(/^\*/, "") };
     if (k === "winCondition,exit") G.win = { kind: "exit" };
@@ -236,12 +256,13 @@ function tsFor(gid, tilesets = Game.tsx) {
 
 export function tileAt(tx, ty) {
   const G = Game;
-  if (tx < 0 || ty < 0 || tx >= G.gw || ty >= G.gh) return 1;
+  if (ty >= G.gh) return 0; // An open map bottom must lead to falling/death, not an invisible floor.
+  if (tx < 0 || ty < 0 || tx >= G.gw) return TILE_SOLID;
   return G.grid[ty * G.gw + tx];
 }
 
-// Provisional tuning, not recovered original constants.
-const GRAV = 1500, MOVE = 170, RUN = 300, JUMP = 560;
+// Script-derived impulses and limits; collision integration remains a port approximation.
+const { gravity: GRAV, walk: MOVE, run: RUN, jump: JUMP } = PLAYER_PHYSICS;
 const EPS = 1e-7;
 function moveBody(b, dt, gravity = GRAV) {
   b.hitWall = false;
@@ -280,7 +301,7 @@ function moveBody(b, dt, gravity = GRAV) {
       let support = false;
       for (let tx = x0; tx <= x1; tx++) {
         const flags = tileAt(tx, ty);
-        if ((flags & (TILE_SOLID | TILE_UP)) && prevBottom <= ty * TILE + EPS) {
+        if (((flags & TILE_SOLID) || ((flags & TILE_UP) && !(b.dropT > 0))) && prevBottom <= ty * TILE + EPS) {
           support = true;
           if (flags & TILE_DAMAGE) b.hurt = true;
         }
@@ -332,6 +353,16 @@ export function gameUpdate(dt) {
   if (!p) return;
   snapshotPositions();
   G.time += dt;
+  G.shakeT = Math.max(0, G.shakeT - dt);
+  if (G.gameover) return;
+  if (G.won) {
+    p.vx = 0; moveBody(p, dt); p.anim.update(dt); p.cur = p.anim.frame;
+    for (const fx of G.effects) fx.anim.update(dt);
+    G.effects = G.effects.filter(fx => !fx.anim.finished);
+    G.winTimer = Math.max(0, G.winTimer - dt);
+    if (!G.winTimer && !G.winSent) { G.winSent = true; G.events.push({ type: "win" }); }
+    return;
+  }
   // Quick-info is modeless and refreshed while touching its sign; jumping is free.
   if (G.dlg) {
     const d = G.dlg; d.t += dt; d.remaining -= dt;
@@ -347,31 +378,55 @@ export function gameUpdate(dt) {
   const now = G.time;
   if (!p.damage && (Input.pressed.has("left") || Input.pressed.has("right"))) {
     const d = Input.pressed.has("left") ? -1 : 1;
-    if (p.tapD === d && now - p.tapT < 0.3) p.run = true;
+    if (G.abilities.run && p.tapD === d && now - p.tapT < 0.3) p.run = true;
     p.tapD = d; p.tapT = now;
   }
-  if (dir === 0) p.run = false;
-  else if (!p.attack && !p.damage) p.face = dir;
-  p.vx = p.damage ? (p.damage.phase === "air" ? -p.damage.face * DAMAGE_MOTION.speed : 0) : dir * (p.run ? RUN : MOVE);
+  if (dir === 0 || !G.abilities.run) p.run = false;
+  if (dir && !p.attack && !p.damage) p.face = dir;
+  if (p.damage) p.vx = p.damage.phase === "air" ? -p.damage.face * DAMAGE_MOTION.speed : 0;
+  else {
+    const target = dir * (p.run ? RUN : MOVE);
+    const accel = dir ? PLAYER_PHYSICS.acceleration : p.ground ? PLAYER_PHYSICS.friction : 0;
+    p.vx += Math.sign(target - p.vx) * Math.min(Math.abs(target - p.vx), accel * dt);
+  }
   p.crouch = !p.damage && Input.down("down") && p.ground;
   if (p.crouch || (p.attack && p.ground)) p.vx = 0;
   if (p.damage) p.buffer = 0;
   else if (jumpPressed()) p.buffer = 0.12; else p.buffer = Math.max(0, p.buffer - dt);
   p.coyote = p.ground ? 0.1 : Math.max(0, p.coyote - dt);
+  p.dropT = Math.max(0, p.dropT - dt);
+  if (!p.damage && p.ground && Input.down("down") && p.buffer > 0) {
+    const supports = [];
+    for (let x = Math.floor((p.x - p.w / 2 + EPS) / TILE); x <= Math.floor((p.x + p.w / 2 - EPS) / TILE); x++)
+      supports.push(tileAt(x, Math.floor((p.y + EPS) / TILE)));
+    if (supports.some(f => f & TILE_UP) && !supports.some(f => f & TILE_SOLID)) {
+      p.dropT = .2; p.y += 2; p.vy = 60; p.ground = false; p.coyote = 0; p.buffer = 0;
+    }
+  }
+  let launched = false;
   if (!p.damage && p.coyote > 0 && p.buffer > 0) {
-    p.vy = -JUMP; p.buffer = 0; p.coyote = 0; p.ground = false;
+    p.vy = -JUMP; p.buffer = 0; p.coyote = 0; p.ground = false; p.doubleUsed = false;
+    launched = true;
     Audio2.sfx(SFX + "jumpAir.ogg");
     dust(p.x, p.y, 6);
   }
-  if (!p.damage && !jumpHeld() && p.vy < -180) p.vy = -180;
+  else if (!p.damage && !p.ground && !p.dropT && jumpPressed() && G.abilities.doubleJump && !p.doubleUsed) {
+    p.vy = -PLAYER_PHYSICS.secondJump; p.doubleUsed = true; p.buffer = 0;
+    launched = true;
+    Audio2.sfx(SFX + "double_jump.ogg");
+  }
+  // Native V4: (!jumpHeld OR !canSustainJumpEnabled) AND vy < -240.
+  // Preserve the entry impulse for one step before applying the inherited cut.
+  if (!p.damage && !launched && (!G.abilities.sustainJump || !jumpHeld()) && p.vy < -PLAYER_PHYSICS.cutJump) p.vy = -PLAYER_PHYSICS.cutJump;
   p.hurt = false;
   const wasGround = p.ground, fallV = p.vy;
   moveBody(p, dt, p.damage ? DAMAGE_MOTION.gravity : GRAV);
+  if (p.ground) p.doubleUsed = false;
   advancePlayerDamage(p, dt);
   if (!wasGround && p.ground && fallV > 300) dust(p.x, p.y, 9);
   p.inv = Math.max(0, p.inv - dt);
   if (p.hurt) hurtPlayer();
-  if (!p.damage && firePressed() && p.fireCd <= 0 && !p.attack && G.booms.length < 2) {
+  if (!p.damage && firePressed() && p.fireCd <= 0 && !p.attack && G.booms.length < G.abilities.maxBoomerangs) {
     const name = p.crouch && p.anim.has("crouchAttack") ? "crouchAttack" : "standAttack";
     if (p.anim.has(name)) {
       p.attack = { name, released: false, crouch: p.crouch, face: p.face };
@@ -382,8 +437,16 @@ export function gameUpdate(dt) {
   p.fireCd = Math.max(0, p.fireCd - dt);
   for (const e of G.enemies) {
     if (!e.active && Math.abs(e.x - p.x) < 512 && Math.abs(e.y - p.y) < 420) e.active = true;
-    if (!e.active || Math.abs(e.x - p.x) > 900 || Math.abs(e.y - p.y) > 700) continue;
-    updateEnemy(e, p, dt, { moveBody, tileAt, shoot: enemyShoot, booms: G.booms });
+    const finishingBoss = e.behavior === "scorpion-boss" && e.state === "dying";
+    if (!finishingBoss && (!e.active || Math.abs(e.x - p.x) > 900 || Math.abs(e.y - p.y) > 700)) continue;
+    updateEnemy(e, p, dt, { moveBody, tileAt, shoot: enemyShoot, booms: G.booms,
+      inCamera: b => b.x >= G.camX && b.x <= G.camX + W && b.y >= G.camY && b.y <= G.camY + H,
+      bossStart: () => void Audio2.music(G.map.props["music,boss"] ? MUS + G.map.props["music,boss"] : null),
+      minionCount: () => G.enemies.filter(m => m.minion && m.hp > 0).length, spawnMinion,
+      shake: time => { G.shakeT = Math.max(G.shakeT, time); },
+      explosion: b => impact(b.x + Math.sin(b.stateTime * 47) * 45, b.y - 30 + Math.cos(b.stateTime * 31) * 30, 2),
+      bossDefeated: b => { G.shakeT = .2; impact(b.x, b.y - 30, 4); Audio2.sfx(SFX + "boss_death.ogg"); },
+    });
     if (e.y > G.gh * TILE + 160 && e.hp > 0) { e.hp = 0; e.deadT = 2; }
   }
   for (const b of G.booms) {
@@ -398,17 +461,15 @@ export function gameUpdate(dt) {
   updateEnemyShots(dt);
   for (const e of G.enemies) {
     if (e.hp <= 0 || Math.abs(p.x - e.x) >= (p.w + e.w) / 2 || p.y <= e.y - e.h || p.y - (p.crouch ? 28 : p.h) >= e.y) continue;
-    if (!e.boss && e.behavior !== "flower" && p.vy > 0 && p.prevY <= e.y - e.h + 10) {
+    if (G.abilities.jumpAttack && !e.boss && e.behavior !== "flower" && p.vy > 0 && p.prevY <= e.y - e.h + 10) {
       damageEnemy(e, p.face); p.vy = -280; p.ground = false;
     } else hurtPlayer();
   }
   updateCamera(G, dt);
   for (const item of G.items) {
+    if (!item.taken) item.anim?.update(dt);
     if (item.taken || Math.abs(p.x - item.x) > 24 || p.y < item.y - 18 || p.y - p.h > item.y + 18) continue;
-    if (Save.collectItem(item.kind)) {
-      item.taken = true;
-      Audio2.sfx(SFX + (item.kind.startsWith("&Key") ? "key.ogg" : "energy.ogg"));
-    }
+    collectItem(item);
   }
   G.tipT = Math.max(0, G.tipT - dt);
   let nearest = null;
@@ -435,19 +496,20 @@ export function gameUpdate(dt) {
   for (const s of G.saves) {
     s.anim?.update(dt);
     if (!s.used && signTouchesPlayer(s, p)) {
-      Save.write({ level: G.level, x: s.x, y: s.y, t: Date.now() });
       G.checkpoint = { x: s.x, y: s.y };
+      G.checkpointConsumed = G.items.filter(i => i.taken && !i.definition?.permanent).map(i => i.id);
+      saveCheckpoint();
       Audio2.sfx(SFX + "save.ogg");
       s.used = true; s.anim?.set("savePoint");
       openDialog("Juego salvado.", null, 2.7);
     }
   }
-  // barra de jefe: maximo hp entre jefes vivos, visible solo cerca del jefe
-  G.bossHP = 0; G.bossMax = 1; G.bossHead = null;
+  // Scorpion keeps its bar through the death sequence; other bosses remain proximity-based.
+  G.bossHP = 0; G.bossMax = 1; G.bossHead = null; G.bossVisible = false;
   for (const e of G.enemies) {
-    if (!e.boss || e.hp <= 0) continue;
-    if (G.player && Math.hypot(e.x - G.player.x, e.y - G.player.y) > 520) continue;
-    if (e.hp > G.bossHP) { G.bossHP = e.hp; G.bossMax = e.maxhp; G.bossHead = e.kind; }
+    if (!e.boss || e.defeated) continue;
+    if (e.behavior === "scorpion-boss" ? !e.fight : e.hp <= 0 || Math.hypot(e.x - p.x, e.y - p.y) > 520) continue;
+    G.bossVisible = true; G.bossHP = Math.max(0, e.hp); G.bossMax = e.maxhp; G.bossHead = e.kind;
   }
   // particulas de polvo
   for (const q of G.parts) { q.life -= dt; q.x += q.vx * dt; q.y += q.vy * dt; }
@@ -457,7 +519,7 @@ export function gameUpdate(dt) {
   // anim jugador con NOMBRES REALES (ataque tiene prioridad mientras dura)
   let want = "stand";
   if (p.attack) want = p.attack.name;
-  else if (!p.ground) want = p.vy < -50 ? (p.run && p.anim.has("runJump") ? "runJump" : "standJump") : "fall";
+  else if (!p.ground) want = p.doubleUsed ? "runJumpMid" : p.vy < -120 ? (p.run && p.anim.has("runJump") ? "runJump" : "standJump") : p.vy < 0 ? "standJumpMid" : G.abilities.jumpAttack ? "jumpAttack" : "fall";
   else if (p.crouch && p.anim.has("crouch")) want = "crouch";
   else if (dir !== 0) want = p.run ? "run" : "walk";
   if (p.damage) want = ({ air: "damage", fall: "damageFall", rise: "damageRaise" })[p.damage.phase];
@@ -478,28 +540,31 @@ export function gameUpdate(dt) {
     G.lives -= 1;
     Audio2.sfx(SFX + "vasco_death.ogg");
     if (G.lives < 0) {
-      G.events.push({ type: "gameover" });
+      G.gameover = true; Save.write({ run: null }); G.events.push({ type: "gameover" });
     } else {
       G.energy = 100;
       const s = G.checkpoint || G.start;
       p.x = s.x; p.y = s.y; p.vx = 0; p.vy = 0; p.inv = 2;
-      p.attack = null; p.damage = null; G.booms = []; G.shots = [];
+      p.attack = null; p.damage = null; p.run = false; p.ground = false; p.coyote = 0; p.buffer = 0; p.dropT = 0; p.doubleUsed = false; p.tapT = -9;
+      p.crouch = false; p.fireCd = 0; p.animName = "stand"; p.anim.restart("stand"); p.cur = p.anim.frame;
+      G.booms = []; G.shots = []; G.effects = []; G.parts = []; G.dlg = null; G.helper = null; G.shakeT = 0;
+      G.bossVisible = false; G.bossHP = 0;
+      G.enemies = G.spawnDescriptors.map(o => attachEnemyAnimation(createEnemy(o, BOSSES.has(o.name))));
+      for (const item of G.items) item.taken = Save.hasItem(item.kind) || G.checkpointConsumed.includes(item.id);
+      for (const info of G.infos) { info.shown = false; info.dismissed = false; }
+      void Audio2.music(G.map.props["music,normal"] ? MUS + G.map.props["music,normal"] : null);
+      saveCheckpoint();
       updateCamera(G, 0, true); snapshotPositions();
     }
   }
   // victoria segun props del mapa
-  if (!G.won && G.win) {
+  if (!G.gameover && !G.won && G.win) {
     if (G.win.kind === "boss") {
-      if (!G.enemies.some(e => e.kind === G.win.target && e.hp > 0)) {
-        G.won = true;
-        Audio2.music(MUS + "win_level.ogg");
-        G.events.push({ type: "win" });
-      }
+      const bosses = G.enemies.filter(e => e.kind === G.win.target);
+      if (bosses.length && bosses.every(e => e.behavior === "scorpion-boss" ? e.defeated : e.hp <= 0)) finishLevel();
     } else if (G.win.kind === "exit") {
       if (p.x > G.gw * TILE - 64) {
-        G.won = true;
-        Audio2.music(MUS + "win_level.ogg");
-        G.events.push({ type: "win" });
+        finishLevel();
       }
     }
   }
@@ -510,22 +575,68 @@ function dust(x, y) {
     Game.parts.push({ x: x + (Math.random() - 0.5) * 20, y, vx: (Math.random() - 0.5) * 60, vy: -30 - Math.random() * 40, life: 0.4 });
 }
 
+function attachEnemyAnimation(e) {
+  const c = Game.charCache.get(e.kind);
+  if (c?.anims.length) {
+    e.anim = new AnimPlayer(c.anims);
+    const normal = ["normal", "walk", "flying", "stand", "idle"].find(name => e.anim.has(name));
+    if (normal) e.anim.set(normal);
+    e.cur = e.anim.frame;
+  }
+  return e;
+}
+
+function spawnMinion(x, y, dir) {
+  const e = attachEnemyAnimation(createEnemy({ name: "Scorpion", x: x - 16, y: y - 16, type: dir > 0 ? "forward" : "" }));
+  e.minion = true; e.active = true; Game.enemies.push(e);
+}
+
+function saveCheckpoint() {
+  const G = Game;
+  Save.write({ level: G.level, x: G.checkpoint.x, y: G.checkpoint.y, t: Date.now() });
+  Save.saveRun({ level: G.level, checkpoint: G.checkpoint, lives: G.lives, consumed: G.checkpointConsumed });
+}
+
+function collectItem(item) {
+  const G = Game, d = item.definition ?? itemDefinition(item.kind);
+  if (!d) return;
+  const oldHearts = G.maxHearts, currentHearts = G.energy * oldHearts / 100;
+  if (d.permanent) {
+    Save.collectItem(item.kind);
+    G.abilities = progressFromItems(Save.read()?.items); G.maxHearts = G.abilities.maxHearts;
+    G.energy = Math.min(100, (currentHearts + G.maxHearts - oldHearts) * 100 / G.maxHearts);
+  } else if (d.effect === "energy") G.energy = Math.min(100, G.energy + 100 / G.maxHearts);
+  else if (d.effect === "full") G.energy = 100;
+  else if (d.effect === "life") G.lives++;
+  item.taken = true; Audio2.sfx(SFX + d.sound); impact(item.x, item.y);
+}
+
+function finishLevel() {
+  const G = Game;
+  G.won = true; G.winSent = false; G.winTimer = Math.max(0, Number(G.map.props.winEffect?.split(",")[1]) || 0);
+  G.player.attack = null; G.player.damage = null; G.player.inv = 0; G.player.vx = 0;
+  G.player.anim.set("stand"); G.player.cur = G.player.anim.frame;
+  G.booms = []; G.shots = []; G.dlg = null; Save.completeLevel(G.level);
+  void Audio2.music(MUS + (G.map.props["music,win"] || "win_level.ogg"));
+  if (!G.winTimer) { G.winSent = true; G.events.push({ type: "win" }); }
+}
+
 function releaseBoomerang() {
   const G = Game, p = G.player, attack = p.attack;
   if (!attack || attack.released) return;
   attack.released = true;
-  if (G.booms.length >= 2) return;
+  if (G.booms.length >= G.abilities.maxBoomerangs) return;
   const c = G.charCache.get("Boomerang"), anim = c?.anims.length ? new AnimPlayer(c.anims) : null;
   if (anim?.has("normal")) anim.set("normal");
   G.booms.push(createBoomerang({ x: p.x, y: p.y, face: attack.face, crouch: attack.crouch }, anim));
   Audio2.sfx(SFX + "boomerang.ogg");
 }
 
-function impact(x, y) {
+function impact(x, y, scale = 1) {
   const c = Game.charCache.get("effects");
   if (!c?.anims.some(a => a.name === "shot_impact")) return;
   const anim = new AnimPlayer(c.anims); anim.set("shot_impact");
-  Game.effects.push({ x, y, prevX: x, prevY: y, anim });
+  Game.effects.push({ x, y, prevX: x, prevY: y, anim, scale });
 }
 
 function damageEnemy(e, direction) {
@@ -536,7 +647,8 @@ function damageEnemy(e, direction) {
 function hurtPlayer() {
   const G = Game, p = G.player;
   if (p.inv > 0 || G.won) return;
-  G.energy = Math.max(0, G.energy - 100 / 7); p.inv = 1;
+  G.energy = Math.max(0, G.energy - 100 / G.maxHearts); p.inv = 1;
+  if (G.energy < 1e-7) G.energy = 0;
   beginPlayerDamage(p);
   Audio2.sfx(SFX + "enemy_hit.ogg");
 }
@@ -621,7 +733,8 @@ export function gameDraw(ctx, alpha = 1) {
   ctx.imageSmoothingEnabled = RenderSettings.filterTextures;
   ctx.fillStyle = "#0a0a18";
   ctx.fillRect(0, 0, W, H);
-  const cx = lerp(G.prevCamX, G.camX), cy = lerp(G.prevCamY, G.camY);
+  const cx = lerp(G.prevCamX, G.camX) + (G.shakeT > 0 ? Math.sin(G.time * 91) * 3 : 0);
+  const cy = lerp(G.prevCamY, G.camY) + (G.shakeT > 0 ? Math.cos(G.time * 73) * 3 : 0);
   // fondos parallax (repiten en X, fijos en Y)
   for (const bg of G.bgs) {
     for (const l of bg.layers)
@@ -633,8 +746,8 @@ export function gameDraw(ctx, alpha = 1) {
   // items
   for (const i of G.items) {
     if (i.taken) continue;
-    ctx.fillStyle = "#7dff9a";
-    ctx.fillRect(i.x - cx - 3, i.y - cy - 3, 6, 6);
+    const c = G.charCache.get("Items");
+    if (c?.img && i.anim) drawAnimFrame(ctx, c.img, c.atlas, i.anim.frame, i.x - cx, i.y - cy);
   }
   // carteles de ayuda/guardado (sprites reales)
   {
@@ -648,11 +761,14 @@ export function gameDraw(ctx, alpha = 1) {
   }
   // enemigos con sprites reales
   for (const e of G.enemies) {
-    if (e.hp <= 0 && e.deadT > 1.2) continue;
+    if (e.defeated || (e.hp <= 0 && e.deadT > 1.2)) continue;
     const c = Game.charCache.get(e.kind);
     if (c?.img && e.anim) {
+      ctx.save();
+      if (e.behavior === "scorpion-boss" && e.state === "dying" && e.stateTime >= 3) ctx.filter = "brightness(0) invert(1)";
       drawAnimFrame(ctx, c.img, c.atlas, e.cur, x(e) - cx, y(e) - cy,
         { flip: enemySpriteFlip(e), round: false, alpha: e.hp <= 0 ? Math.max(0, 1 - e.deadT / 1.2) : e.hurtT > 0 ? .65 : 1 });
+      ctx.restore();
     } else {
       ctx.fillStyle = "#ffd75e";
       ctx.fillRect(x(e) - cx - 3, y(e) - cy - 3, 6, 6);
@@ -689,7 +805,7 @@ export function gameDraw(ctx, alpha = 1) {
     if (shotChar?.img && shot.anim) drawAnimFrame(ctx, shotChar.img, shotChar.atlas, shot.anim.frame, x(shot) - cx, y(shot) - cy, { flip: shot.vx < 0, round: false });
   }
   for (const fx of G.effects) if (effectChar?.img)
-    drawAnimFrame(ctx, effectChar.img, effectChar.atlas, fx.anim.frame, fx.x - cx, fx.y - cy, { round: false });
+    drawAnimFrame(ctx, effectChar.img, effectChar.atlas, fx.anim.frame, fx.x - cx, fx.y - cy, { round: false, scale: fx.scale ?? 1 });
   // polvo
   ctx.fillStyle = "rgba(255,255,255,0.7)";
   for (const q of G.parts) ctx.fillRect(x(q) - cx - 1, y(q) - cy - 1, 3, 3);
@@ -726,13 +842,12 @@ function drawHUD(ctx) {
   ctx.imageSmoothingEnabled = true;
   ctx.font = "bold 20px sans-serif"; ctx.fillStyle = "#fff";
   put("lives", 6, 2);
-  ctx.fillText("x" + G.lives, 100, 30);
-  // 7 corazones de energia (como el original)
-  for (let i = 0; i < 7; i++)
-    put(i < Math.ceil(Math.max(0, G.energy - 1e-7) * 7 / 100) ? "colorHeart" : "blackHeart", 150 + i * 20, 8);
+  if (G.dialogFont) drawBitmapText(ctx, G.dialogFont, String(G.lives), 81, 12);
+  for (let i = 0; i < G.maxHearts; i++)
+    put(i < Math.ceil(Math.max(0, G.energy - 1e-7) * G.maxHearts / 100) ? "colorHeart" : "blackHeart", 112 + (i % 5) * 20, 3 + Math.floor(i / 5) * 20);
   // barra de jefe con cabeza (arte real del atlas)
-  if (G.bossHP > 0) {
-    const bx = (W - 226) / 2, by = H - 40;
+  if (G.bossVisible) {
+    const bx = 231, by = 336;
     put("bossEnergyBase", bx, by);
     const frac = Math.max(0, G.bossHP / G.bossMax);
     const e = A["bossEnergy"];
@@ -742,7 +857,7 @@ function drawHUD(ctx) {
     }
     const heads = { BigScorpion: "headBigScorpion", TopoNinja: "headTopoNinja", BigBird: "headBigBird", BigBat: "headBigBat", BigGhost: "headGhost", BigSpider: "headBigSpider", BigAnguila: "headElectricEel", BigPirana: "headPiranha", GiantDragonfly: "headGiantDragonfly", BigUglyDragon: "headUglyDragon", FurryCritter: "headFurryCritter", Malmark: "headMalmark" };
     const hk = heads[G.bossHead];
-    if (hk) put(hk, bx - 70, by - 8);
+    if (hk) put(hk, 448, 327);
   }
 }
 

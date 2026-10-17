@@ -91,7 +91,7 @@ async function loadLevelData() {
   await levelData;
 }
 
-async function startLevel(n) {
+async function startLevel(n, fresh = true) {
   // video de entrada del nivel (skipeable), luego gameplay
   state = "loading"; resetClock(); Input.reset();
   setBoot(null);
@@ -104,7 +104,7 @@ async function startLevel(n) {
   setBoot(`Cargando nivel ${n}…`);
   await loadLevelData();
   if (state === "fatal") return;
-  await loadLevel(n);
+  await loadLevel(n, fresh);
   if (state === "fatal") { Audio2.stopEffects(); Audio2.stopMusic(); return; }
   resetClock(); Input.reset();
   setBoot(null); state = "game";
@@ -179,14 +179,14 @@ function returnToMenu() {
 
 async function onLevelWin() {
   const action = Game.winAction || "";
-  Save.unlock(Game.level + 1);
+  Save.completeLevel(Game.level);
   const m = action.match(/goto:level(\d+)/);
   if (action === "toEnding" || Game.level >= 18) {
     await showEnd("victory");
   } else if (m) {
-    await startLevel(parseInt(m[1], 10));
+    await startLevel(parseInt(m[1], 10), false);
   } else {
-    await startLevel(Math.min(18, Game.level + 1));
+    await startLevel(Math.min(18, Game.level + 1), false);
   }
 }
 

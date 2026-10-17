@@ -6,7 +6,7 @@ import { parseTMX, parseAnims, TILE_SOLID, TILE_UP } from "../js/tmx.js";
 import { AnimPlayer } from "../js/sprite.js";
 import { cameraBounds, updateCamera } from "../js/camera.js";
 import { createBoomerang, updateBoomerang } from "../js/projectiles.js";
-import { createEnemy, hitEnemy, updateEnemy } from "../js/enemies.js";
+import { createEnemy, hitEnemy, updateEnemy, enemySpriteFlip } from "../js/enemies.js";
 
 const dom = new JSDOM();
 const xml = text => new dom.window.DOMParser().parseFromString(text, "text/xml");
@@ -177,10 +177,45 @@ test("fly patrol X is spawn-relative and does not pursue a player on either side
 });
 
 test("unstudied swimming enemies and bosses accept hits without being forced into land physics", () => {
-  for (const [kind, boss] of [["Fish", false], ["BigScorpion", true]]) {
+  for (const [kind, boss] of [["Fish", false], ["BigBird", true]]) {
     const e = createEnemy({ name: kind, x: 320, y: 304 }, boss);
     assert.equal(hitEnemy(e), true); assert.equal(e.hp, e.maxhp - 1);
     updateEnemy(e, player(), 1 / 60, { ...services, moveBody() { assert.fail("unverified species must not receive patrol gravity"); } });
     assert.ok(Math.abs(e.y - e.homeY) <= 4);
   }
+});
+
+test("first-area right-facing atlases turn with movement and stationary facing", () => {
+  for (const kind of ["Fly","Frog","Flower","Beetle","Snail","Scorpion","BigScorpion"]) {
+    const e=createEnemy({name:kind,x:0,y:0});
+    e.vx=-30;e.dir=1;assert.equal(enemySpriteFlip(e),true,kind);
+    e.vx=30;e.dir=-1;assert.equal(enemySpriteFlip(e),false,kind);
+    e.vx=0;assert.equal(enemySpriteFlip(e),true,kind);
+  }
+});
+
+test("scorpion waits for the camera, jumps/drops minions, limits reinforcements and finishes its four-second death", async () => {
+  const e=createEnemy({name:"BigScorpion",x:320,y:304},true),p=player();
+  e.anim=new AnimPlayer(parseAnims(await asset("characters/big-scorpion-v02/animData/Big-scorpion-v02.xml")));
+  const drops=[],shakes=[];let starts=0,defeats=0,explosions=0,inCamera=false;
+  const api={...services,inCamera:()=>inCamera,minionCount:()=>drops.length,
+    spawnMinion:(...position)=>drops.push(position),shake:t=>shakes.push(t),bossStart:()=>starts++,
+    bossDefeated:()=>defeats++,explosion:()=>explosions++};
+  assert.equal(e.hp,20);assert.equal(hitEnemy(e),false);
+  for(let i=0;i<30;i++) updateEnemy(e,p,1/60,api);
+  assert.equal(e.fight,false);assert.equal(e.y,320);
+  inCamera=true;updateEnemy(e,p,1/60,api);assert.equal(starts,1);
+  let jumped=false;
+  for(let i=0;i<330;i++){updateEnemy(e,p,1/60,api);jumped ||= e.state==="jump" && e.vy<0;}
+  assert.equal(jumped,true);assert.equal(drops.length,2);assert.ok(shakes.includes(.5));
+  for(let i=0;i<300;i++) updateEnemy(e,p,1/60,api);
+  assert.equal(drops.length,2,"two live minions prevent further drops");
+  assert.equal(hitEnemy(e),true);assert.equal(hitEnemy(e),false,"freeze blocks repeated hits in a single tick");
+  for(let hit=1;hit<20;hit++) { for(let i=0;i<13;i++)updateEnemy(e,p,1/60,api);assert.equal(hitEnemy(e),true); }
+  assert.equal(e.state,"dying");assert.equal(e.defeated,false);
+  for(let i=0;i<239;i++)updateEnemy(e,p,1/60,api);
+  assert.equal(defeats,0);assert.ok(explosions>=25 && explosions<=30);
+  for(let i=0;i<4;i++)updateEnemy(e,p,1/60,api);
+  assert.equal(e.defeated,true);assert.equal(defeats,1);
+  updateEnemy(e,p,1/60,api);assert.equal(defeats,1);
 });

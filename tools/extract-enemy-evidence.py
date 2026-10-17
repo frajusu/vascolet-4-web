@@ -10,7 +10,7 @@ from elftools.elf.elffile import ELFFile
 
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--subject', choices=['Fly', 'Frog', 'Flower', 'Beetle', 'Snail', 'PlayerDamage'], default='Frog')
+parser.add_argument('--subject', choices=['Fly', 'Frog', 'Flower', 'Beetle', 'Snail', 'PlayerDamage', 'PlayerProgress', 'BigScorpion'], default='Frog')
 parser.add_argument('--binary', type=Path, default=root.parent / 'Vascolet4.activity/bin/vascolet4')
 parser.add_argument('--output', type=Path, default=root / 'analysis/native-evidence')
 args = parser.parse_args()
@@ -21,6 +21,9 @@ ranges = {
     'Beetle': [(0x0816f4e2, 0x0816f945), (0x08079400, 0x08079550)],
     'Snail': [(0x0816fdc7, 0x08170408), (0x080796a0, 0x080797f0)],
     'PlayerDamage': [(0x080cca24, 0x080ccd53), (0x080cdd12, 0x080ce150)],
+    'PlayerProgress': [(0x080c6180, 0x080c6be2), (0x080d57f0, 0x080d5a28),
+                       (0x080d66ac, 0x080d680c), (0x081e8740, 0x081e876a), (0x08201040, 0x0820108d)],
+    'BigScorpion': [(0x08176a3e, 0x08178c8e)],
 }
 with args.binary.open('rb') as f:
     elf = ELFFile(f)
@@ -67,5 +70,8 @@ for start, end in ranges[args.subject]:
     file.write_text('\n'.join(lines), encoding='utf-8'); files.append(str(file))
 manifest = {'subject': args.subject, 'binary': str(args.binary), 'sha256': hashlib.sha256(args.binary.read_bytes()).hexdigest(),
             'ranges': ranges[args.subject], 'files': files, 'scope': 'ELF excerpts, not Windows equivalence certification'}
+if args.subject == 'PlayerProgress':
+    raw = read(0x0860dbb0, 4)
+    manifest['boomerang_level_initial_data'] = struct.unpack('<i', raw)[0] if len(raw) == 4 else None
 (args.output / f'{args.subject}.json').write_text(json.dumps(manifest, indent=2), encoding='utf-8')
 print(json.dumps(manifest, indent=2))

@@ -9,3 +9,4 @@ vascolet-save.json
 vascolet-settings.json
 .DS_Store
 Thumbs.db
+__pycache__/

@@ -164,3 +164,44 @@ Opciones conserva el arte y tamaño de letras originales mediante tres recortes:
 se repite una banda de textura de 24 píxeles bajo las etiquetas existentes y el
 conjunto se sube 12 píxeles. La nueva casilla está alineada con las otras y Volver
 queda dentro del panel. No se estiran el logo ni las etiquetas ya dibujadas.
+
+## Quinta corrección: progresión del nivel 1 y escorpión — 17/10/2026
+
+El límite fijo de dos boomerangs de la primera tanda queda sustituido por capacidad
+derivada de frutas. Se implementaron los 13 objetos definidos en `level1.tmx` con
+sus animaciones de `Items.xml`, efectos de energía y trofeos persistentes. Una
+partida nueva tiene cinco corazones y carece de carrera, doble salto y pisotón.
+El mapa 1 concede SustainJump y JumpAttack; no concede Run. Las dos verduras
+amplían el máximo a siete corazones y las dos frutas amplían la capacidad de tiro.
+
+La lectura completa del corte de salto `0x080d587a` reveló un **OR**, no un AND:
+`(!jumpHeld || !canSustainJumpEnabled) && vy < -240`. Sin mejora, mantener Z no
+concede toda la altura; con ella, mantenerlo conserva el impulso y soltarlo sigue
+recortando el salto. El impulso de entrada de V4 es −400 (`0x080d67f3`). El port
+conserva un paso de ese impulso antes del corte; el orden exacto de actualización
+todavía requiere comparación temporal con Windows.
+
+Los checkpoints ahora guardan partida/vidas y consumibles por instancia. Muerte y
+recarga restauran la posición, mantienen trofeos y reconstruyen enemigos/jefe.
+El borde inferior abierto del mapa deja caer al personaje: antes, `tileAt` creaba
+un suelo invisible que impedía alcanzar la condición de muerte por caída.
+
+La factoría nativa de BigScorpion referencia **big-scorpion-v02**, no big-scorpion.
+Se usa su arte y máquina de estados: espera a entrar en cámara, marcha con los
+desplazamientos del XML, salto después de tres segundos condicionado por refuerzos,
+dos Scorpion al aterrizar, pausa de un segundo y congelación breve al recibir daño.
+Su vida es 20; la derrota termina a los cuatro segundos y sólo entonces satisface
+`*BigScorpion,defeated`. Se respeta después `winEffect=win,6` y `goto:level2`.
+Las pruebas de navegador verifican también que esa transición conserve las vidas.
+
+Se verificó el sentido de los atlas de rana, flor, escarabajo, caracol y ambos
+escorpiones. El flip de las especies estudiadas ahora sigue su movimiento/mirada.
+Se ajustó el HUD a cinco corazones por fila y la barra/cabeza del escorpión a las
+posiciones del original. Explosiones, parpadeo y geometría física siguen siendo
+aproximaciones, documentadas en [el estado del nivel 1](level1-status.md).
+
+`npm run test:level1` termina la pelea con boomerangs e input reales del motor,
+sin modificar vida del jefe ni invulnerabilidad durante la pelea. La preparación
+reubica al jugador para aislar objetos, guardado y arena: **no es un recorrido
+natural completo**. El intento de recorrido automático desde el inicio consiguió
+recoger SustainJump, pero no terminó el nivel; no se usa como prueba de completitud.

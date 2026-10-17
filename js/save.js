@@ -27,6 +27,21 @@ export const Save = {
     this.write({ items: [...(Array.isArray(saved.items) ? saved.items : []), kind] });
     return true;
   },
+  run() {
+    const r = this.read()?.run;
+    if (!r || !Number.isInteger(r.level) || r.level < 1 || r.level > 18 || !r.checkpoint ||
+      !Number.isFinite(r.checkpoint.x) || !Number.isFinite(r.checkpoint.y) ||
+      !Number.isInteger(r.lives) || r.lives < 0 || !Array.isArray(r.consumed)) return null;
+    return r;
+  },
+  saveRun(run) {
+    this.write({ run: { ...run, checkpoint: { ...run.checkpoint }, consumed: [...(run.consumed || [])] } });
+  },
+  completeLevel(n) {
+    const s = this.read() || {};
+    this.write({ completed: [...new Set([...(Array.isArray(s.completed) ? s.completed : []), n])],
+      unlocked: Math.min(18, n + 1), run: null });
+  },
   settings() { try { return { ...DEFAULT_SETTINGS, ...(JSON.parse(localStorage.getItem(SETK)) || {}) }; } catch { return { ...DEFAULT_SETTINGS }; } },
   writeSettings(s) { try { localStorage.setItem(SETK, JSON.stringify(s)); } catch {} },
 };

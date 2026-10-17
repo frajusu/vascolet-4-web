@@ -2,6 +2,7 @@
 // secondary reference. Bosses/other species and collision boxes are still provisional.
 import { TILE_SOLID, TILE_UP } from "./tmx.js";
 import { ENEMY_PROFILES, enemyRandom } from "./enemy-profiles.js";
+import { damageScorpion, updateScorpion } from "./scorpion-boss.js";
 const clamp = (v, limit) => Math.max(-limit, Math.min(v, limit));
 
 export function createEnemy(object, boss = false, seed = 0x45a91) {
@@ -17,6 +18,7 @@ export function createEnemy(object, boss = false, seed = 0x45a91) {
     anim: null, cur: null };
   if (profile.behavior === "fly") e.vx = e.dir * e.speed;
   if (profile.attackDelay) e.cooldown = profile.attackDelay + enemyRandom(e) * profile.attackSpread;
+  if (profile.behavior === "scorpion-boss") { e.state = "waiting"; e.fight = false; e.defeated = false; }
   return e;
 }
 
@@ -25,12 +27,13 @@ export function enemyAnimation(e, name, restart = false) {
 }
 
 export function enemySpriteFlip(e) {
-  // Fly's original atlas faces right. Its art orientation is independent of AI.
-  if (e.kind === "Fly") return (Math.abs(e.vx) > 1 ? e.vx : e.dir) < 0;
+  // Verified first-area atlases face right. Art orientation is independent of AI.
+  if (ENEMY_PROFILES[e.kind]) return (Math.abs(e.vx) > 1 ? e.vx : e.dir) < 0;
   return e.dir > 0;
 }
 
 export function hitEnemy(e, direction = 1) {
+  if (e.behavior === "scorpion-boss") return damageScorpion(e);
   if (e.hp <= 0 || e.hurtT > 0) return false;
   e.hp = Math.max(0, e.hp - 1); e.hurtT = .16;
   if (!e.hp) {
@@ -43,7 +46,8 @@ export function hitEnemy(e, direction = 1) {
   return true;
 }
 
-export function updateEnemy(e, player, dt, { moveBody, tileAt, shoot, booms = [] }) {
+export function updateEnemy(e, player, dt, { moveBody, tileAt, shoot, booms = [], ...bossApi }) {
+  if (e.behavior === "scorpion-boss") { e.t += dt; updateScorpion(e, player, dt, { moveBody, ...bossApi }); return; }
   e.t += dt; e.stateTime += dt; e.hurtT = Math.max(0, e.hurtT - dt); e.cooldown -= dt;
   if (e.hp <= 0) {
     e.deadT += dt;
