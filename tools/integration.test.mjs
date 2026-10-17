@@ -280,6 +280,34 @@ test("attack releases at the original XML flag, crouch uses its own pose, and ra
   Input.reset();
 });
 
+test("help/save signs meet the floor, Lampi returns on re-entry, dialogues stay modeless and saved signs remain visible", async () => {
+  clearAssets(); Input.reset(); Save.clear();
+  fixtures.set("assets/data/maps/level4.tmx", levelXML().replace("</objectgroup>",
+    '<object name="*Info" x="240" y="288"><properties><property name="info" value="tip-fixture"/></properties></object><object name="*Save" x="800" y="288"/></objectgroup>'));
+  Game.chars = JSON.parse(await readFile(new URL("../assets/chars.json", import.meta.url), "utf8"));
+  Game.texts = { "tip-fixture": "Este jardín tiene muchos insectos... ¡Ten cuidado!\nUsa las flechas para moverte..." };
+  await loadLevel(4); tick();
+  assert.equal(Game.infos[0].y, 320); assert.equal(Game.saves[0].y, 320);
+  assert.ok(Game.helper && Game.helper.anim.anims.length);
+  assert.equal(Game.dlg.text, Game.texts["tip-fixture"]);
+  tick(73); assert.ok(Game.helper.anim.i > 0);
+  const ctx = context(); gameDraw(ctx);
+  const head = ctx.draws.find(d => d.image.src?.endsWith("/hud.png") && d.args[0] === 312 && d.args[1] === 1);
+  assert.deepEqual(head.args.slice(4), [6, 45, 72, 62]);
+  Input.pressed.add("z"); Input.held.add("z"); tick();
+  assert.ok(Game.player.y < 320 && Game.dlg, "help must not pause movement or consume jump");
+  Input.reset(); Object.assign(Game.player, { x: 600, y: 320, vy: 0 }); tick(5);
+  const generation = Game.helperSerial;
+  Game.player.x = 256; tick();
+  assert.equal(Game.helperSerial, generation + 1); assert.equal(Game.helper.phase, "follow");
+  Game.player.x = 816; Game.player.y = 320; Game.player.vy = 0; tick();
+  assert.equal(Game.saves[0].used, true); assert.equal(Game.saves[0].x, 816);
+  assert.equal(Game.saves[0].anim.cur.name, "savePoint");
+  assert.equal(Game.dlg.text, "Juego salvado.");
+  assert.equal(Save.read().x, 816);
+  Input.reset(); clearAssets();
+});
+
 test("main boots menu-only, keeps 144 Hz input queued, consumes once during catchup, caps pauses and crops pages", async () => {
   clearAssets(); requests.length = imageRequests.length = frames.length = 0;
   Game.map = null; Game.player = null; dom.window.localStorage.clear();
@@ -316,7 +344,8 @@ test("main boots menu-only, keeps 144 Hz input queued, consumes once during catc
   await until(() => !document.getElementById("boot")); render(10_188);
   const ctx = document.getElementById("game")._ctx;
   const options = ctx.draws.find(call => call.image.src?.endsWith("/options.png") && call.args[0] === 1);
-  assert.deepEqual(options.args, [1, 386, 512, 384, 0, 0, 512, 384]);
+  assert.deepEqual(options.args, [1, 386, 512, 306, 0, -12, 512, 306]);
+  assert.ok(ctx.draws.some(call => call.image.src?.endsWith("/options.png") && call.args[1] === 692 && call.args[5] === 318), "extended panel foot must be composed below the extra check");
   let ts = 10_190;
   // Volver al menu principal: opciones -> Esc -> pausa -> Salir -> Si -> capítulos -> Esc.
   key("keydown", "Escape", "Escape"); render(ts += 17); key("keyup", "Escape", "Escape");

@@ -128,3 +128,39 @@ El volumen de efectos se aplica una sola vez en la ganancia maestra.
 El video ya no cambia la posición CSS del contenedor fijo. Su overlay se ajusta
 al canvas al redimensionar y elimina listeners al terminar. La prueba de navegador
 comprueba igualdad de rectángulos y centrado antes/durante/después de reproducir.
+
+## Cuarta corrección: ayuda, orientación y muestreo de texturas
+
+Se observó el original al empezar 1-1, avanzar al segundo cartel y volver al primero.
+El plan reproducible está en `tools/behavior/native-help.plan.json`. Los carteles
+usaban el centro del objeto TMX como pie y por eso quedaban 16 píxeles altos; ahora
+se anclan al borde inferior del marcador de 32 píxeles. Los carteles de guardado
+permanecen en su sitio después de usarlos y pasan de `saveStale` a `savePoint`.
+
+`Stage::Stage` (`0x08205f72`) sitúa el banner de información en `(266,45)`.
+`showQuickInfo` usa el retrato a −224 en X y medio alto en Y. Con los pivotes del
+atlas, el banner resulta `(33,47,466,68)` y Lampi `(6,45,72,62)`, dentro de pantalla.
+El texto usa `winnie14-or`, centrado en `(266,81)`. Se aplica un ancho seguro que
+evita el retrato; los textos largos se ajustan y, si superan tres líneas, se paginan
+en vez de truncarse. La ayuda sigue siendo modeless y Z no cierra el mensaje.
+
+`SIGN_INFO` muestra la información durante 2,5 s, refrescada mientras se toca el
+cartel, y crea como máximo un LightBug. El sprite original se precarga/ anima.
+La salida desde `(0,-300)`, seguimiento a `(-64,-48)` relativo al jugador, límites
+120/240, aceleraciones 320/240 y retirada a los 4 s provienen de `LIGHT_BUG_NORMAL`
+(`0x0814c7ec`) y `LIGHT_BUG_LEAVE` (`0x0814ca98`). La reactivación al acercarse
+otra vez evita conservar un Lampi ya retirándose fuera de vista. El fade breve y
+la paginación son adaptaciones del port; no se afirman constantes nativas.
+
+El atlas de Fly mira a la derecha. Se separó el flip visual de la dirección de IA:
+la mosca ahora mira hacia su desplazamiento, también mientras frena/gira.
+
+Se añadió `filterTextures` a los ajustes. El modo filtrado aplica interpolación al
+mundo y escalado CSS normal; sin filtro se usan píxeles de origen exactos, sin el
+recorte de medio píxel, y CSS pixelado. También se corrigió el caso de sprites de
+un solo píxel, que el inset anterior podía convertir en un recorte vacío.
+
+Opciones conserva el arte y tamaño de letras originales mediante tres recortes:
+se repite una banda de textura de 24 píxeles bajo las etiquetas existentes y el
+conjunto se sube 12 píxeles. La nueva casilla está alineada con las otras y Volver
+queda dentro del panel. No se estiran el logo ni las etiquetas ya dibujadas.

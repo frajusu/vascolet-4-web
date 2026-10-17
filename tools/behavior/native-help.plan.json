@@ -1,0 +1,10 @@
+{
+  "description":"Windows original 800x600 client: first help sign, approach next sign, return. Captures only the game client; inspect the route before using frames as reference.",
+  "steps":[
+    {"wait":10},{"wait":10},{"scan":28},{"wait":2},{"click":[40,375]},
+    {"wait":3},{"scan":28},{"wait":5},{"scan":28},{"wait":1},
+    {"record":"help-first","frames":12,"interval":0.1},
+    {"record":"help-next","keys":[77],"releaseAt":31,"frames":40,"interval":0.1},
+    {"record":"help-return","keys":[75],"releaseAt":27,"frames":36,"interval":0.1}
+  ]
+}

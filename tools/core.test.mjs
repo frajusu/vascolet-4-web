@@ -227,6 +227,18 @@ test("frame drawing orders composite sprites, mirrors positive offsets, and neve
   assert.deepEqual(ctx.draws[2].args.slice(1), [1.5, 386.5, 511, 383, -256, -192, 512, 384]);
 });
 
+test("nearest atlas sampling uses exact pixels and a one-pixel sprite remains drawable in both modes", () => {
+  const ctx = fakeContext(), image = {}, entry = { x: 7, y: 11, w: 20, h: 30, ax: 3, ay: 25 };
+  ctx.imageSmoothingEnabled = false;
+  drawAtlas(ctx, image, entry, 100, 200);
+  assert.deepEqual(ctx.draws[0].args, [image, 7, 11, 20, 30, -3, -25, 20, 30]);
+  for (const smooth of [true, false]) {
+    ctx.imageSmoothingEnabled = smooth;
+    drawAtlas(ctx, image, { ...entry, w: 1, h: 1 }, 100, 200);
+    assert.deepEqual(ctx.draws.at(-1).args.slice(1, 5), [7, 11, 1, 1]);
+  }
+});
+
 test("drawing restores context even when drawImage or a pixel callback fails", () => {
   const ctx = fakeContext();
   ctx.drawImage = () => { throw new Error("draw failed"); };

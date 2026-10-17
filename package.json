@@ -4,13 +4,14 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "node --test tools/core.test.mjs tools/integration.test.mjs tools/gameplay.test.mjs tools/menu.test.mjs",
+    "test": "node --test tools/core.test.mjs tools/integration.test.mjs tools/gameplay.test.mjs tools/menu.test.mjs tools/help.test.mjs",
     "serve": "node tools/serve.mjs",
     "test:browser": "node tools/browser-smoke.mjs",
     "test:gameplay": "node tools/browser-gameplay.mjs",
     "test:menus": "node tools/browser-menus.mjs",
     "test:animals": "node tools/enemy-lab.mjs",
-    "test:options-video": "node tools/browser-options-video.mjs"
+    "test:options-video": "node tools/browser-options-video.mjs",
+    "test:help-rendering": "node tools/browser-help-rendering.mjs"
   },
   "keywords": [],
   "author": "",

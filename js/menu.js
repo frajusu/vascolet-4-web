@@ -10,6 +10,7 @@ import { Save } from "./save.js";
 import { Audio2 } from "./audio.js";
 import { loadBitmapFont, drawBitmapText } from "./bitmap-font.js";
 import { TROPHIES } from "./trophies.js";
+import { setTextureFiltering } from "./render-settings.js";
 
 const W = 512, H = 384;
 // layout medido (binario: pitch 40, ultimo gap 60 + screenshots CV):
@@ -36,7 +37,7 @@ export async function menuInit(choose) {
 
 const TRASH = { x: 472, y: 316, w: 32, h: 32 };
 function inRect(mx, my, r) {
-  return mx >= r.x && mx <= r.x + r.w && my >= r.y && my <= r.y + r.h;
+  return mx >= r.x && mx < r.x + r.w && my >= r.y && my < r.y + r.h;
 }
 
 function btnRect(b) {
@@ -246,6 +247,8 @@ export function chaptersDraw(ctx, texts) {
 // Crop opciones + sliders (volumeControl) + checks + soundOn/Off + VOLVER.
 let optAtlas = null;
 // Windows Options::init 0x005108e0. These are atlas anchors, not sprite centers.
+// One added check row: translate artwork/controls up 12 and extend only its foot.
+export const OPTIONS_PANEL = Object.freeze({ shiftY: -12, splitY: 306, extraHeight: 24 });
 export const OPTION_CONTROLS = Object.freeze([
   { id: "musicMute", x: 307, y: 125, w: 48, h: 40, type: "mute", setting: "music" },
   { id: "music", x: 145, y: 160, w: 228, h: 28, type: "slider", travel: 200 },
@@ -253,8 +256,9 @@ export const OPTION_CONTROLS = Object.freeze([
   { id: "sfx", x: 145, y: 226, w: 228, h: 28, type: "slider", travel: 200 },
   { id: "fullscreen", x: 314, y: 258, w: 24, h: 24, type: "check" },
   { id: "stretch", x: 314, y: 282, w: 24, h: 24, type: "check" },
-  { id: "volver", x: 201, y: 315, w: 110, h: 30, type: "back" },
-]);
+  { id: "filterTextures", x: 314, y: 306, w: 24, h: 24, type: "check", label: "Filtrar texturas" },
+  { id: "volver", x: 201, y: 339, w: 110, h: 30, type: "back" },
+].map(c => Object.freeze({ ...c, y: c.y + OPTIONS_PANEL.shiftY })));
 let optSel = 1, optDrag = null, optMouseRevision = 0;
 let optionsDone = null;
 export function onOptionsDone(cb) { optionsDone = cb; }
@@ -263,6 +267,7 @@ export async function optionsInit() {
   optSel = 1; optDrag = null; optMouseRevision = Input.mouse.revision;
   if (!optAtlas) optAtlas = parseAtlas(await loadXML("assets/gui/options/options.xml"));
   await loadAssets(["assets/gui/options/options.png"]);
+  setTextureFiltering(Save.settings().filterTextures, document.getElementById("game"));
 }
 
 function optSettings() { return Save.settings(); }
@@ -320,6 +325,7 @@ export function applyDisplay(s) {
   if (s.fullscreen && !document.fullscreenElement) document.documentElement.requestFullscreen?.().catch(() => {});
   if (!s.fullscreen && document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
   if (canvas) canvas.dataset.stretch = s.stretch === false ? "0" : "1";
+  setTextureFiltering(s.filterTextures, canvas);
 }
 
 export function optionsDraw(ctx) {
@@ -330,7 +336,14 @@ export function optionsDraw(ctx) {
   ctx.fillRect(0, 0, W, H);
   const sheet = img("assets/gui/options/options.png");
   const crop = optAtlas && optAtlas.opciones;
-  if (sheet && crop) ctx.drawImage(sheet, crop.x, crop.y, crop.w, crop.h, 0, 0, W, H);
+  if (sheet && crop) {
+    const { shiftY, splitY, extraHeight } = OPTIONS_PANEL;
+    // Repeat a plain textured band instead of stretching the logo or baked labels.
+    ctx.drawImage(sheet, crop.x, crop.y, crop.w, splitY, 0, shiftY, crop.w, splitY);
+    ctx.drawImage(sheet, crop.x, crop.y + splitY, crop.w, extraHeight, 0, splitY + shiftY, crop.w, extraHeight);
+    ctx.drawImage(sheet, crop.x, crop.y + splitY, crop.w, crop.h - splitY,
+      0, splitY + extraHeight + shiftY, crop.w, crop.h - splitY);
+  }
   const s = optSettings();
   for (const [i, control] of OPTION_CONTROLS.entries()) {
     const selected = i === optSel;
@@ -344,6 +357,10 @@ export function optionsDraw(ctx) {
       if (entry) { x -= entry.ax; y -= entry.ay; }
     }
     if (source && entry) ctx.drawImage(source, entry.x, entry.y, entry.w, entry.h, x, y, entry.w, entry.h);
+    if (control.label) {
+      ctx.font = "bold 14px Arial, sans-serif"; ctx.fillStyle = "#ffff00";
+      ctx.fillText(control.label, 152, control.y + 18);
+    }
   }
   ctx.imageSmoothingEnabled = true;
 }

@@ -8,8 +8,11 @@ import { Save } from "./save.js";
 import { Audio2 } from "./audio.js";
 import { updateCamera } from "./camera.js";
 import { createBoomerang, updateBoomerang, terrainHit, segmentBox } from "./projectiles.js";
-import { createEnemy, hitEnemy, updateEnemy } from "./enemies.js";
+import { createEnemy, hitEnemy, updateEnemy, enemySpriteFlip } from "./enemies.js";
 import { beginPlayerDamage, advancePlayerDamage, DAMAGE_MOTION } from "./player-damage.js";
+import { loadBitmapFont, drawBitmapText, measureBitmapText, wrapBitmapText } from "./bitmap-font.js";
+import { createLampi, updateLampi, signTouchesPlayer, dialogueLayout, HELP_DIALOG } from "./help.js";
+import { RenderSettings } from "./render-settings.js";
 
 const W = 512, H = 384, TILE = 32;
 const SFX = "assets/audio/fx/win/", MUS = "assets/audio/music/win/";
@@ -23,6 +26,7 @@ export const Game = {
   camX: 0, camY: 0, prevCamX: 0, prevCamY: 0, time: 0,
   tip: "", tipT: 0, level: 1, coins: 0, lives: 5, energy: 100,
   dlg: null, // {text, shown, t, portrait}
+  helper: null, helperSerial: 0, dialogFont: null,
   charCache: new Map(),
   chars: {}, texts: {},
   hudAtlas: null,
@@ -90,7 +94,7 @@ function tmxDir(n) {
     Bee: "bee", GiantDragonfly: "giant-dragonfly", BigUglyDragon: "ugly-dragon",
     FurryCritter: "furry-critter", Mouse: "mouse", BigBat: "big-bat", BigGhost: "ghost2",
     BigSpider: "big-spider", BigAnguila: "anguila2", BigPirana: "big-pirana",
-    BigPiranaBlowFish: "blowfish2", Boomerang: "boomerang", Malmark2: "malmark2",
+    BigPiranaBlowFish: "blowfish2", Boomerang: "boomerang", Malmark2: "malmark2", LightBug: "light-bug",
   };
   return map[n] || n.toLowerCase();
 }
@@ -128,6 +132,7 @@ export async function loadLevel(n, fresh = true) {
   const G = Game;
   G.level = n; G.enemies = []; G.items = []; G.infos = []; G.saves = [];
   G.booms = []; G.parts = []; G.shots = []; G.effects = []; G.dlg = null;
+  G.helper = null; G.helperSerial = 0;
   G.coins = 0; G.energy = 100; G.tip = ""; G.tipT = 0;
   if (fresh) G.lives = 5;
   G.start = null; G.player = null; G.time = 0;
@@ -162,8 +167,8 @@ export async function loadLevel(n, fresh = true) {
   if (!G.hudAtlas) G.hudAtlas = parseAtlas(await loadXML("assets/images/hud/hud.xml"));
   for (const o of group(G.map, "General")) {
     if (o.name === "Start") G.start = { x: o.x + 16, y: o.y + 16 };
-    if (o.name === "*Info") G.infos.push({ x: o.x + 16, y: o.y + 16, key: o.props.info, shown: false });
-    if (o.name === "*Save") G.saves.push({ x: o.x + 16, y: o.y + 16, tip: o.props.info });
+    if (o.name === "*Info") G.infos.push({ x: o.x + 16, y: o.y + 32, key: o.props.info, shown: false, dismissed: false });
+    if (o.name === "*Save") G.saves.push({ x: o.x + 16, y: o.y + 32, tip: o.props.info, used: false, anim: null });
   }
   const foes = group(G.map, "Enemies");
   for (const o of foes.length ? foes : group(G.map, "Scenes")) {
@@ -180,7 +185,8 @@ export async function loadLevel(n, fresh = true) {
   };
   G.checkpoint = G.start ? { x: G.start.x, y: G.start.y } : { x: 256, y: 352 };
   await ensureChar("Vascolet");
-  await Promise.all(["Boomerang", "effects", "fireball"].map(ensureChar));
+  await Promise.all(["Boomerang", "effects", "fireball", "LightBug"].map(ensureChar));
+  if (!G.dialogFont) G.dialogFont = await loadBitmapFont("winnie14-or");
   G.player.anim = new AnimPlayer(Game.charCache.get("Vascolet").anims);
   // carteles de ayuda/guardado (signposts del original)
   try {
@@ -191,7 +197,8 @@ export async function loadLevel(n, fresh = true) {
       return a ? a.frames[0] : null;
     };
     G.signInfo = frameOf("info");
-    G.signSave = frameOf("savePoint");
+    G.signSave = frameOf("saveStale");
+    for (const save of G.saves) { save.anim = new AnimPlayer(sc.anims); save.anim.set("saveStale"); }
   } catch { G.signInfo = null; G.signSave = null; }
   G.player.cur = G.player.anim.frame;
   await Promise.all(G.enemies.map(async e => {
@@ -298,7 +305,7 @@ function moveBody(b, dt, gravity = GRAV) {
 function snapshotPositions() {
   const G = Game;
   G.prevCamX = G.camX; G.prevCamY = G.camY;
-  for (const b of [G.player, ...G.enemies, ...G.booms, ...G.parts, ...G.shots, ...G.effects]) {
+  for (const b of [G.player, G.helper, ...G.enemies, ...G.booms, ...G.parts, ...G.shots, ...G.effects]) {
     if (b) { b.prevX = b.x; b.prevY = b.y; }
   }
 }
@@ -325,15 +332,14 @@ export function gameUpdate(dt) {
   if (!p) return;
   snapshotPositions();
   G.time += dt;
-  // dialogo NO modal (como el original): el juego sigue, Z/Enter/click avanza/cierra
+  // Quick-info is modeless and refreshed while touching its sign; jumping is free.
   if (G.dlg) {
-    G.dlg.t += dt;
-    const full = G.dlg.text.length;
-    G.dlg.shown = Math.min(full, Math.floor(G.dlg.t * 40));
-    if (Input.pressed.has("z") || Input.pressed.has("enter") || Input.pressed.has(" ") || Input.pressed.has("click")) {
-      if (G.dlg.shown < full) { G.dlg.shown = full; G.dlg.t = 99; }
-      else G.dlg = null;
+    const d = G.dlg; d.t += dt; d.remaining -= dt;
+    if (Input.pressed.has("enter") || Input.pressed.has("click")) {
+      if (d.page + 1 < d.pages.length) { d.page++; d.remaining = HELP_DIALOG.duration; }
+      else { if (d.source) d.source.dismissed = true; G.dlg = null; }
     }
+    if (d.remaining <= 0) G.dlg = null;
   }
   let dir = 0;
   if (Input.down("left")) dir -= 1;
@@ -405,21 +411,35 @@ export function gameUpdate(dt) {
     }
   }
   G.tipT = Math.max(0, G.tipT - dt);
-  for (const i of G.infos) {
-    // Los carteles los explica Lampi (help.jpg original). Sin pausa.
-    if (Math.hypot(i.x - p.x, i.y - p.y) < 48 && !i.shown) {
-      i.shown = true;
-      const t = Game.texts[i.key];
-      if (t) openDialog(t, "dialogBannerLampi");
-    } else if (Math.hypot(i.x - p.x, i.y - p.y) > 96) i.shown = false;
+  let nearest = null;
+  for (const sign of G.infos) {
+    if (!signTouchesPlayer(sign, p)) { sign.shown = false; sign.dismissed = false; }
+    else if (!nearest || Math.abs(sign.x - p.x) < Math.abs(nearest.x - p.x)) nearest = sign;
+  }
+  if (nearest) {
+    if (!nearest.shown) {
+      nearest.shown = true; G.helperSerial++;
+      const c = G.charCache.get("LightBug");
+      if (G.helper?.phase === "follow") { G.helper.age = 0; G.helper.generation = G.helperSerial; }
+      else G.helper = createLampi(nearest, c?.anims || [], G.helperSerial);
+    }
+    if (!nearest.dismissed && G.texts[nearest.key]) {
+      if (G.dlg?.source === nearest) G.dlg.remaining = HELP_DIALOG.duration;
+      else openDialog(G.texts[nearest.key], "dialogBannerLampi", HELP_DIALOG.duration, nearest);
+    }
+  }
+  if (G.helper) {
+    updateLampi(G.helper, p, dt);
+    if (G.helper.age > 9 || (G.helper.phase === "leave" && G.helper.y < G.camY - 80)) G.helper = null;
   }
   for (const s of G.saves) {
-    if (Math.hypot(s.x - p.x, s.y - p.y) < 40) {
+    s.anim?.update(dt);
+    if (!s.used && signTouchesPlayer(s, p)) {
       Save.write({ level: G.level, x: s.x, y: s.y, t: Date.now() });
       G.checkpoint = { x: s.x, y: s.y };
       Audio2.sfx(SFX + "save.ogg");
-      G.tip = "Guardado."; G.tipT = 2;
-      s.x = -99999;
+      s.used = true; s.anim?.set("savePoint");
+      openDialog("Juego salvado.", null, 2.7);
     }
   }
   // barra de jefe: maximo hp entre jefes vivos, visible solo cerca del jefe
@@ -545,8 +565,12 @@ function updateEnemyShots(dt) {
   G.shots = G.shots.filter(s => s.life > 0);
 }
 
-function openDialog(text, portrait) {
-  Game.dlg = { text, shown: 0, t: 0, portrait };
+function openDialog(text, portrait, duration = HELP_DIALOG.duration, source = null) {
+  const layout = dialogueLayout(Game.hudAtlas, portrait);
+  const lines = wrapBitmapText(Game.dialogFont, text, layout.maxWidth);
+  const pages = [];
+  for (let i = 0; i < lines.length; i += 3) pages.push(lines.slice(i, i + 3));
+  Game.dlg = { text, shown: text.length, t: 0, remaining: duration, portrait, source, pages, page: 0, layout };
   Audio2.sfx(SFX + "help.ogg", 0.6);
 }
 
@@ -560,7 +584,8 @@ function drawTile(ctx, raw, tilesets, x, y) {
   const sx = T.margin + (local % cols) * (T.tileW + T.spacing);
   const sy = T.margin + Math.floor(local / cols) * (T.tileH + T.spacing);
   // inset de 0.5px contra bleeding de tiles vecinos
-  const ix = sx + 0.5, iy = sy + 0.5, iw = T.tileW - 1, ih = T.tileH - 1;
+  const inset = ctx.imageSmoothingEnabled ? .5 : 0;
+  const ix = sx + inset, iy = sy + inset, iw = T.tileW - 2 * inset, ih = T.tileH - 2 * inset;
   if (raw & 0xe0000000) {
     ctx.save();
     ctx.translate(x + TILE / 2, y + TILE / 2);
@@ -593,7 +618,7 @@ export function gameDraw(ctx, alpha = 1) {
   alpha = Math.max(0, Math.min(1, alpha));
   const lerp = (previous, current) => (previous ?? current) + (current - (previous ?? current)) * alpha;
   const x = b => lerp(b.prevX, b.x), y = b => lerp(b.prevY, b.y);
-  ctx.imageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = RenderSettings.filterTextures;
   ctx.fillStyle = "#0a0a18";
   ctx.fillRect(0, 0, W, H);
   const cx = lerp(G.prevCamX, G.camX), cy = lerp(G.prevCamY, G.camY);
@@ -616,11 +641,10 @@ export function gameDraw(ctx, alpha = 1) {
     const sc = Game.charCache.get("carteles-ayuda-guardar");
     const drawSign = (sp, fr) => {
       if (!sc || !sc.img || !fr || !fr.img) return;
-      const ent = sc.atlas[fr.img];
-      if (ent) drawAtlas(ctx, sc.img, { ...ent, ax: ent.ax + (fr.ox || 0), ay: ent.ay + (fr.oy || 0) }, sp.x - cx, sp.y - cy);
+      drawAnimFrame(ctx, sc.img, sc.atlas, fr, sp.x - cx, sp.y - cy);
     };
     for (const o of G.infos) drawSign(o, G.signInfo);
-    for (const o of G.saves) if (o.x > -9999) drawSign(o, G.signSave);
+    for (const o of G.saves) drawSign(o, o.anim?.frame ?? G.signSave);
   }
   // enemigos con sprites reales
   for (const e of G.enemies) {
@@ -628,11 +652,15 @@ export function gameDraw(ctx, alpha = 1) {
     const c = Game.charCache.get(e.kind);
     if (c?.img && e.anim) {
       drawAnimFrame(ctx, c.img, c.atlas, e.cur, x(e) - cx, y(e) - cy,
-        { flip: e.dir > 0, round: false, alpha: e.hp <= 0 ? Math.max(0, 1 - e.deadT / 1.2) : e.hurtT > 0 ? .65 : 1 });
+        { flip: enemySpriteFlip(e), round: false, alpha: e.hp <= 0 ? Math.max(0, 1 - e.deadT / 1.2) : e.hurtT > 0 ? .65 : 1 });
     } else {
       ctx.fillStyle = "#ffd75e";
       ctx.fillRect(x(e) - cx - 3, y(e) - cy - 3, 6, 6);
     }
+  }
+  if (G.helper) {
+    const c = G.charCache.get("LightBug"), b = G.helper;
+    if (c?.img) drawAnimFrame(ctx, c.img, c.atlas, b.anim.frame, x(b) - cx, y(b) - cy, { flip: b.face < 0, round: false });
   }
   // jugador
   const p = G.player;
@@ -722,33 +750,16 @@ function drawDialog(ctx) {
   const G = Game, D = G.dlg;
   const him = img(HUD), A = G.hudAtlas;
   const box = A && A["cartelDialogos"], face = A && A[D.portrait];
-  ctx.imageSmoothingEnabled = true;
-  if (him && box) {
-    // caja nativa 466x68: arriba si el jugador esta abajo y viceversa
-    const p = G.player;
-    const pScreenY = p ? p.y - G.camY : H / 2;
-    const by = pScreenY > H / 2 ? 14 : H - box.h - 10;
-    const bx = Math.round((W - box.w) / 2);
-    ctx.drawImage(him, box.x, box.y, box.w, box.h, bx, by, box.w, box.h);
-    if (face) ctx.drawImage(him, face.x, face.y, face.w, face.h, bx - face.w + 12, by + 12, face.w, face.h);
-    ctx.font = "bold 15px sans-serif";
-    ctx.textBaseline = "top";
-    const lines = D.text.slice(0, D.shown).split("\n");
-    lines.slice(0, 3).forEach((ln, i) => {
-      const lx = bx + 70, ly = by + 14 + i * 18;
-      ctx.lineWidth = 3; ctx.strokeStyle = "#3a0a00";
-      ctx.strokeText(ln, lx, ly);
-      ctx.fillStyle = "#ffc93c";
-      ctx.fillText(ln, lx, ly);
-    });
-    ctx.textBaseline = "alphabetic";
-    if (D.shown >= D.text.length) {
-      ctx.fillStyle = "#ffc93c";
-      ctx.fillText("▼", bx + box.w - 26, by + box.h - 20);
-    }
-  } else {
-    ctx.fillStyle = "rgba(0,0,0,0.7)"; ctx.fillRect(20, H - 90, W - 40, 80);
-    ctx.font = "bold 15px sans-serif"; ctx.fillStyle = "#ffc93c";
-    D.text.slice(0, D.shown).split("\n").slice(0, 3).forEach((ln, i) => ctx.fillText(ln, 30, H - 64 + i * 18));
-  }
+  if (!him || !box || !G.dialogFont) return;
+  const layout = D.layout, b = layout.banner, head = layout.head, lines = D.pages[D.page];
+  ctx.save();
+  ctx.globalAlpha *= Math.min(1, D.t / .12, Math.max(0, D.remaining / .16));
+  ctx.imageSmoothingEnabled = RenderSettings.filterTextures;
+  ctx.drawImage(him, box.x, box.y, box.w, box.h, b.x, b.y, b.w, b.h);
+  if (face && head) ctx.drawImage(him, face.x, face.y, face.w, face.h, head.x, head.y, head.w, head.h);
+  lines.forEach((line, i) => drawBitmapText(ctx, G.dialogFont, line,
+    Math.round(layout.textX - measureBitmapText(G.dialogFont, line) / 2),
+    Math.round(layout.textY - lines.length * 17 / 2 + i * 17)));
+  if (D.pages.length > 1) drawBitmapText(ctx, G.dialogFont, `${D.page + 1}/${D.pages.length}`, b.x + b.w - 30, b.y + b.h - 19);
+  ctx.restore();
 }

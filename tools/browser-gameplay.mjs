@@ -116,17 +116,24 @@ try {
     const fly = g.enemies.find(e => e.kind === "Fly");
     Object.assign(fly, { x: g.player.x + 5, y: 384, homeX: g.player.x + 5, homeY: 384, active: true, vx: 0, vy: 0 });
     g.enemies = [fly]; g.win = null; g.infos = []; g.dlg = null;
+    window.__recoilSamples = [];
+    window.__recoilTimer = setInterval(() => {
+      const p = g.player;
+      if (window.__recoilSamples.length < 180) window.__recoilSamples.push({ t:g.time, x:p.x, y:p.y, phase:p.damage?.phase ?? null });
+    }, 16);
     return { start: { x: g.player.x, y: g.player.y } };
   });
   await key("Escape");
   await page.waitForFunction(async () => Boolean((await import("/js/game.js")).Game.player.damage));
   await page.evaluate(async () => { (await import("/js/game.js")).Game.enemies = []; });
   await page.waitForTimeout(80); await shot("player-recoil");
-  report.recoil.mid = await page.evaluate(async () => {
-    const p = (await import("/js/game.js")).Game.player; return { x: p.x, y: p.y, phase: p.damage?.phase };
-  });
-  assert.ok(report.recoil.mid.x < report.recoil.start.x - 4 && report.recoil.mid.y < report.recoil.start.y - 10);
   await page.waitForTimeout(1000);
+  const recoilSamples = await page.evaluate(() => { clearInterval(window.__recoilTimer); return window.__recoilSamples; });
+  // Check the recorded trajectory, not a transient pose after screenshot latency.
+  report.recoil.sampleCount = recoilSamples.length;
+  report.recoil.minX = Math.min(...recoilSamples.map(s => s.x)); report.recoil.minY = Math.min(...recoilSamples.map(s => s.y));
+  report.recoil.apex = recoilSamples.reduce((best,s) => s.y < best.y ? s : best, recoilSamples[0]);
+  assert.ok(report.recoil.minX < report.recoil.start.x - 4 && report.recoil.minY < report.recoil.start.y - 10);
   assert.equal(await page.evaluate(async () => (await import("/js/game.js")).Game.player.damage), null);
   report.checks.push("Daño real por contacto: retroceso, salto y recuperación del jugador");
   assert.deepEqual(errors, []); assert.equal(await page.locator("#err").textContent(), "");

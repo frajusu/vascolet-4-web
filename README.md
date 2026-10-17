@@ -23,6 +23,10 @@ Menús como el original: Jugar (mapa de capítulos 1-1…6-3 con desbloqueo), Op
 (volumen música/efectos, pantalla completa, estirar), Ayuda, Créditos, Logros,
 papelera para borrar el guardado, pausa con Volver/Opciones/Salir.
 
+En Opciones, **Filtrar texturas** activa el suavizado de imágenes. Desmarcarlo usa
+muestreo nearest y escalado pixelado para mapas, personajes y demás texturas. La
+preferencia queda guardada en el navegador.
+
 ## Progreso guardado
 
 En `localStorage` del navegador: nivel, vidas, monedas, capítulos desbloqueados y
@@ -73,6 +77,8 @@ con el motor real del port. `npm run test:animals` genera curvas de posición,
 estados y capturas; `npm run test:animals -- Frog` aísla la rana.
 `npm run test:options-video` verifica interacción y posición de controles y el
 centrado del canvas durante las cinemáticas.
+`npm run test:help-rendering` comprueba carteles, Lampi, retratos/diálogos completos,
+orientación de moscas y filtrado persistente con capturas de ambos modos.
 
 ## Licencia y créditos
 

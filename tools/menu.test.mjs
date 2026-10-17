@@ -7,6 +7,7 @@ import { Input } from "../js/input.js";
 import { Save } from "../js/save.js";
 import { Audio2 } from "../js/audio.js";
 import { TROPHIES } from "../js/trophies.js";
+import { RenderSettings, setTextureFiltering } from "../js/render-settings.js";
 
 const dom = new JSDOM("", { url: "https://menus.test/" });
 const originals = new Map();
@@ -30,7 +31,7 @@ test.after(() => {
     if (original) Object.defineProperty(globalThis, name, original); else delete globalThis[name];
   }
 });
-const context = () => ({ draws: [], fillRect() {}, drawImage(image, ...rect) { this.draws.push({ src: image.src, rect }); } });
+const context = () => ({ draws: [], texts: [], fillRect() {}, fillText(text, x, y) { this.texts.push({ text, x, y }); }, drawImage(image, ...rect) { this.draws.push({ src: image.src, rect }); } });
 const press = (key, dt = 1 / 60) => { Input.pressed.add(key); chaptersUpdate(dt); Input.endStep(); };
 function drawChapters() { const ctx = context(); chaptersDraw(ctx, {}); return ctx; }
 const background = ctx => ctx.draws.find(d => /area0\d\.jpg/.test(d.src));
@@ -124,15 +125,18 @@ test("Options share original draw/hit geometry; outside clicks are inert; mute, 
     };
     click(50, 173); assert.equal(Save.settings().music, .5);
     click(50, 330); assert.equal(closed, 0);
-    click(331, 145); assert.equal(Save.settings().musicMute, true); assert.equal(Save.settings().sfxMute, false);
-    click(258, 174); assert.equal(Save.settings().music, .5);
-    Object.assign(Input.mouse, { x: 258, y: 174, down: true }); Input.pressed.add("click"); optionsUpdate(); Input.endStep();
+    click(331, 133); assert.equal(Save.settings().musicMute, true); assert.equal(Save.settings().sfxMute, false);
+    click(258, 162); assert.equal(Save.settings().music, .5);
+    Object.assign(Input.mouse, { x: 258, y: 162, down: true }); Input.pressed.add("click"); optionsUpdate(); Input.endStep();
     Input.mouse.x = 358; optionsUpdate(); assert.equal(Save.settings().music, 1);
     Input.mouse.down = false; optionsUpdate();
-    click(327, 294); assert.equal(Save.settings().stretch, false);
+    click(327, 282); assert.equal(Save.settings().stretch, false);
+    click(327, 306); assert.equal(Save.settings().filterTextures, false); assert.equal(RenderSettings.filterTextures, false);
     const ctx = context(); optionsDraw(ctx);
     const knob = ctx.draws.find(d => d.rect[0] === 592 && d.rect[1] === 38);
-    assert.ok(knob && knob.rect[4] === 347 && knob.rect[5] === 162, "music knob must sit on its original rail");
-    click(256, 330); assert.equal(closed, 1);
-  } finally { Audio2.setVolumes = set; Input.reset(); }
+    assert.ok(knob && knob.rect[4] === 347 && knob.rect[5] === 150, "music knob must sit on its translated rail");
+    assert.deepEqual(ctx.texts.find(t => t.text === "Filtrar texturas"), { text: "Filtrar texturas", x: 152, y: 312 });
+    assert.ok(ctx.draws.filter(d => d.src.endsWith("options.png") && d.rect[0] === 1).every(d => d.rect[2] === d.rect[6] && d.rect[3] === d.rect[7]), "panel slices must not distort the logo or original labels");
+    click(256, 342); assert.equal(closed, 1);
+  } finally { Audio2.setVolumes = set; Input.reset(); setTextureFiltering(true); }
 });

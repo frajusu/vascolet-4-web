@@ -1,7 +1,7 @@
 // Guardado localStorage (gratis, sin backend).
 import { trophyForItem } from "./trophies.js";
 const KEY = "vascolet4-save-v1", SETK = "vascolet4-settings-v1";
-const DEFAULT_SETTINGS = { volume: 0.8, music: 0.8, sfx: 0.8, musicMute: false, sfxMute: false, fullscreen: false, stretch: true };
+const DEFAULT_SETTINGS = { volume: 0.8, music: 0.8, sfx: 0.8, musicMute: false, sfxMute: false, fullscreen: false, stretch: true, filterTextures: true };
 export const Save = {
   read() { try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; } },
   write(d) {

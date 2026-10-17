@@ -17,8 +17,9 @@ export function drawAtlas(ctx, atlasImg, entry, dx, dy, opts = {}) {
   ctx.save();
   try {
     transform(ctx, dx, dy, opts);
-    // inset anti-bleeding: recorta medio pixel de cada borde del atlas
-    ctx.drawImage(atlasImg, entry.x + 0.5, entry.y + 0.5, entry.w - 1, entry.h - 1,
+    // Nearest mode uses exact source pixels, with no half-pixel crop/resampling.
+    const inset = ctx.imageSmoothingEnabled ? Math.min(.5, (entry.w - 1) / 2, (entry.h - 1) / 2) : 0;
+    ctx.drawImage(atlasImg, entry.x + inset, entry.y + inset, entry.w - 2 * inset, entry.h - 2 * inset,
       -entry.ax, -entry.ay, entry.w, entry.h);
   } finally { ctx.restore(); }
   return true;

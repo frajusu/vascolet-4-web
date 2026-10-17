@@ -26,3 +26,23 @@ export function drawBitmapText(ctx, font, text, x, y) {
   }
   return x - startX;
 }
+
+export function measureBitmapText(font, text) {
+  return [...text].reduce((width, ch) => width + ((font.glyphs.get(ch.codePointAt(0)) ?? font.glyphs.get(63))?.w ?? 0), 0);
+}
+
+export function wrapBitmapText(font, text, maxWidth) {
+  const lines = [];
+  for (const paragraph of text.split("\n")) {
+    let line = "";
+    for (const word of paragraph.split(/\s+/).filter(Boolean)) {
+      if (line && measureBitmapText(font, line + " " + word) > maxWidth) { lines.push(line); line = ""; }
+      for (const ch of (line ? " " : "") + word) {
+        if (line && measureBitmapText(font, line + ch) > maxWidth) { lines.push(line); line = ""; }
+        line += ch;
+      }
+    }
+    lines.push(line);
+  }
+  return lines;
+}

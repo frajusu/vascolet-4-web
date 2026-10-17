@@ -24,6 +24,12 @@ export function enemyAnimation(e, name, restart = false) {
   if (e.anim?.has(name)) { e.anim.set(name, { restart }); e.cur = e.anim.frame; }
 }
 
+export function enemySpriteFlip(e) {
+  // Fly's original atlas faces right. Its art orientation is independent of AI.
+  if (e.kind === "Fly") return (Math.abs(e.vx) > 1 ? e.vx : e.dir) < 0;
+  return e.dir > 0;
+}
+
 export function hitEnemy(e, direction = 1) {
   if (e.hp <= 0 || e.hurtT > 0) return false;
   e.hp = Math.max(0, e.hp - 1); e.hurtT = .16;

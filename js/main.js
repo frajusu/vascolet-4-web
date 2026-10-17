@@ -7,6 +7,7 @@ import { Save } from "./save.js";
 import { Audio2 } from "./audio.js";
 import { menuInit, menuUpdate, menuDraw, chaptersInit, chaptersUpdate, chaptersDraw, optionsInit, optionsUpdate, optionsDraw, onOptionsDone, achInit, achUpdate, achDraw, pauseInit, pauseUpdate, pauseDraw, playVideo, stopVideo } from "./menu.js";
 import { Game, loadLevel, gameUpdate, gameDraw } from "./game.js";
+import { RenderSettings, setTextureFiltering } from "./render-settings.js";
 
 const canvas = document.getElementById("game");
 const ctx = canvas?.getContext("2d", { willReadFrequently: true });
@@ -50,6 +51,7 @@ async function boot() {
   addEventListener("unhandledrejection", e => fatal(e.reason));
   document.addEventListener("visibilitychange", () => { resetClock(); Input.reset(); });
   Input.init(); Audio2.init();
+  setTextureFiltering(Save.settings().filterTextures, canvas);
   setBoot("Cargando menú…");
   await loadAssets([
     "assets/gui/menu/background.jpg", "assets/gui/menu/menu.png",
@@ -226,8 +228,7 @@ function staticUpdate(kind) {
 function frame(ts) {
   if (state === "fatal") return;
   try {
-    const paintedUI = ["menu", "chapters", "logros", "help", "credits", "options", "paused"].includes(state);
-    canvas.style.imageRendering = paintedUI ? "auto" : "pixelated";
+    canvas.style.imageRendering = RenderSettings.filterTextures ? "auto" : "pixelated";
     const dt = last === null ? 0 : Math.max(0, Math.min(MAX_DELTA, (ts - last) / 1000));
     last = ts;
     if (document.hidden) { resetClock(); requestAnimationFrame(frame); return; }
