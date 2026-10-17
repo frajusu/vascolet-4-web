@@ -65,6 +65,15 @@ también como referencia el proyecto Godot del usuario. La física exacta,
 presentación, especies posteriores y patrones de jefes siguen en recuperación.
 Fuentes, observaciones y ajustes provisionales: [notas de comportamiento](docs/behavior-notes.md).
 
+### Pulido de animales
+
+[Flujo de comparación con el original](docs/enemy-fidelity-workflow.md): captura
+nativa reproducible, extracción dirigida por especie y laboratorio determinista
+con el motor real del port. `npm run test:animals` genera curvas de posición,
+estados y capturas; `npm run test:animals -- Frog` aísla la rana.
+`npm run test:options-video` verifica interacción y posición de controles y el
+centrado del canvas durante las cinemáticas.
+
 ## Licencia y créditos
 
 Vascolet 4 y todos sus assets pertenecen a sus autores originales (Batoví Studio).

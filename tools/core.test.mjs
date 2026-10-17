@@ -428,7 +428,9 @@ test("SFX requests share decode, cap active and pending voices, route through ma
   assert.equal(fetchCalls, 1); assert.equal(decodes(), 1);
   assert.equal(sources.length, 2);
   assert.equal(audio._active.size, 2);
-  assert.equal(one.connected.gain.value, 0.5 * audio.sfxVolume);
+  assert.equal(one.connected.gain.value, 0.5);
+  assert.equal(one.connected.gain.value * audio.musicGain.gain.value, 0.5 * audio.sfxVolume,
+    "effects volume must be applied exactly once, including for already-playing effects");
   assert.equal(one.connected.connected, audio.musicGain);
   audio.setVolume(0);
   assert.equal(audio.musicGain.gain.value, 0);

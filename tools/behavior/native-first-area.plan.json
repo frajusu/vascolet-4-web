@@ -1,0 +1,26 @@
+{
+  "description": "Original Windows, level 1 entry, repeatable approach to first insects/frog. Inspect captures before accepting a reference; a collision may interrupt the route.",
+  "steps": [
+    {"wait":10},{"wait":10},{"scan":28},{"wait":2},{"click":[40,375]},
+    {"wait":3},{"scan":28},{"wait":5},{"scan":28},{"wait":1},{"shot":"first-area-entry"},
+    {"record":"first-area-traverse","keys":[77],"frames":120,"interval":0.15,
+      "events":[
+        {"frame":0,"down":[44]},{"frame":3,"up":[44]},
+        {"frame":8,"down":[44]},{"frame":11,"up":[44]},
+        {"frame":16,"down":[44]},{"frame":19,"up":[44]},
+        {"frame":24,"down":[44]},{"frame":27,"up":[44]},
+        {"frame":32,"down":[44]},{"frame":35,"up":[44]},
+        {"frame":40,"down":[44]},{"frame":43,"up":[44]},
+        {"frame":48,"down":[44]},{"frame":51,"up":[44]},
+        {"frame":56,"down":[44]},{"frame":59,"up":[44]},
+        {"frame":64,"down":[44]},{"frame":67,"up":[44]},
+        {"frame":72,"down":[44]},{"frame":75,"up":[44]},
+        {"frame":80,"down":[44]},{"frame":83,"up":[44]},
+        {"frame":88,"down":[44]},{"frame":91,"up":[44]},
+        {"frame":96,"down":[44]},{"frame":99,"up":[44]},
+        {"frame":104,"down":[44]},{"frame":107,"up":[44]},
+        {"frame":112,"down":[44]},{"frame":115,"up":[44]}
+      ]},
+    {"record":"first-area-idle","frames":40,"interval":0.15}
+  ]
+}

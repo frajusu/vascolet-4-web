@@ -8,7 +8,9 @@
     "serve": "node tools/serve.mjs",
     "test:browser": "node tools/browser-smoke.mjs",
     "test:gameplay": "node tools/browser-gameplay.mjs",
-    "test:menus": "node tools/browser-menus.mjs"
+    "test:menus": "node tools/browser-menus.mjs",
+    "test:animals": "node tools/enemy-lab.mjs",
+    "test:options-video": "node tools/browser-options-video.mjs"
   },
   "keywords": [],
   "author": "",

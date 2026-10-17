@@ -14,7 +14,7 @@ export const Audio2 = {
     }
     this._target = target;
     const s = Save.settings();
-    this.setVolumes(s.music ?? s.volume ?? 0.8, s.sfx ?? s.volume ?? 0.8);
+    this.setVolumes(s.musicMute ? 0 : s.music ?? s.volume ?? 0.8, s.sfxMute ? 0 : s.sfx ?? s.volume ?? 0.8);
     this._unlockHandler = () => { void this.unlock(); };
     // Keep listening: a later track/context may need another gesture retry.
     target.addEventListener("pointerdown", this._unlockHandler);
@@ -38,7 +38,7 @@ export const Audio2 = {
       this.ctx = new AC();
       // Legacy name retained; this is the effects master gain, not the media element.
       this.musicGain = this.ctx.createGain();
-      this.musicGain.gain.value = this.volume;
+      this.musicGain.gain.value = this.sfxVolume ?? this.volume;
       this.musicGain.connect(this.ctx.destination);
       return this.ctx;
     } catch (error) { this.ctx = null; this._report("context", error); return null; }
@@ -137,7 +137,7 @@ export const Audio2 = {
       const ctx = this.ctx, buffer = await this._loadBuffer(path, ctx);
       if (version !== this._effectVersion || ctx !== this.ctx || ctx.state !== "running") return null;
       source = ctx.createBufferSource(); gain = ctx.createGain();
-      source.buffer = buffer; gain.gain.value = volume(vol) * (this.sfxVolume ?? 1);
+      source.buffer = buffer; gain.gain.value = volume(vol);
       source.connect(gain); gain.connect(this.musicGain);
       this._active.set(source, gain);
       source.onended = () => this._release(source, gain);

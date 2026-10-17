@@ -245,16 +245,22 @@ export function chaptersDraw(ctx, texts) {
 // ---------- Opciones reales ----------
 // Crop opciones + sliders (volumeControl) + checks + soundOn/Off + VOLVER.
 let optAtlas = null;
-const OPT_ROWS = ["music", "sfx", "fullscreen", "stretch", "volver"];
-let optSel = 0;
-const OPT_BAR = { x: 105, w: 277, musicY: 159, sfxY: 218 };
-const OPT_CHECKS = { fullscreenY: 235, stretchY: 254, x: 377 };
-const OPT_VOLVER = { x: 201, y: 318 };
+// Windows Options::init 0x005108e0. These are atlas anchors, not sprite centers.
+export const OPTION_CONTROLS = Object.freeze([
+  { id: "musicMute", x: 307, y: 125, w: 48, h: 40, type: "mute", setting: "music" },
+  { id: "music", x: 145, y: 160, w: 228, h: 28, type: "slider", travel: 200 },
+  { id: "sfxMute", x: 307, y: 190, w: 48, h: 40, type: "mute", setting: "sfx" },
+  { id: "sfx", x: 145, y: 226, w: 228, h: 28, type: "slider", travel: 200 },
+  { id: "fullscreen", x: 314, y: 258, w: 24, h: 24, type: "check" },
+  { id: "stretch", x: 314, y: 282, w: 24, h: 24, type: "check" },
+  { id: "volver", x: 201, y: 315, w: 110, h: 30, type: "back" },
+]);
+let optSel = 1, optDrag = null, optMouseRevision = 0;
 let optionsDone = null;
 export function onOptionsDone(cb) { optionsDone = cb; }
 
 export async function optionsInit() {
-  optSel = 0;
+  optSel = 1; optDrag = null; optMouseRevision = Input.mouse.revision;
   if (!optAtlas) optAtlas = parseAtlas(await loadXML("assets/gui/options/options.xml"));
   await loadAssets(["assets/gui/options/options.png"]);
 }
@@ -271,58 +277,48 @@ function commitOpt(s) {
 export function optionsUpdate() {
   const s = optSettings();
   const m = Input.mouse;
-  const rowAt = (y) => {
-    if (y >= OPT_BAR.musicY - 14 && y < OPT_BAR.musicY + 14) return 0;
-    if (y >= OPT_BAR.sfxY - 14 && y < OPT_BAR.sfxY + 14) return 1;
-    if (y >= OPT_CHECKS.fullscreenY - 12 && y < OPT_CHECKS.fullscreenY + 14) return 2;
-    if (y >= OPT_CHECKS.stretchY - 12 && y < OPT_CHECKS.stretchY + 14) return 3;
-    if (y >= OPT_VOLVER.y - 6 && y < OPT_VOLVER.y + 36) return 4;
-    return -1;
+  const activate = control => {
+    if (control.type === "back") { optDrag = null; optionsDone?.(); return; }
+    if (control.type === "mute") s[control.id] = !s[control.id];
+    if (control.type === "check") s[control.id] = !s[control.id];
+    commitOpt(s);
   };
-  if (m.inside) {
-    const r = rowAt(m.y);
-    if (r >= 0 && r !== optSel) { optSel = r; Audio2.sfx("assets/audio/button.wav"); }
-    if (Input.pressed.has("click")) {
-      if (r === 0 || r === 1) {
-        const frac = Math.max(0, Math.min(1, (m.x - OPT_BAR.x) / OPT_BAR.w));
-        if (r === 0) s.music = Math.round(frac * 10) / 10; else s.sfx = Math.round(frac * 10) / 10;
-        commitOpt(s); return;
-      }
-      if (r === 2) { s.fullscreen = !s.fullscreen; commitOpt(s); return; }
-      if (r === 3) { s.stretch = !s.stretch; commitOpt(s); return; }
-      if (r === 4) { Save.writeSettings(s); optionsDone && optionsDone(); return; }
-    }
+  const drag = control => {
+    // Knob center = anchor + 13 for the normal atlas crop.
+    s[control.id] = Math.round(Math.max(0, Math.min(1, (m.x - control.x - 13) / control.travel)) * 100) / 100;
+    commitOpt(s);
+  };
+  if (!m.down) optDrag = null;
+  if (optDrag) { drag(optDrag); return; }
+  const hit = m.inside ? OPTION_CONTROLS.findIndex(c => inRect(m.x, m.y, c)) : -1;
+  if (hit >= 0 && m.revision !== optMouseRevision) optSel = hit;
+  optMouseRevision = m.revision;
+  if (Input.pressed.has("click") && hit >= 0) {
+    optSel = hit;
+    const control = OPTION_CONTROLS[hit];
+    if (control.type === "slider") { optDrag = m.down ? control : null; drag(control); }
+    else activate(control);
+    return;
   }
-  if (Input.pressed.has("up")) { optSel = (optSel + OPT_ROWS.length - 1) % OPT_ROWS.length; Audio2.sfx("assets/audio/button.wav"); }
-  if (Input.pressed.has("down")) { optSel = (optSel + 1) % OPT_ROWS.length; Audio2.sfx("assets/audio/button.wav"); }
-  if (Input.pressed.has("esc")) { Save.writeSettings(s); optionsDone && optionsDone(); return; }
-  const row = OPT_ROWS[optSel];
-  const adj = (d) => {
-    if (row === "music") s.music = Math.round(Math.min(1, Math.max(0, (s.music ?? 0.8) + d)) * 10) / 10;
-    if (row === "sfx") s.sfx = Math.round(Math.min(1, Math.max(0, (s.sfx ?? 0.8) + d)) * 10) / 10;
-  };
+  if (Input.pressed.has("up")) optSel = (optSel + OPTION_CONTROLS.length - 1) % OPTION_CONTROLS.length;
+  if (Input.pressed.has("down")) optSel = (optSel + 1) % OPTION_CONTROLS.length;
+  if (Input.pressed.has("esc")) { optDrag = null; optionsDone?.(); return; }
+  const control = OPTION_CONTROLS[optSel];
   if (Input.pressed.has("left") || Input.pressed.has("right")) {
     const d = Input.pressed.has("left") ? -0.1 : 0.1;
-    if (row === "music" || row === "sfx") adj(d);
-    if (row === "fullscreen") s.fullscreen = !s.fullscreen;
-    if (row === "stretch") s.stretch = !s.stretch;
-    if (row === "volver") { Save.writeSettings(s); optionsDone && optionsDone(); return; }
-    commitOpt(s);
+    if (control.type === "slider") { s[control.id] = Math.round(Math.max(0, Math.min(1, s[control.id] + d)) * 100) / 100; commitOpt(s); }
+    else if (control.type !== "back") activate(control);
   }
   if (Input.pressed.has("enter")) {
-    if (row === "volver") { Save.writeSettings(s); optionsDone && optionsDone(); return; }
-    if (row === "music") s.musicMute = !s.musicMute;
-    if (row === "sfx") s.sfxMute = !s.sfxMute;
-    if (row === "fullscreen") s.fullscreen = !s.fullscreen;
-    if (row === "stretch") s.stretch = !s.stretch;
-    commitOpt(s);
+    if (control.type === "slider") { s[`${control.id}Mute`] = !s[`${control.id}Mute`]; commitOpt(s); }
+    else activate(control);
   }
 }
 
 export function applyDisplay(s) {
   const canvas = document.getElementById("game");
-  if (s.fullscreen && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
-  if (!s.fullscreen && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  if (s.fullscreen && !document.fullscreenElement) document.documentElement.requestFullscreen?.().catch(() => {});
+  if (!s.fullscreen && document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
   if (canvas) canvas.dataset.stretch = s.stretch === false ? "0" : "1";
 }
 
@@ -336,46 +332,18 @@ export function optionsDraw(ctx) {
   const crop = optAtlas && optAtlas.opciones;
   if (sheet && crop) ctx.drawImage(sheet, crop.x, crop.y, crop.w, crop.h, 0, 0, W, H);
   const s = optSettings();
-  const knob = optAtlas && optAtlas[optSel <= 1 ? "volumeControlSelected" : "volumeControl"];
-  const drawKnob = (frac, y) => {
-    if (sheet && knob) {
-      const x = OPT_BAR.x + frac * OPT_BAR.w;
-      ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(sheet, knob.x, knob.y, knob.w, knob.h, x - knob.w / 2, y - knob.h / 2, knob.w, knob.h);
-      ctx.imageSmoothingEnabled = true;
+  for (const [i, control] of OPTION_CONTROLS.entries()) {
+    const selected = i === optSel;
+    let key, x = control.x, y = control.y, source = sheet, entry;
+    if (control.type === "back") { source = img("assets/gui/menu/menu.png"); entry = atlas?.[selected ? "volverOver" : "volverUp"]; }
+    else {
+      if (control.type === "slider") { key = "volumeControl"; x += s[control.id] * control.travel; }
+      if (control.type === "mute") key = s[control.id] ? "soundOff" : "soundOn";
+      if (control.type === "check") key = s[control.id] ? "check" : "uncheck";
+      entry = optAtlas?.[key + (selected ? "Selected" : "")];
+      if (entry) { x -= entry.ax; y -= entry.ay; }
     }
-  };
-  drawKnob(s.music ?? 0.8, OPT_BAR.musicY);
-  drawKnob(s.sfx ?? 0.8, OPT_BAR.sfxY);
-  const snd = (muted, y) => {
-    const e = optAtlas && optAtlas[muted ? "soundOffSelected" : "soundOnSelected"];
-    const e2 = optAtlas && optAtlas[muted ? "soundOff" : "soundOn"];
-    const use = e || e2;
-    if (sheet && use) {
-      ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(sheet, use.x, use.y, use.w, use.h, 388, y, use.w, use.h);
-      ctx.imageSmoothingEnabled = true;
-    }
-  };
-  snd(s.musicMute, OPT_BAR.musicY - 18);
-  snd(s.sfxMute, OPT_BAR.sfxY - 18);
-  const chk = (on, y, selected) => {
-    const key = (on ? "check" : "uncheck") + (selected ? "Selected" : "");
-    const e = optAtlas && (optAtlas[key] || optAtlas[on ? "check" : "uncheck"]);
-    if (sheet && e) {
-      ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(sheet, e.x, e.y, e.w, e.h, OPT_CHECKS.x, y, e.w, e.h);
-      ctx.imageSmoothingEnabled = true;
-    }
-  };
-  chk(!!s.fullscreen, OPT_CHECKS.fullscreenY, optSel === 2);
-  chk(s.stretch !== false, OPT_CHECKS.stretchY, optSel === 3);
-  const msheet = img("assets/gui/menu/menu.png");
-  const v = atlas && atlas[optSel === 4 ? "volverOver" : "volverUp"];
-  if (msheet && v) {
-    ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(msheet, v.x, v.y, v.w, v.h, OPT_VOLVER.x, OPT_VOLVER.y, v.w, v.h);
-    ctx.imageSmoothingEnabled = true;
+    if (source && entry) ctx.drawImage(source, entry.x, entry.y, entry.w, entry.h, x, y, entry.w, entry.h);
   }
   ctx.imageSmoothingEnabled = true;
 }
@@ -515,7 +483,7 @@ export function pauseDraw(ctx) {
 
 // ---------- Videos ----------
 // Overlay <video> 512x384 con skip. Mapeo provisional videoN<->nivelN.
-let videoEl = null, videoGen = 0;
+let videoEl = null, videoGen = 0, videoCleanup = null;
 export function playVideo(n, onDone) {
   stopVideo();
   const myGen = ++videoGen;
@@ -528,9 +496,19 @@ export function playVideo(n, onDone) {
   videoEl.onended = done;
   videoEl.onerror = done;
   const skip = () => done();
-  addEventListener("keydown", skip, { once: true });
-  addEventListener("mousedown", skip, { once: true });
-  canvas.parentElement.style.position = "relative";
+  const sync = () => {
+    if (myGen !== videoGen || !videoEl) return;
+    const r = canvas.getBoundingClientRect();
+    Object.assign(videoEl.style, { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px` });
+  };
+  addEventListener("keydown", skip); addEventListener("mousedown", skip); addEventListener("resize", sync);
+  document.addEventListener("fullscreenchange", sync);
+  const observer = typeof ResizeObserver === "function" ? new ResizeObserver(sync) : null;
+  observer?.observe(canvas);
+  videoCleanup = () => {
+    removeEventListener("keydown", skip); removeEventListener("mousedown", skip); removeEventListener("resize", sync);
+    document.removeEventListener("fullscreenchange", sync); observer?.disconnect();
+  };
   canvas.parentElement.appendChild(videoEl);
   try {
     const res = videoEl.play();
@@ -543,6 +521,7 @@ export function playVideo(n, onDone) {
 }
 export function stopVideo() {
   videoGen++;
+  videoCleanup?.(); videoCleanup = null;
   if (videoEl) {
     try { videoEl.pause(); videoEl.removeAttribute("src"); videoEl.remove(); } catch {}
     videoEl = null;

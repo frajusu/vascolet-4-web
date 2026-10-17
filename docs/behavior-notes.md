@@ -105,3 +105,26 @@ desbloqueados. La papelera borra únicamente el guardado del juego.
 
 La comparación visual adicional se ejecuta con `npm run test:menus` y genera
 capturas del selector, fondo fijo al navegar y trofeos gris/color.
+
+## Tercera corrección: animales, retroceso, Opciones y video
+
+Las primeras vidas y velocidades se habían tomado como aproximación de Godot.
+La nueva referencia es la extracción dirigida de `script_states_2` y descriptores
+del ELF. Se corrigieron el alcance de detección y el salto balístico de la rana,
+patrulla horizontal de moscas, marcha de escarabajos/caracoles y pausas/temporizadores
+de disparo. Las cajas de colisión y las diferencias Windows/ELF aún requieren
+validación, según el [flujo de fidelidad](enemy-fidelity-workflow.md).
+
+El daño ya inicia el impulso vertical −200 y horizontal −60 relativo a la mirada,
+sin que el input normal lo sobrescriba al paso siguiente. También se usan las poses
+de caída/recuperación. Las comprobaciones cubren contacto, recuperación y mantener
+una dirección pulsada durante el retroceso.
+
+Para Opciones se usó **la función Windows 0x005108e0**, no la variante Sugar/XO.
+El atlas se dibuja con sus pivotes, sliders y mute son controles independientes,
+los sliders admiten arrastre y los clicks fuera de los controles son inertes.
+El volumen de efectos se aplica una sola vez en la ganancia maestra.
+
+El video ya no cambia la posición CSS del contenedor fijo. Su overlay se ajusta
+al canvas al redimensionar y elimina listeners al terminar. La prueba de navegador
+comprueba igualdad de rectángulos y centrado antes/durante/después de reproducir.

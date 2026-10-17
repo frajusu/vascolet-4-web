@@ -50,6 +50,7 @@ install("DOMParser", dom.window.DOMParser); install("Image", MockImage);
 install("localStorage", dom.window.localStorage);
 install("innerWidth", 1024); install("innerHeight", 768);
 install("addEventListener", dom.window.addEventListener.bind(dom.window));
+install("removeEventListener", dom.window.removeEventListener.bind(dom.window));
 install("requestAnimationFrame", callback => { frames.push(callback); return frames.length; });
 install("fetch", async raw => {
   const path = String(raw).replace(/\\/g, "/"); requests.push(path);
@@ -128,7 +129,7 @@ test("flat floor remains on one support plane for 600 ticks; mixed flags retain 
   tick();
   for (const flags of [TILE_SOLID, TILE_UP, TILE_SOLID | TILE_DAMAGE, TILE_UP | TILE_DAMAGE]) {
     Game.grid.fill(0); Game.grid.fill(flags, 10 * Game.gw, 11 * Game.gw);
-    Object.assign(Game.player, { y: 320, vy: 0, inv: 0 });
+    Object.assign(Game.player, { y: 320, vy: 0, inv: 1e9, damage: null });
     for (let i = 0; i < 600; i++) {
       tick();
       assert.equal(Game.player.y, 320, `flags=${flags}, tick=${i}`);
@@ -228,6 +229,19 @@ test("enemy contact removes one heart and invulnerability prevents damage every 
   assert.ok(Math.abs(Game.energy - (100 - 100 / 7)) < 1e-8);
   const energy = Game.energy;
   tick(30); assert.equal(Game.energy, energy); assert.ok(p.inv > 0);
+});
+
+test("damage launches the player backward/upward, input cannot cancel it, and recovery completes", async () => {
+  await freshLevel(); tick(); const p = Game.player;
+  const startX = p.x, startY = p.y;
+  const fly = createEnemy({ name: "Fly", x: p.x - 16, y: p.y - 30 }); fly.active = true;
+  Game.enemies = [fly]; tick(); Game.enemies = [];
+  assert.equal(p.vx, -60); assert.equal(p.vy, -200); assert.equal(p.damage.phase, "air");
+  Input.held.add("right"); Input.pressed.add("z"); tick(12);
+  assert.ok(p.x < startX - 10); assert.ok(p.y < startY - 15); assert.equal(p.face, 1);
+  assert.equal(p.vx, -60, "normal movement must not overwrite recoil");
+  Input.reset(); tick(60); assert.equal(p.damage, null); assert.equal(p.ground, true);
+  assert.ok(Math.abs(Game.energy - (100 - 100 / 7)) < 1e-8);
 });
 
 test("collecting a trophy in gameplay is persisted and checkpoints preserve both trophy and chapter progress", async () => {

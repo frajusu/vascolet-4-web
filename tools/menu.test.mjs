@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { JSDOM } from "jsdom";
-import { menuInit, chaptersInit, chaptersUpdate, chaptersDraw, chPos, achInit, achDraw, achUpdate } from "../js/menu.js";
+import { menuInit, chaptersInit, chaptersUpdate, chaptersDraw, chPos, achInit, achDraw, achUpdate, optionsInit, optionsUpdate, optionsDraw, onOptionsDone } from "../js/menu.js";
 import { Input } from "../js/input.js";
 import { Save } from "../js/save.js";
 import { Audio2 } from "../js/audio.js";
@@ -15,6 +15,7 @@ function install(name, value) {
   Object.defineProperty(globalThis, name, { configurable: true, writable: true, value });
 }
 install("DOMParser", dom.window.DOMParser);
+install("document", dom.window.document);
 install("localStorage", dom.window.localStorage);
 install("fetch", async path => ({ ok: true, text: async () => readFile(new URL(`../${path}`, import.meta.url), "utf8") }));
 install("Image", class {
@@ -29,7 +30,7 @@ test.after(() => {
     if (original) Object.defineProperty(globalThis, name, original); else delete globalThis[name];
   }
 });
-const context = () => ({ draws: [], drawImage(image, ...rect) { this.draws.push({ src: image.src, rect }); } });
+const context = () => ({ draws: [], fillRect() {}, drawImage(image, ...rect) { this.draws.push({ src: image.src, rect }); } });
 const press = (key, dt = 1 / 60) => { Input.pressed.add(key); chaptersUpdate(dt); Input.endStep(); };
 function drawChapters() { const ctx = context(); chaptersDraw(ctx, {}); return ctx; }
 const background = ctx => ctx.draws.find(d => /area0\d\.jpg/.test(d.src));
@@ -110,4 +111,28 @@ test("trophies draw all 20 cropped cards in original groups, with enabled state 
   achUpdate(() => closed++); Input.endStep(); assert.equal(closed, 0);
   Object.assign(Input.mouse, { x: 256, y: 340 }); Input.pressed.add("click");
   achUpdate(() => closed++); Input.endStep(); assert.equal(closed, 1);
+});
+
+test("Options share original draw/hit geometry; outside clicks are inert; mute, drag and keyboard operate independently", async () => {
+  await fresh(1); await optionsInit(); Save.writeSettings({ music: .5, sfx: .8 });
+  const set = Audio2.setVolumes; Audio2.setVolumes = () => {};
+  try {
+    let closed = 0; onOptionsDone(() => closed++);
+    const click = (x, y) => {
+      Object.assign(Input.mouse, { x, y, inside: true, down: false }); Input.mouse.revision++;
+      Input.pressed.add("click"); optionsUpdate(); Input.endStep();
+    };
+    click(50, 173); assert.equal(Save.settings().music, .5);
+    click(50, 330); assert.equal(closed, 0);
+    click(331, 145); assert.equal(Save.settings().musicMute, true); assert.equal(Save.settings().sfxMute, false);
+    click(258, 174); assert.equal(Save.settings().music, .5);
+    Object.assign(Input.mouse, { x: 258, y: 174, down: true }); Input.pressed.add("click"); optionsUpdate(); Input.endStep();
+    Input.mouse.x = 358; optionsUpdate(); assert.equal(Save.settings().music, 1);
+    Input.mouse.down = false; optionsUpdate();
+    click(327, 294); assert.equal(Save.settings().stretch, false);
+    const ctx = context(); optionsDraw(ctx);
+    const knob = ctx.draws.find(d => d.rect[0] === 592 && d.rect[1] === 38);
+    assert.ok(knob && knob.rect[4] === 347 && knob.rect[5] === 162, "music knob must sit on its original rail");
+    click(256, 330); assert.equal(closed, 1);
+  } finally { Audio2.setVolumes = set; Input.reset(); }
 });

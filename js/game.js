@@ -9,6 +9,7 @@ import { Audio2 } from "./audio.js";
 import { updateCamera } from "./camera.js";
 import { createBoomerang, updateBoomerang, terrainHit, segmentBox } from "./projectiles.js";
 import { createEnemy, hitEnemy, updateEnemy } from "./enemies.js";
+import { beginPlayerDamage, advancePlayerDamage, DAMAGE_MOTION } from "./player-damage.js";
 
 const W = 512, H = 384, TILE = 32;
 const SFX = "assets/audio/fx/win/", MUS = "assets/audio/music/win/";
@@ -174,12 +175,12 @@ export async function loadLevel(n, fresh = true) {
   G.player = {
     x: (G.start || { x: 256 }).x, y: (G.start || { y: 352 }).y,
     vx: 0, vy: 0, w: 28, h: 56, face: 1, ground: false, coyote: 0, buffer: 0,
-    inv: 0, fireCd: 0, attack: null, run: false, tapD: 0, tapT: -9, crouch: false,
+    inv: 0, fireCd: 0, attack: null, damage: null, run: false, tapD: 0, tapT: -9, crouch: false,
     anim: null, animName: "", cur: null,
   };
   G.checkpoint = G.start ? { x: G.start.x, y: G.start.y } : { x: 256, y: 352 };
   await ensureChar("Vascolet");
-  await Promise.all(["Boomerang", "effects", "bola-de-pinchos"].map(ensureChar));
+  await Promise.all(["Boomerang", "effects", "fireball"].map(ensureChar));
   G.player.anim = new AnimPlayer(Game.charCache.get("Vascolet").anims);
   // carteles de ayuda/guardado (signposts del original)
   try {
@@ -338,31 +339,33 @@ export function gameUpdate(dt) {
   if (Input.down("left")) dir -= 1;
   if (Input.down("right")) dir += 1;
   const now = G.time;
-  if (Input.pressed.has("left") || Input.pressed.has("right")) {
+  if (!p.damage && (Input.pressed.has("left") || Input.pressed.has("right"))) {
     const d = Input.pressed.has("left") ? -1 : 1;
     if (p.tapD === d && now - p.tapT < 0.3) p.run = true;
     p.tapD = d; p.tapT = now;
   }
   if (dir === 0) p.run = false;
-  else if (!p.attack) p.face = dir;
-  p.vx = dir * (p.run ? RUN : MOVE);
-  p.crouch = Input.down("down") && p.ground;
+  else if (!p.attack && !p.damage) p.face = dir;
+  p.vx = p.damage ? (p.damage.phase === "air" ? -p.damage.face * DAMAGE_MOTION.speed : 0) : dir * (p.run ? RUN : MOVE);
+  p.crouch = !p.damage && Input.down("down") && p.ground;
   if (p.crouch || (p.attack && p.ground)) p.vx = 0;
-  if (jumpPressed()) p.buffer = 0.12; else p.buffer = Math.max(0, p.buffer - dt);
+  if (p.damage) p.buffer = 0;
+  else if (jumpPressed()) p.buffer = 0.12; else p.buffer = Math.max(0, p.buffer - dt);
   p.coyote = p.ground ? 0.1 : Math.max(0, p.coyote - dt);
-  if (p.coyote > 0 && p.buffer > 0) {
+  if (!p.damage && p.coyote > 0 && p.buffer > 0) {
     p.vy = -JUMP; p.buffer = 0; p.coyote = 0; p.ground = false;
     Audio2.sfx(SFX + "jumpAir.ogg");
     dust(p.x, p.y, 6);
   }
-  if (!jumpHeld() && p.vy < -180) p.vy = -180;
+  if (!p.damage && !jumpHeld() && p.vy < -180) p.vy = -180;
   p.hurt = false;
   const wasGround = p.ground, fallV = p.vy;
-  moveBody(p, dt);
+  moveBody(p, dt, p.damage ? DAMAGE_MOTION.gravity : GRAV);
+  advancePlayerDamage(p, dt);
   if (!wasGround && p.ground && fallV > 300) dust(p.x, p.y, 9);
-  if (p.hurt && p.inv <= 0) { G.energy -= 15; p.inv = 1; Audio2.sfx(SFX + "enemy_hit.ogg"); }
   p.inv = Math.max(0, p.inv - dt);
-  if (firePressed() && p.fireCd <= 0 && !p.attack && G.booms.length < 2) {
+  if (p.hurt) hurtPlayer();
+  if (!p.damage && firePressed() && p.fireCd <= 0 && !p.attack && G.booms.length < 2) {
     const name = p.crouch && p.anim.has("crouchAttack") ? "crouchAttack" : "standAttack";
     if (p.anim.has(name)) {
       p.attack = { name, released: false, crouch: p.crouch, face: p.face };
@@ -374,7 +377,7 @@ export function gameUpdate(dt) {
   for (const e of G.enemies) {
     if (!e.active && Math.abs(e.x - p.x) < 512 && Math.abs(e.y - p.y) < 420) e.active = true;
     if (!e.active || Math.abs(e.x - p.x) > 900 || Math.abs(e.y - p.y) > 700) continue;
-    updateEnemy(e, p, dt, { moveBody, tileAt, shoot: enemyShoot });
+    updateEnemy(e, p, dt, { moveBody, tileAt, shoot: enemyShoot, booms: G.booms });
     if (e.y > G.gh * TILE + 160 && e.hp > 0) { e.hp = 0; e.deadT = 2; }
   }
   for (const b of G.booms) {
@@ -437,7 +440,7 @@ export function gameUpdate(dt) {
   else if (!p.ground) want = p.vy < -50 ? (p.run && p.anim.has("runJump") ? "runJump" : "standJump") : "fall";
   else if (p.crouch && p.anim.has("crouch")) want = "crouch";
   else if (dir !== 0) want = p.run ? "run" : "walk";
-  if (p.inv > .8 && p.anim.has("damage")) { want = "damage"; p.attack = null; }
+  if (p.damage) want = ({ air: "damage", fall: "damageFall", rise: "damageRaise" })[p.damage.phase];
   if (want !== p.animName && p.anim.has(want)) { p.animName = want; p.anim.set(want); }
   const r = p.anim.update(dt);
   p.cur = r.frame;
@@ -449,6 +452,7 @@ export function gameUpdate(dt) {
   // Crouch XML lacks Custom; its extended throw pose is frame 4.
   if (p.attack?.name === "crouchAttack" && p.anim.i >= 4) releaseBoomerang();
   if (p.attack && p.anim.finished) p.attack = null;
+  if (p.damage?.phase === "rise" && (p.animName === "damageRaise" ? p.anim.finished : p.damage.time >= .2)) p.damage = null;
   // muerte: energia o caida al vacio -> pierde vida, respawn o game over
   if ((G.energy <= 0 || p.y > G.gh * TILE + 80) && !G.won) {
     G.lives -= 1;
@@ -459,7 +463,7 @@ export function gameUpdate(dt) {
       G.energy = 100;
       const s = G.checkpoint || G.start;
       p.x = s.x; p.y = s.y; p.vx = 0; p.vy = 0; p.inv = 2;
-      p.attack = null; G.booms = []; G.shots = [];
+      p.attack = null; p.damage = null; G.booms = []; G.shots = [];
       updateCamera(G, 0, true); snapshotPositions();
     }
   }
@@ -513,15 +517,17 @@ function hurtPlayer() {
   const G = Game, p = G.player;
   if (p.inv > 0 || G.won) return;
   G.energy = Math.max(0, G.energy - 100 / 7); p.inv = 1;
-  p.attack = null;
+  beginPlayerDamage(p);
   Audio2.sfx(SFX + "enemy_hit.ogg");
 }
 
 function enemyShoot(e) {
-  const c = Game.charCache.get("bola-de-pinchos");
+  const kind = e.behavior === "snail" ? "fireball" : "effects";
+  const c = Game.charCache.get(kind);
   const anim = c?.anims.length ? new AnimPlayer(c.anims) : null;
-  const x = e.x + e.dir * 34, y = e.y - (e.behavior === "flower" ? 58 : 25);
-  Game.shots.push({ x, y, prevX: x, prevY: y, vx: e.dir * 180, life: 4, anim });
+  if (anim?.has(e.behavior === "snail" ? "normal" : "bullet")) anim.set(e.behavior === "snail" ? "normal" : "bullet");
+  const x = e.x + e.dir * (e.behavior === "flower" ? 20 : 0), y = e.y - (e.behavior === "flower" ? 40 : 20);
+  Game.shots.push({ kind, x, y, prevX: x, prevY: y, vx: e.dir * 180, life: 4, anim });
 }
 
 function updateEnemyShots(dt) {
@@ -649,9 +655,11 @@ export function gameDraw(ctx, alpha = 1) {
       }
     }
   }
-  const shotChar = G.charCache.get("bola-de-pinchos"), effectChar = G.charCache.get("effects");
-  for (const shot of G.shots) if (shotChar?.img && shot.anim)
-    drawAnimFrame(ctx, shotChar.img, shotChar.atlas, shot.anim.frame, x(shot) - cx, y(shot) - cy + 7.6, { scale: .4, round: false });
+  const effectChar = G.charCache.get("effects");
+  for (const shot of G.shots) {
+    const shotChar = G.charCache.get(shot.kind);
+    if (shotChar?.img && shot.anim) drawAnimFrame(ctx, shotChar.img, shotChar.atlas, shot.anim.frame, x(shot) - cx, y(shot) - cy, { flip: shot.vx < 0, round: false });
+  }
   for (const fx of G.effects) if (effectChar?.img)
     drawAnimFrame(ctx, effectChar.img, effectChar.atlas, fx.anim.frame, fx.x - cx, fx.y - cy, { round: false });
   // polvo

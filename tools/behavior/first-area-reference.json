@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "binarySource": "Vascolet4.activity/bin/vascolet4, ELF i386 with symbols",
+  "status": "Recovered script rules; Windows frame-by-frame equivalence remains to be certified per animal",
+  "units": "logical pixels and seconds",
+  "Fly": {"state":"FLY_BASE_STATE", "entry":"0x0816c948", "xSpeed":240, "turnDistance":32, "xAcceleration":480, "xTarget":"spawn", "yForce":600, "yTarget":"player", "notes":"No horizontal pursuit. Kill-on-damage state bypasses huge descriptor HP."},
+  "Frog": {"normal":"0x08170472", "attack":"0x081709b6", "triggerDistance":128, "triggers":["player X proximity","boomerang X proximity"], "launchFlag":"PhysicEvent", "jumpVelocity":-500, "horizontalVelocity":240, "gravity":900, "midairSteering":false, "hp":4},
+  "Flower": {"normal":"0x0816ed38", "attack":"0x0816f11a", "fixedPosition":true, "timerBase":1, "timerSpread":2, "launchFlag":"Custom", "projectile":"GenericBullet (effects:bullet)", "offset":[20,-40], "hp":5},
+  "Beetle": {"state":"0x0816f54c", "speed":30, "turnOnWall":true, "turnOnCliff":"only with starting command dontFall", "hp":10},
+  "Snail": {"state":"0x0816fe31", "inherits":"BEETLE_NORMAL", "speed":30, "timerBase":1, "timerSpread":1, "attackHold":0.5, "projectile":"Fireball", "offset":[0,-20], "hp":10},
+  "PlayerDamage": {"state":"0x080cca3b", "jumpAction":"0x080cca7f", "jumpVelocity":-200, "xAction":"0x080ccaa4", "horizontalVelocityRelativeToFacing":-60, "invulnerability":1, "fallHold":0.25},
+  "remainingGaps":["Windows vs ELF version comparison for each pattern", "exact collision boxes and anchor positions", "projectile speeds/lifetimes", "offscreen reset/respawn policy", "random generator sequence parity", "bosses and later species"]
+}

@@ -1,7 +1,7 @@
 // Edges persist until a simulation step consumes them, independently of rendering.
 export const Input = {
   held: new Set(), pressed: new Set(), released: new Set(),
-  mouse: { x: 0, y: 0, inside: false, revision: 0 },
+  mouse: { x: 0, y: 0, inside: false, revision: 0, down: false },
   _keys: new Map(), _target: null, _handlers: null,
   init(target = globalThis.window ?? globalThis) {
     if (this._target === target) return this;
@@ -26,20 +26,22 @@ export const Input = {
       const r = canvas.getBoundingClientRect();
       this.mouse.x = (e.clientX - r.left) / (r.width || 1) * 512;
       this.mouse.y = (e.clientY - r.top) / (r.height || 1) * 384;
-      this.mouse.inside = true;
+      this.mouse.inside = e.clientX >= r.left && e.clientX < r.right && e.clientY >= r.top && e.clientY < r.bottom;
       this.mouse.revision++;
     };
     const leave = () => { this.mouse.inside = false; };
     const click = e => {
       move(e);
-      if (e.button === 0) this.pressed.add("click");
+      if (e.button === 0) { this.mouse.down = true; this.pressed.add("click"); }
     };
+    const mouseup = e => { if (e.button === 0) { this.mouse.down = false; this.released.add("click"); } };
     this._target = target; this._handlers = { keydown: down, keyup: up, blur };
     for (const [type, fn] of Object.entries(this._handlers)) target.addEventListener(type, fn);
-    this._mouse = { move, leave, click };
+    this._mouse = { move, leave, click, mouseup };
     target.addEventListener("mousemove", move);
     target.addEventListener("mouseleave", leave);
     target.addEventListener("mousedown", click);
+    target.addEventListener("mouseup", mouseup);
     this._visibility = visibility;
     target.document?.addEventListener("visibilitychange", visibility);
     return this;
@@ -51,13 +53,14 @@ export const Input = {
         this._target.removeEventListener("mousemove", this._mouse.move);
         this._target.removeEventListener("mouseleave", this._mouse.leave);
         this._target.removeEventListener("mousedown", this._mouse.click);
+        this._target.removeEventListener("mouseup", this._mouse.mouseup);
       }
       this._target.document?.removeEventListener("visibilitychange", this._visibility);
     }
     this._target = null; this._handlers = null; this._mouse = null;
     this.reset();
   },
-  reset() { this.held.clear(); this.pressed.clear(); this.released.clear(); this._keys.clear(); },
+  reset() { this.held.clear(); this.pressed.clear(); this.released.clear(); this._keys.clear(); this.mouse.down = false; },
   down(k) { return this.held.has(k); },
   consumePressed(k) { return this.pressed.delete(k); },
   endStep() { this.pressed.clear(); this.released.clear(); },

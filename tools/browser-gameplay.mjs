@@ -109,6 +109,26 @@ try {
     launchX: window.__movingBoom.launchX, launchY: window.__movingBoom.launchY }));
   assert.equal(report.movingThrow.caught, true, "moving throw must be caught rather than expire or trail the player");
   report.checks.push("Lanzamiento con salto y cambio de dirección: retorno y recogida reales");
+  await key("Escape");
+  report.recoil = await page.evaluate(async () => {
+    const { Game: g, loadLevel } = await import("/js/game.js"); await loadLevel(1);
+    g.player.y = 384; g.player.ground = true; g.player.face = 1; g.player.inv = 0;
+    const fly = g.enemies.find(e => e.kind === "Fly");
+    Object.assign(fly, { x: g.player.x + 5, y: 384, homeX: g.player.x + 5, homeY: 384, active: true, vx: 0, vy: 0 });
+    g.enemies = [fly]; g.win = null; g.infos = []; g.dlg = null;
+    return { start: { x: g.player.x, y: g.player.y } };
+  });
+  await key("Escape");
+  await page.waitForFunction(async () => Boolean((await import("/js/game.js")).Game.player.damage));
+  await page.evaluate(async () => { (await import("/js/game.js")).Game.enemies = []; });
+  await page.waitForTimeout(80); await shot("player-recoil");
+  report.recoil.mid = await page.evaluate(async () => {
+    const p = (await import("/js/game.js")).Game.player; return { x: p.x, y: p.y, phase: p.damage?.phase };
+  });
+  assert.ok(report.recoil.mid.x < report.recoil.start.x - 4 && report.recoil.mid.y < report.recoil.start.y - 10);
+  await page.waitForTimeout(1000);
+  assert.equal(await page.evaluate(async () => (await import("/js/game.js")).Game.player.damage), null);
+  report.checks.push("Daño real por contacto: retroceso, salto y recuperación del jugador");
   assert.deepEqual(errors, []); assert.equal(await page.locator("#err").textContent(), "");
   report.ok = true;
 } catch (e) { report.ok = false; report.failure = e.stack; process.exitCode = 1; }

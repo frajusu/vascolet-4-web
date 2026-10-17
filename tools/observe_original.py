@@ -1,7 +1,7 @@
 """Bounded original-game observations using Win32 scan-code input.
 
 Only captures the selected game's client area; never the rest of the desktop.
-Usage: python tools/observe_original.py analysis/observe.plan.json
+Usage: python tools/observe_original.py <plan.json> [output-directory]
 """
 import ctypes as C
 from ctypes import wintypes as W
@@ -89,8 +89,11 @@ def capture(hwnd, filename):
 
 def main():
     plan = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
-    output = ROOT / "analysis" / "original"
+    output = Path(sys.argv[2]).resolve() if len(sys.argv) > 2 else ROOT / "analysis" / "original"
     output.mkdir(parents=True, exist_ok=True)
+    import hashlib
+    (output / "run.json").write_text(json.dumps({"plan": plan, "executable": str(GAME),
+      "sha256": hashlib.sha256(GAME.read_bytes()).hexdigest(), "started": time.strftime("%Y-%m-%dT%H:%M:%S")}, indent=2))
     proc = subprocess.Popen([str(GAME)], cwd=GAME.parent)
     try:
         hwnd = None

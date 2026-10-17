@@ -110,20 +110,36 @@ const floorPhysics = (b, dt, gravity = 1500) => {
 };
 const services = { moveBody: floorPhysics, tileAt: () => TILE_SOLID, shoot() {} };
 async function enemy(kind, x = 320) {
-  const e = createEnemy({ name: kind, x, y: 304 });
+  const e = createEnemy({ name: kind, x, y: kind === "Flower" ? 288 : 304 });
   const anims = parseAnims(await asset(`characters/${kind.toLowerCase()}/animData/${kind}.xml`));
   e.anim = new AnimPlayer(anims); e.anim.set("normal"); e.cur = e.anim.frame; e.ground = true;
   return e;
 }
 
-test("frog waits for its animation PhysicEvent, jumps with gravity, then lands and waits", async () => {
+test("frog windup and fixed ballistic leap match recovered trigger/impulses; it cannot steer in midair", async () => {
   const e = await enemy("Frog"), p = player(); e.cooldown = 0;
   for (let i = 0; i < 10; i++) updateEnemy(e, p, 1 / 60, services);
   assert.equal(e.state, "windup"); assert.equal(e.y, 320);
   for (let i = 0; i < 7; i++) updateEnemy(e, p, 1 / 60, services);
   assert.equal(e.state, "jump"); assert.ok(e.vy < 0);
-  for (let i = 0; i < 45; i++) updateEnemy(e, p, 1 / 60, services);
-  assert.equal(e.y, 320); assert.equal(e.state, "normal"); assert.ok(e.cooldown > 0);
+  const direction = e.dir, startX = e.x;
+  let minY = e.y, ticks = 0;
+  p.x = e.x + 500; // move behind the airborne frog
+  while (e.state === "jump" && ticks++ < 100) {
+    updateEnemy(e, p, 1 / 60, services); minY = Math.min(minY, e.y);
+    if (e.state === "jump") assert.equal(e.dir, direction);
+  }
+  assert.equal(e.y, 320); assert.equal(e.state, "normal");
+  assert.ok(320 - minY > 130 && 320 - minY < 145, `apex ${320 - minY}`);
+  assert.ok(Math.abs(e.x - startX) > 245 && Math.abs(e.x - startX) < 280);
+});
+
+test("frog remains still beyond 128px and reacts to nearby boomerangs, not an arbitrary cooldown", async () => {
+  const e = await enemy("Frog"), p = { x: 2000, y: 320 };
+  for (let i = 0; i < 300; i++) updateEnemy(e, p, 1 / 60, services);
+  assert.equal(e.state, "normal"); assert.equal(e.x, e.homeX);
+  updateEnemy(e, p, 1 / 60, { ...services, booms: [{ x: e.x - 100, life: 1, state: "out" }] });
+  assert.equal(e.state, "windup");
 });
 
 test("flower stays rooted and shoots once at the Custom attack frame", async () => {
@@ -133,9 +149,13 @@ test("flower stays rooted and shoots once at the Custom attack frame", async () 
   assert.equal(e.x, x); assert.equal(e.y, 320); assert.equal(shots.length, 1);
 });
 
-test("beetle and snail turn at a ledge and a wall instead of walking in mid-air", async () => {
+test("patrols turn at walls and avoid cliffs only when the original dontFall command is set", async () => {
+  assert.equal(createEnemy({ name: "Beetle", x: 0, y: 0, props: { dontFall: "" } }).dontFall, true);
+  const combined = createEnemy({ name: "Beetle", x: 0, y: 0, type: "forward,dontFall" });
+  assert.equal(combined.dontFall, true); assert.equal(combined.dir, 1);
   for (const kind of ["Beetle", "Snail"]) {
     const e = await enemy(kind); const before = e.dir;
+    e.dontFall = true;
     updateEnemy(e, player(), 1 / 60, { ...services, tileAt: empty });
     assert.equal(e.dir, -before);
     updateEnemy(e, player(), 1 / 60, { ...services, moveBody(b) { b.hitWall = true; } });
@@ -143,14 +163,17 @@ test("beetle and snail turn at a ledge and a wall instead of walking in mid-air"
   }
 });
 
-test("fly patrol has a fixed home position and damage produces a finite death state", async () => {
-  const e = await enemy("Fly"), p = { x: 2000, y: 320 };
-  for (let i = 0; i < 1800; i++) updateEnemy(e, p, 1 / 60, { ...services,
-    moveBody(b, dt) { b.x += b.vx * dt; b.y += b.vy * dt; } });
-  assert.ok(Math.abs(e.x - e.homeX) < 50 && Math.abs(e.y - e.homeY) < 30);
+test("fly patrol X is spawn-relative and does not pursue a player on either side", async () => {
+  const e = await enemy("Fly"), other = await enemy("Fly");
+  for (let i = 0; i < 1800; i++) {
+    const movement = { ...services, moveBody(b, dt) { b.x += b.vx * dt; b.y += b.vy * dt; } };
+    updateEnemy(e, { x: 2000, y: 320 }, 1 / 60, movement);
+    updateEnemy(other, { x: -2000, y: 320 }, 1 / 60, movement);
+    assert.equal(e.x, other.x); assert.ok(Math.abs(e.x - e.homeX) < 105);
+  }
   assert.equal(hitEnemy(e), true); assert.equal(e.hp, 0); assert.equal(e.state, "dead");
   assert.equal(hitEnemy(e), false);
-  updateEnemy(e, p, 1, services); assert.ok(e.deadT >= 1);
+  updateEnemy(e, { x: 2000, y: 320 }, 1, services); assert.ok(e.deadT >= 1);
 });
 
 test("unstudied swimming enemies and bosses accept hits without being forced into land physics", () => {
