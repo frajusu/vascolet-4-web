@@ -10,6 +10,7 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+import os
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,6 +55,8 @@ def window_for_pid(pid):
     return found[0] if found else None
 
 def send_key(scan, up=False):
+    if os.environ.get("VASCOLET_INTERACTIVE_INPUT") != "1":
+        raise RuntimeError("Interactive/global input is disabled. Use the isolated native runner.")
     extended = 1 if scan in (0x48, 0x50, 0x4b, 0x4d) else 0
     event = INPUT(type=1, ki=KEYBDINPUT(wScan=scan, dwFlags=8 | extended | (2 if up else 0)))
     if U.SendInput(1, C.byref(event), C.sizeof(INPUT)) != 1:
@@ -88,6 +91,8 @@ def capture(hwnd, filename):
         G.DeleteObject(bitmap); G.DeleteDC(mem); U.ReleaseDC(hwnd, dc)
 
 def main():
+    if os.environ.get("VASCOLET_INTERACTIVE_INPUT") != "1":
+        raise RuntimeError("Foreground observation is disabled by default; native automation must be isolated.")
     plan = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
     output = Path(sys.argv[2]).resolve() if len(sys.argv) > 2 else ROOT / "analysis" / "original"
     output.mkdir(parents=True, exist_ok=True)

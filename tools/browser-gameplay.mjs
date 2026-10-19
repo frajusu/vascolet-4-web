@@ -41,7 +41,7 @@ try {
   report.checks.push("Ayuda y Créditos sin texto agregado");
   for (let i = 0; i < 3; i++) await key("ArrowUp");
   await key("Enter"); await key("Enter"); await key("Enter");
-  await page.waitForFunction(async () => Boolean((await import("/js/game.js")).Game.player));
+  await page.waitForFunction(async () => { const g=(await import("/js/game.js")).Game; return Boolean(g.map&&g.player?.anim&&g.time>0); });
   await shot("level1-camera");
   const state = () => page.evaluate(async () => {
     const { Game: g } = await import("/js/game.js");
@@ -75,7 +75,7 @@ try {
   await page.waitForTimeout(850);
   report.throw = await page.evaluate(() => { clearInterval(window.__sampler); return window.__boomSamples; });
   const travel = report.throw.flatMap(s => s.booms.map(b => b.x - s.player.x));
-  assert.ok(Math.max(...travel) > 180 && Math.max(...travel) < 240);
+  assert.ok(Math.max(...travel) > 130 && Math.max(...travel) < 165, "new-game range, without the two-fruit upgrade from the older reference");
   assert.ok(report.throw.some(s => s.booms.some(b => b.state === "return")));
   assert.equal((await state()).booms, 0);
   report.checks.push("Lanzamiento y retorno reales en navegador, capturas y telemetría");
@@ -99,22 +99,28 @@ try {
   });
   await key("Escape"); await key("x");
   await page.waitForFunction(async () => (await import("/js/game.js")).Game.booms.length === 1);
-  await page.evaluate(async () => { window.__movingBoom = (await import("/js/game.js")).Game.booms[0]; });
+  await page.evaluate(async () => {
+    const { Game:g }=await import("/js/game.js"); window.__movingBoom=g.booms[0]; window.__movingSamples=[];
+    window.__movingTimer=setInterval(()=>{const b=window.__movingBoom,p=g.player;
+      window.__movingSamples.push({t:b.t,x:b.x,y:b.y,vx:b.vx,vy:b.vy,state:b.state,life:b.life,caught:b.caught,player:{x:p.x,y:p.y}});},20);
+  });
   await page.keyboard.down("ArrowRight"); await page.keyboard.down("z");
   await page.waitForTimeout(250); await shot("moving-boomerang-out");
   await page.keyboard.up("ArrowRight"); await page.keyboard.up("z"); await page.keyboard.down("ArrowLeft");
   await page.waitForTimeout(300); await page.keyboard.up("ArrowLeft");
-  await shot("moving-boomerang-turn"); await page.waitForTimeout(1900);
+  await shot("moving-boomerang-turn");
+  await page.waitForFunction(()=>window.__movingBoom.life<=0,{},{timeout:6000});
   report.movingThrow = await page.evaluate(() => ({ caught: window.__movingBoom.caught, t: window.__movingBoom.t,
     launchX: window.__movingBoom.launchX, launchY: window.__movingBoom.launchY }));
+  report.movingSamples=await page.evaluate(()=>{clearInterval(window.__movingTimer);return window.__movingSamples;});
   assert.equal(report.movingThrow.caught, true, "moving throw must be caught rather than expire or trail the player");
   report.checks.push("Lanzamiento con salto y cambio de dirección: retorno y recogida reales");
   await key("Escape");
   report.recoil = await page.evaluate(async () => {
     const { Game: g, loadLevel } = await import("/js/game.js"); await loadLevel(1);
-    g.player.y = 384; g.player.ground = true; g.player.face = 1; g.player.inv = 0;
+    g.player.y = 382; g.player.ground = true; g.player.face = 1; g.player.inv = 0;
     const fly = g.enemies.find(e => e.kind === "Fly");
-    Object.assign(fly, { x: g.player.x + 5, y: 384, homeX: g.player.x + 5, homeY: 384, active: true, vx: 0, vy: 0 });
+    Object.assign(fly, { x: g.player.x + 5, y: 382, homeX: g.player.x + 5, homeY: 382, active: true, vx: 0, vy: 0 });
     g.enemies = [fly]; g.win = null; g.infos = []; g.dlg = null;
     window.__recoilSamples = [];
     window.__recoilTimer = setInterval(() => {
@@ -143,5 +149,6 @@ finally {
   if (page && !page.isClosed() && !report.ok) await shot("failure").catch(() => {});
   await browser?.close(); server.closeAllConnections(); await new Promise(resolve => server.close(resolve));
   await writeFile(path.join(output, "report.json"), JSON.stringify(report, null, 2));
-  console.log(JSON.stringify({ ...report, throw: report.throw ? `${report.throw.length} samples in report.json` : null }, null, 2));
+  console.log(JSON.stringify({ ...report, throw: report.throw ? `${report.throw.length} samples in report.json` : null,
+    movingSamples:report.movingSamples?`${report.movingSamples.length} samples in report.json`:null }, null, 2));
 }

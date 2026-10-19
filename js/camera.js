@@ -19,9 +19,16 @@ export function cameraBounds(map, subject, width = 512, height = 384) {
 export function updateCamera(game, dt, snap = false) {
   const p = game.player, b = cameraBounds(game.map, p);
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(v, hi));
-  const x = clamp(p.x - 256, b.minX, b.maxX);
-  const y = clamp(p.y - 232, b.minY, b.maxY);
-  const blend = snap ? 1 : 1 - Math.exp(-8 * dt);
-  game.camX = clamp(game.camX + (x - game.camX) * blend, b.minX, b.maxX);
-  game.camY = clamp(game.camY + (y - game.camY) * blend, b.minY, b.maxY);
+  // GameSubjectCamera::updateOnSubject accumulates displacement, clamped to
+  // +/-60. It is not an exponential chase behind the player's movement.
+  if (snap || !game.cameraTrack) game.cameraTrack = { lastX: Math.floor(p.x), leadX: 0, floorY: p.y };
+  const track = game.cameraTrack, px = Math.floor(p.x);
+  track.leadX = clamp(track.leadX + px - track.lastX, -60, 60); track.lastX = px;
+  if (p.ground || p.y > track.floorY) track.floorY = p.y;
+  const jumpCorrection = Math.max(0, track.floorY - p.y) * .5;
+  const y = clamp(track.floorY - jumpCorrection - 232, b.minY, b.maxY);
+  game.camX = clamp(px + track.leadX - 256, b.minX, b.maxX);
+  if (snap || y <= game.camY) game.camY = y;
+  else game.camY = Math.min(y, game.camY + Math.max(15, (y - game.camY) * 3) * dt);
+  game.camY = clamp(game.camY, b.minY, b.maxY);
 }

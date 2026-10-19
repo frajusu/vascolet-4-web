@@ -74,6 +74,8 @@ Fuentes, observaciones y ajustes provisionales: [notas de comportamiento](docs/b
 El nivel 1 incorpora sus 13 objetos con animaciones, habilidades obtenidas durante
 la partida, cinco corazones iniciales ampliables, reanudación y el escorpión con
 saltos/refuerzos y secuencia de derrota que desbloquea el nivel 2.
+La última tanda ajusta ganancias de efectos, daño/animaciones de enemigos,
+proyectiles, alcance del boomerang según frutas, física inicial y panel de pausa.
 [Estado y alcance de su validación](docs/level1-status.md): todavía está pendiente
 cerrar un recorrido continuo completo y la equivalencia exacta con el original.
 
@@ -89,6 +91,9 @@ centrado del canvas durante las cinemáticas.
 orientación de moscas y filtrado persistente con capturas de ambos modos.
 `npm run test:level1` comprueba los objetos, reanudación y pelea/victoria del
 escorpión sobre el mapa real mediante colocaciones controladas explícitas.
+La [herramienta nativa aislada](tools/native-isolated/README.md) permite observar
+una copia del original en un escritorio invisible, con controles privados y sin
+seleccionar ese escritorio. Su smoke de marcha/salto pasó; no recorre el nivel completo.
 
 ## Licencia y créditos
 

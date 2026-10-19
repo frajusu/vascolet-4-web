@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { JSDOM } from "jsdom";
-import { menuInit, chaptersInit, chaptersUpdate, chaptersDraw, chPos, achInit, achDraw, achUpdate, optionsInit, optionsUpdate, optionsDraw, onOptionsDone } from "../js/menu.js";
+import { menuInit, chaptersInit, chaptersUpdate, chaptersDraw, chPos, achInit, achDraw, achUpdate, optionsInit, optionsUpdate, optionsDraw, onOptionsDone, pauseInit, pauseUpdate, pauseDraw } from "../js/menu.js";
 import { Input } from "../js/input.js";
 import { Save } from "../js/save.js";
 import { Audio2 } from "../js/audio.js";
@@ -91,6 +91,21 @@ test("checkpoints preserve unlocks/trophies; duplicate collection is ignored; er
   Save.writeSettings({ music: .3 }); localStorage.setItem("unrelated", "keep"); Save.clear();
   assert.equal(Save.unlocked(), 1); assert.equal(Save.hasItem("&P-Run"), false);
   assert.equal(Save.settings().music, .3); assert.equal(localStorage.getItem("unrelated"), "keep");
+});
+
+test("pause and quit buttons share native in-panel draw/hit positions instead of floating below or beside the panel", async () => {
+  await fresh(1);const actions=[];await pauseInit(id=>actions.push(id));
+  const ctx=context();pauseDraw(ctx);
+  const buttons=ctx.draws.filter(d=>d.src.endsWith("/menu.png"));
+  assert.deepEqual(buttons.map(d=>d.rect.slice(4)),[[201,205,110,30],[201,245,110,30],[201,305,110,30]]);
+  Object.assign(Input.mouse,{inside:true,x:256,y:360});Input.pressed.add("click");pauseUpdate();Input.endStep();
+  assert.deepEqual(actions,[],"old out-of-panel button position is inert");
+  Input.mouse.inside=false;
+  for(const key of ["down","down","enter"]){Input.pressed.add(key);pauseUpdate();Input.endStep();}
+  const confirm=context();pauseDraw(confirm);
+  assert.deepEqual(confirm.draws.filter(d=>d.src.endsWith("/menu.png")).map(d=>d.rect.slice(4)),[[201,277,110,30],[201,314,110,30]]);
+  Object.assign(Input.mouse,{inside:true,x:256,y:292});Input.pressed.add("click");pauseUpdate();Input.endStep();
+  assert.deepEqual(actions,["salir"]);
 });
 
 test("trophies draw all 20 cropped cards in original groups, with enabled state only for collected items", async () => {

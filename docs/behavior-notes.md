@@ -1,5 +1,8 @@
 # Comparación de combate y cámara — 16/10/2026
 
+Las secciones numeradas conservan el historial de correcciones. La sexta tanda,
+al final del documento, sustituye las aproximaciones iniciales de tiro y sonidos.
+
 ## Fuentes utilizadas
 
 - Ejecución de `Vascolet/vascolet4.exe` con DirectInput, capturas de su cliente
@@ -205,3 +208,49 @@ sin modificar vida del jefe ni invulnerabilidad durante la pelea. La preparació
 reubica al jugador para aislar objetos, guardado y arena: **no es un recorrido
 natural completo**. El intento de recorrido automático desde el inicio consiguió
 recoger SustainJump, pero no terminó el nivel; no se usa como prueba de completitud.
+
+## Sexta corrección: combate, audio, física y pausa — 18/10/2026
+
+- `AudioLibrary::initAudioLibrary` (`0x08067980`) aporta ganancias por efecto:
+  pasos 0,1 (antes 0,7), salto/energía 0,4, ayuda/guardado 0,5. Se centralizan en
+  `js/level-sounds.js`, separados del volumen maestro y de los sonidos del menú.
+  Se corrigieron también efectos de recogida, aterrizaje y dolor del jugador.
+- `ENEMY_BASE_STATE` mantiene la animación del enemigo vivo durante el golpe.
+  Elegir `damage` mostraba la pose de muerte de Frog o un recorte de ancho cero
+  de Snail. Ahora conservan su animación; la muerte de Flower permanece enraizada.
+  Las vidas usadas son Fly 1, Frog 4, Flower 5, Beetle 10 y Snail 10; el boomerang
+  resta una unidad y el pisotón dos. La mosca atraviesa el mapa sin física terrestre.
+- Los proyectiles de flor viajan a 240 y no tienen colisión con sólidos ni el
+  antiguo TTL de cuatro segundos. Fireball viaja a 480 y sí tiene una regla nativa
+  de extinción contra sólidos/contacto: reproduce `ending` antes de borrarse.
+- `V4_throwBoomerangLogic` (`0x080c6bf0`) define velocidad `640+30*frutas` y tiempo
+  de ida `0,1+0,035*frutas`. La referencia anterior de unos 200 píxeles correspondía
+  a una mejora, no a una partida nueva. El retorno usa fuerzas 960/350 y límites
+  640/240; un impacto inicia rebote/caída y conserva el cupo hasta desaparecer.
+  El tiro agachado sale directamente; el aéreo usa `jumpAttack`. Esta animación
+  no debe activarse sola en el ápice al obtener el poder de pisotón.
+- Se aplican la integración de `bat::Particle1::update` (`0x082a4fa0`), margen de
+  suelo de dos píxeles y cola de acciones de dos pasos. La posición inicial es
+  `(272,382)`. Las muestras Windows de marcha y salto en
+  `tools/behavior/native-motion-reference.json` se reproducen con error menor a
+  medio píxel. Es una comparación inicial acotada, no prueba de toda la física.
+  La cámara acumula anticipación horizontal hasta ±60 en lugar de usar un lerp.
+- Pausa (`0x081c3d80`) usa botones centrados en `(256,220)`, `(256,260)` y
+  `(256,320)`. La confirmación de salida coloca Sí/No en vertical. Dibujo y click
+  comparten sus rectángulos, sin modificar el menú principal ni Opciones.
+
+### Resultado al cerrar la tanda
+
+Pasaron los 75 tests, el smoke de navegador, menús, Opciones/video, ayuda/render
+y la prueba controlada del nivel 1 (13 objetos, checkpoint, pelea y nivel 2).
+El smoke del original en escritorio invisible también pasó: caminó y saltó con
+input privado, conservando `Default` como escritorio de entrada antes/después.
+La herramienta y sus requisitos están en `tools/native-isolated/README.md`.
+
+**Pendiente reproducido:** `test:gameplay` pasó una ejecución y falló otra en la
+recogida tras salto/cambio de dirección. La telemetría muestra que el boomerang
+puede sobrepasar al jugador y golpear el suelo antes de volver; no se declara
+resuelto ni se elimina la aserción. El test conserva muestras de esa trayectoria.
+El bot exploratorio actual llegó a x=4636 con SustainJump y un checkpoint, pero
+se trabó. El recorrido original llegó al primer checkpoint/árbol y no terminó.
+No se acredita comparación completa de nivel ni comparación auditiva integral.

@@ -3,20 +3,23 @@
 import { img, loadImage, loadXML } from "./assets.js";
 import { parseTMX, parseTSX, group, layer, parseAtlas, parseAnims, TILE_SOLID, TILE_UP, TILE_DAMAGE } from "./tmx.js";
 import { drawAtlas, drawAnimFrame, AnimPlayer, pixel } from "./sprite.js";
-import { Input, jumpHeld, jumpPressed, firePressed } from "./input.js";
+import { Input } from "./input.js";
 import { Save } from "./save.js";
 import { Audio2 } from "./audio.js";
 import { updateCamera } from "./camera.js";
-import { createBoomerang, updateBoomerang, terrainHit, segmentBox } from "./projectiles.js";
+import { createBoomerang, updateBoomerang } from "./projectiles.js";
 import { createEnemy, hitEnemy, updateEnemy, enemySpriteFlip } from "./enemies.js";
 import { beginPlayerDamage, advancePlayerDamage, DAMAGE_MOTION } from "./player-damage.js";
 import { loadBitmapFont, drawBitmapText, measureBitmapText, wrapBitmapText } from "./bitmap-font.js";
 import { createLampi, updateLampi, signTouchesPlayer, dialogueLayout, HELP_DIALOG } from "./help.js";
 import { RenderSettings } from "./render-settings.js";
 import { progressFromItems, itemDefinition, PLAYER_PHYSICS } from "./progression.js";
+import { levelSound } from "./level-sounds.js";
+import { createEnemyShot, updateEnemyShot } from "./enemy-projectiles.js";
+import { integrateAxis, MAP_SKIN, subjectY } from "./physics.js";
 
 const W = 512, H = 384, TILE = 32;
-const SFX = "assets/audio/fx/win/", MUS = "assets/audio/music/win/";
+const MUS = "assets/audio/music/win/";
 const HUD = "assets/images/hud/hud.png";
 
 export const Game = {
@@ -134,7 +137,7 @@ export async function loadLevel(n, fresh = true) {
   const G = Game;
   G.level = n; G.enemies = []; G.items = []; G.infos = []; G.saves = [];
   G.booms = []; G.parts = []; G.shots = []; G.effects = []; G.dlg = null;
-  G.helper = null; G.helperSerial = 0;
+  G.helper = null; G.helperSerial = 0; G.inputFrames = [];
   G.coins = 0; G.energy = 100; G.tip = ""; G.tipT = 0; G.shakeT = 0; G.winTimer = 0;
   const run = Save.run(), savedRun = fresh && run?.level === n ? run : null;
   if (fresh) G.lives = Number.isInteger(savedRun?.lives) ? savedRun.lives : 5;
@@ -170,9 +173,9 @@ export async function loadLevel(n, fresh = true) {
   await loadImage(HUD);
   if (!G.hudAtlas) G.hudAtlas = parseAtlas(await loadXML("assets/images/hud/hud.xml"));
   for (const o of group(G.map, "General")) {
-    if (o.name === "Start") G.start = { x: o.x + 16, y: o.y + 16 };
-    if (o.name === "*Info") G.infos.push({ x: o.x + 16, y: o.y + 32, key: o.props.info, shown: false, dismissed: false });
-    if (o.name === "*Save") G.saves.push({ x: o.x + 16, y: o.y + 32, tip: o.props.info, used: false, anim: null });
+    if (o.name === "Start") G.start = { x: o.x + 16, y: subjectY(o) };
+    if (o.name === "*Info") G.infos.push({ x: o.x + 16, y: subjectY(o), key: o.props.info, shown: false, dismissed: false });
+    if (o.name === "*Save") G.saves.push({ x: o.x + 16, y: subjectY(o), tip: o.props.info, used: false, anim: null });
   }
   const foes = group(G.map, "Enemies");
   G.spawnDescriptors = (foes.length ? foes : group(G.map, "Scenes")).map(o => ({ ...o }));
@@ -188,7 +191,7 @@ export async function loadLevel(n, fresh = true) {
   }
   G.player = {
     x: (G.start || { x: 256 }).x, y: (G.start || { y: 352 }).y,
-    vx: 0, vy: 0, w: 8, h: 60, face: 1, ground: false, coyote: 0, buffer: 0, doubleUsed: false, dropT: 0,
+    vx: 0, vy: 0, w: 8, h: 60, skin: MAP_SKIN, face: 1, ground: false, coyote: 0, buffer: 0, doubleUsed: false, dropT: 0,
     inv: 0, fireCd: 0, attack: null, damage: null, run: false, tapD: 0, tapT: -9, crouch: false,
     anim: null, animName: "", cur: null,
   };
@@ -266,13 +269,15 @@ const { gravity: GRAV, walk: MOVE, run: RUN, jump: JUMP } = PLAYER_PHYSICS;
 const EPS = 1e-7;
 function moveBody(b, dt, gravity = GRAV) {
   b.hitWall = false;
-  b.vy += gravity * dt;
-  if (b.vy > 900) b.vy = 900;
+  const skin = b.skin ?? 0;
+  const vertical = integrateAxis(b.vy, gravity, 0, 500, dt);
+  b.vy = vertical.velocity;
   const prevX = b.x;
-  b.x += b.vx * dt;
-  const y0 = Math.floor((b.y - b.h + EPS) / TILE), y1 = Math.floor((b.y - EPS) / TILE);
-  if (b.vx !== 0) {
-    const side = Math.sign(b.vx), half = side * b.w / 2;
+  const dx = b.stepX ?? b.vx * dt; b.stepX = undefined;
+  b.x += dx;
+  const y0 = Math.floor((b.y - b.h + EPS) / TILE), y1 = Math.floor((b.y + skin - EPS) / TILE);
+  if (dx !== 0) {
+    const side = Math.sign(dx), half = side * b.w / 2;
     const from = Math.floor((prevX + half - side * EPS) / TILE);
     const to = Math.floor((b.x + half - side * EPS) / TILE);
     for (let tx = from; side > 0 ? tx <= to : tx >= to; tx += side) {
@@ -289,27 +294,27 @@ function moveBody(b, dt, gravity = GRAV) {
       }
     }
   }
-  const prevBottom = b.y;
-  b.y += b.vy * dt;
+  const prevBottom = b.y + skin;
+  b.y += vertical.displacement;
   b.ground = false;
   const x0 = Math.floor((b.x - b.w / 2 + EPS) / TILE), x1 = Math.floor((b.x + b.w / 2 - EPS) / TILE);
-  if (b.vy >= 0) {
+  if (vertical.displacement >= 0) {
     // Test crossed support planes, including the exact plane at rest. Sampling
     // y-1 missed this row under gravity and alternated grounded/airborne ticks.
-    const from = Math.floor((prevBottom + EPS) / TILE), to = Math.floor((b.y + EPS) / TILE);
+    const from = Math.floor((prevBottom + EPS) / TILE), to = Math.floor((b.y + skin + EPS) / TILE);
     for (let ty = from; ty <= to; ty++) {
       let support = false;
       for (let tx = x0; tx <= x1; tx++) {
         const flags = tileAt(tx, ty);
-        if (((flags & TILE_SOLID) || ((flags & TILE_UP) && !(b.dropT > 0))) && prevBottom <= ty * TILE + EPS) {
+        if (((flags & TILE_SOLID) || ((flags & TILE_UP) && !(b.dropT > 0))) && prevBottom <= ty * TILE + skin + EPS) {
           support = true;
           if (flags & TILE_DAMAGE) b.hurt = true;
         }
       }
-      if (support) { b.y = ty * TILE; b.vy = 0; b.ground = true; break; }
+      if (support) { b.y = ty * TILE - skin; b.vy = 0; b.ground = true; break; }
     }
   } else {
-    const from = Math.floor((prevBottom - b.h - EPS) / TILE), to = Math.floor((b.y - b.h - EPS) / TILE);
+    const from = Math.floor((prevBottom - skin - b.h - EPS) / TILE), to = Math.floor((b.y - b.h - EPS) / TILE);
     for (let ty = from; ty >= to; ty--) {
       let ceiling = false;
       for (let tx = x0; tx <= x1; tx++) {
@@ -319,7 +324,7 @@ function moveBody(b, dt, gravity = GRAV) {
       if (ceiling) { b.y = (ty + 1) * TILE + b.h; b.vy = 0; break; }
     }
   }
-  for (let ty = Math.floor((b.y - b.h + EPS) / TILE); ty <= Math.floor((b.y - EPS) / TILE); ty++)
+  for (let ty = Math.floor((b.y - b.h + EPS) / TILE); ty <= Math.floor((b.y + skin - EPS) / TILE); ty++)
     for (let tx = x0; tx <= x1; tx++) if (tileAt(tx, ty) & TILE_DAMAGE) b.hurt = true;
 }
 
@@ -337,13 +342,11 @@ function flagSound(animName, flag) {
   if (flag !== "PlaySound") return;
   if (animName === "walk" || animName === "run" || animName === "withAntWalk") {
     STEP.n ^= 1;
-    Audio2.sfx(SFX + (STEP.n ? "footStep1.ogg" : "footStep2.ogg"), 0.7);
+    if (Game.player?.ground) levelSound(STEP.n ? "footStep1" : "footStep2");
   } else if (animName.startsWith("flying")) {
-    Audio2.sfx(SFX + "wings.ogg", 0.5);
-  } else if (animName === "boomerang" || animName === "normal" || animName === "fast") {
-    Audio2.sfx(SFX + "boomerang2.ogg", 0.6);
+    levelSound("wings");
   } else if (animName.startsWith("swim")) {
-    Audio2.sfx(SFX + "swim.ogg", 0.5);
+    levelSound("swim");
   }
 }
 
@@ -372,12 +375,20 @@ export function gameUpdate(dt) {
     }
     if (d.remaining <= 0) G.dlg = null;
   }
+  // The original updates physics before its queued state/input actions. Native
+  // 60Hz captures show two steps between a new key edge and its first movement.
+  G.inputFrames.push({ held: new Set(Input.held), pressed: new Set(Input.pressed) });
+  const controls = G.inputFrames.length > 2 ? G.inputFrames.shift() : { held: new Set(), pressed: new Set() };
+  const down = key => controls.held.has(key), pressed = controls.pressed;
+  const jumpHeld = () => down("z") || down("s");
+  const jumpPressed = () => pressed.has("z") || pressed.has("s");
+  const firePressed = () => pressed.has("x") || pressed.has("a");
   let dir = 0;
-  if (Input.down("left")) dir -= 1;
-  if (Input.down("right")) dir += 1;
+  if (down("left")) dir -= 1;
+  if (down("right")) dir += 1;
   const now = G.time;
-  if (!p.damage && (Input.pressed.has("left") || Input.pressed.has("right"))) {
-    const d = Input.pressed.has("left") ? -1 : 1;
+  if (!p.damage && (pressed.has("left") || pressed.has("right"))) {
+    const d = pressed.has("left") ? -1 : 1;
     if (G.abilities.run && p.tapD === d && now - p.tapT < 0.3) p.run = true;
     p.tapD = d; p.tapT = now;
   }
@@ -385,20 +396,20 @@ export function gameUpdate(dt) {
   if (dir && !p.attack && !p.damage) p.face = dir;
   if (p.damage) p.vx = p.damage.phase === "air" ? -p.damage.face * DAMAGE_MOTION.speed : 0;
   else {
-    const target = dir * (p.run ? RUN : MOVE);
-    const accel = dir ? PLAYER_PHYSICS.acceleration : p.ground ? PLAYER_PHYSICS.friction : 0;
-    p.vx += Math.sign(target - p.vx) * Math.min(Math.abs(target - p.vx), accel * dt);
+    const axis = integrateAxis(p.vx, dir * (p.run ? 4800 : PLAYER_PHYSICS.acceleration),
+      p.ground ? PLAYER_PHYSICS.friction : 0, p.run ? RUN : MOVE, dt);
+    p.vx = axis.velocity; p.stepX = axis.displacement;
   }
-  p.crouch = !p.damage && Input.down("down") && p.ground;
-  if (p.crouch || (p.attack && p.ground)) p.vx = 0;
+  p.crouch = !p.damage && down("down") && p.ground;
+  if (p.crouch || (p.attack && p.ground)) { p.vx = 0; p.stepX = 0; }
   if (p.damage) p.buffer = 0;
   else if (jumpPressed()) p.buffer = 0.12; else p.buffer = Math.max(0, p.buffer - dt);
   p.coyote = p.ground ? 0.1 : Math.max(0, p.coyote - dt);
   p.dropT = Math.max(0, p.dropT - dt);
-  if (!p.damage && p.ground && Input.down("down") && p.buffer > 0) {
+  if (!p.damage && p.ground && down("down") && p.buffer > 0) {
     const supports = [];
     for (let x = Math.floor((p.x - p.w / 2 + EPS) / TILE); x <= Math.floor((p.x + p.w / 2 - EPS) / TILE); x++)
-      supports.push(tileAt(x, Math.floor((p.y + EPS) / TILE)));
+      supports.push(tileAt(x, Math.floor((p.y + (p.skin ?? 0) + EPS) / TILE)));
     if (supports.some(f => f & TILE_UP) && !supports.some(f => f & TILE_SOLID)) {
       p.dropT = .2; p.y += 2; p.vy = 60; p.ground = false; p.coyote = 0; p.buffer = 0;
     }
@@ -407,13 +418,13 @@ export function gameUpdate(dt) {
   if (!p.damage && p.coyote > 0 && p.buffer > 0) {
     p.vy = -JUMP; p.buffer = 0; p.coyote = 0; p.ground = false; p.doubleUsed = false;
     launched = true;
-    Audio2.sfx(SFX + "jumpAir.ogg");
+    levelSound("jumpAir");
     dust(p.x, p.y, 6);
   }
   else if (!p.damage && !p.ground && !p.dropT && jumpPressed() && G.abilities.doubleJump && !p.doubleUsed) {
     p.vy = -PLAYER_PHYSICS.secondJump; p.doubleUsed = true; p.buffer = 0;
     launched = true;
-    Audio2.sfx(SFX + "double_jump.ogg");
+    levelSound("double_jump");
   }
   // Native V4: (!jumpHeld OR !canSustainJumpEnabled) AND vy < -240.
   // Preserve the entry impulse for one step before applying the inherited cut.
@@ -424,14 +435,17 @@ export function gameUpdate(dt) {
   if (p.ground) p.doubleUsed = false;
   advancePlayerDamage(p, dt);
   if (!wasGround && p.ground && fallV > 300) dust(p.x, p.y, 9);
+  if (!wasGround && p.ground && fallV > 100) levelSound("fall1");
   p.inv = Math.max(0, p.inv - dt);
   if (p.hurt) hurtPlayer();
   if (!p.damage && firePressed() && p.fireCd <= 0 && !p.attack && G.booms.length < G.abilities.maxBoomerangs) {
-    const name = p.crouch && p.anim.has("crouchAttack") ? "crouchAttack" : "standAttack";
+    const name = !p.ground && p.anim.has("jumpAttack") ? "jumpAttack"
+      : p.crouch && p.anim.has("crouchAttack") ? "crouchAttack" : "standAttack";
     if (p.anim.has(name)) {
       p.attack = { name, released: false, crouch: p.crouch, face: p.face };
       p.animName = name; p.anim.set(name, { restart: true });
       p.fireCd = .15;
+      if (p.crouch) releaseBoomerang();
     }
   }
   p.fireCd = Math.max(0, p.fireCd - dt);
@@ -444,14 +458,15 @@ export function gameUpdate(dt) {
       bossStart: () => void Audio2.music(G.map.props["music,boss"] ? MUS + G.map.props["music,boss"] : null),
       minionCount: () => G.enemies.filter(m => m.minion && m.hp > 0).length, spawnMinion,
       shake: time => { G.shakeT = Math.max(G.shakeT, time); },
-      explosion: b => impact(b.x + Math.sin(b.stateTime * 47) * 45, b.y - 30 + Math.cos(b.stateTime * 31) * 30, 2),
-      bossDefeated: b => { G.shakeT = .2; impact(b.x, b.y - 30, 4); Audio2.sfx(SFX + "boss_death.ogg"); },
+      explosion: b => { impact(b.x + Math.sin(b.stateTime * 47) * 45, b.y - 30 + Math.cos(b.stateTime * 31) * 30, 2); levelSound("v_explosion"); },
+      bossDefeated: b => { G.shakeT = .2; impact(b.x, b.y - 30, 4); levelSound("v_explosion"); },
     });
     if (e.y > G.gh * TILE + 160 && e.hp > 0) { e.hp = 0; e.deadT = 2; }
   }
   for (const b of G.booms) {
     updateBoomerang(b, p, G.enemies, dt, { tileAt, hitEnemy: (e, boom) => damageEnemy(e, Math.sign(boom.vx)),
-      wallHit: () => Audio2.sfx(SFX + "boomerang_wall_hit.ogg", .7), impact });
+      wallHit: () => levelSound("boomerang_wall_hit"), caught: () => levelSound("boomerang_wall_hit"),
+      camera: { x: G.camX, y: G.camY }, impact });
     if (b.anim) {
       b.anim.update(dt);
       for (const event of b.anim.drainEvents()) flagSound(event.animation, event.type);
@@ -462,7 +477,7 @@ export function gameUpdate(dt) {
   for (const e of G.enemies) {
     if (e.hp <= 0 || Math.abs(p.x - e.x) >= (p.w + e.w) / 2 || p.y <= e.y - e.h || p.y - (p.crouch ? 28 : p.h) >= e.y) continue;
     if (G.abilities.jumpAttack && !e.boss && e.behavior !== "flower" && p.vy > 0 && p.prevY <= e.y - e.h + 10) {
-      damageEnemy(e, p.face); p.vy = -280; p.ground = false;
+      damageEnemy(e, p.face, 2); p.vy = -280; p.ground = false;
     } else hurtPlayer();
   }
   updateCamera(G, dt);
@@ -499,7 +514,7 @@ export function gameUpdate(dt) {
       G.checkpoint = { x: s.x, y: s.y };
       G.checkpointConsumed = G.items.filter(i => i.taken && !i.definition?.permanent).map(i => i.id);
       saveCheckpoint();
-      Audio2.sfx(SFX + "save.ogg");
+      levelSound("save");
       s.used = true; s.anim?.set("savePoint");
       openDialog("Juego salvado.", null, 2.7);
     }
@@ -519,7 +534,9 @@ export function gameUpdate(dt) {
   // anim jugador con NOMBRES REALES (ataque tiene prioridad mientras dura)
   let want = "stand";
   if (p.attack) want = p.attack.name;
-  else if (!p.ground) want = p.doubleUsed ? "runJumpMid" : p.vy < -120 ? (p.run && p.anim.has("runJump") ? "runJump" : "standJump") : p.vy < 0 ? "standJumpMid" : G.abilities.jumpAttack ? "jumpAttack" : "fall";
+  // jumpAttack is the XML's airborne BOOMERANG throw, not the stomp power.
+  // Only an explicit fire input may select it; an ordinary apex falls normally.
+  else if (!p.ground) want = p.doubleUsed ? "runJumpMid" : p.vy < -120 ? (p.run && p.anim.has("runJump") ? "runJump" : "standJump") : p.vy < 0 ? "standJumpMid" : "fall";
   else if (p.crouch && p.anim.has("crouch")) want = "crouch";
   else if (dir !== 0) want = p.run ? "run" : "walk";
   if (p.damage) want = ({ air: "damage", fall: "damageFall", rise: "damageRaise" })[p.damage.phase];
@@ -531,14 +548,12 @@ export function gameUpdate(dt) {
     if (event.type === "MakeEffect") dust(p.x, p.y - 4);
     if (p.attack && event.animation === p.attack.name && event.type === "Custom") releaseBoomerang();
   }
-  // Crouch XML lacks Custom; its extended throw pose is frame 4.
-  if (p.attack?.name === "crouchAttack" && p.anim.i >= 4) releaseBoomerang();
-  if (p.attack && p.anim.finished) p.attack = null;
+  if (p.attack && (p.anim.finished || (p.attack.name === "jumpAttack" && (p.ground || p.anim.i >= p.anim.cur.loop)))) p.attack = null;
   if (p.damage?.phase === "rise" && (p.animName === "damageRaise" ? p.anim.finished : p.damage.time >= .2)) p.damage = null;
   // muerte: energia o caida al vacio -> pierde vida, respawn o game over
   if ((G.energy <= 0 || p.y > G.gh * TILE + 80) && !G.won) {
     G.lives -= 1;
-    Audio2.sfx(SFX + "vasco_death.ogg");
+    levelSound("vasco_death");
     if (G.lives < 0) {
       G.gameover = true; Save.write({ run: null }); G.events.push({ type: "gameover" });
     } else {
@@ -547,7 +562,7 @@ export function gameUpdate(dt) {
       p.x = s.x; p.y = s.y; p.vx = 0; p.vy = 0; p.inv = 2;
       p.attack = null; p.damage = null; p.run = false; p.ground = false; p.coyote = 0; p.buffer = 0; p.dropT = 0; p.doubleUsed = false; p.tapT = -9;
       p.crouch = false; p.fireCd = 0; p.animName = "stand"; p.anim.restart("stand"); p.cur = p.anim.frame;
-      G.booms = []; G.shots = []; G.effects = []; G.parts = []; G.dlg = null; G.helper = null; G.shakeT = 0;
+      G.booms = []; G.shots = []; G.effects = []; G.parts = []; G.dlg = null; G.helper = null; G.shakeT = 0; G.inputFrames = [];
       G.bossVisible = false; G.bossHP = 0;
       G.enemies = G.spawnDescriptors.map(o => attachEnemyAnimation(createEnemy(o, BOSSES.has(o.name))));
       for (const item of G.items) item.taken = Save.hasItem(item.kind) || G.checkpointConsumed.includes(item.id);
@@ -587,7 +602,7 @@ function attachEnemyAnimation(e) {
 }
 
 function spawnMinion(x, y, dir) {
-  const e = attachEnemyAnimation(createEnemy({ name: "Scorpion", x: x - 16, y: y - 16, type: dir > 0 ? "forward" : "" }));
+  const e = attachEnemyAnimation(createEnemy({ name: "Scorpion", x: x - 16, y: y - 32 + MAP_SKIN, type: dir > 0 ? "forward" : "" }));
   e.minion = true; e.active = true; Game.enemies.push(e);
 }
 
@@ -608,7 +623,7 @@ function collectItem(item) {
   } else if (d.effect === "energy") G.energy = Math.min(100, G.energy + 100 / G.maxHearts);
   else if (d.effect === "full") G.energy = 100;
   else if (d.effect === "life") G.lives++;
-  item.taken = true; Audio2.sfx(SFX + d.sound); impact(item.x, item.y);
+  item.taken = true; levelSound(d.sound); impact(item.x, item.y);
 }
 
 function finishLevel() {
@@ -627,9 +642,9 @@ function releaseBoomerang() {
   attack.released = true;
   if (G.booms.length >= G.abilities.maxBoomerangs) return;
   const c = G.charCache.get("Boomerang"), anim = c?.anims.length ? new AnimPlayer(c.anims) : null;
-  if (anim?.has("normal")) anim.set("normal");
-  G.booms.push(createBoomerang({ x: p.x, y: p.y, face: attack.face, crouch: attack.crouch }, anim));
-  Audio2.sfx(SFX + "boomerang.ogg");
+  if (anim?.has("fast")) anim.set("fast");
+  G.booms.push(createBoomerang({ x: p.x, y: p.y, face: attack.face, crouch: attack.crouch, boomerangLevel: G.abilities.fruits }, anim));
+  levelSound("boomerang");
 }
 
 function impact(x, y, scale = 1) {
@@ -639,9 +654,9 @@ function impact(x, y, scale = 1) {
   Game.effects.push({ x, y, prevX: x, prevY: y, anim, scale });
 }
 
-function damageEnemy(e, direction) {
-  if (!hitEnemy(e, direction)) return;
-  Audio2.sfx(SFX + (e.boss && e.hp <= 0 ? "boss_death.ogg" : "enemy_boomerang_hit.ogg"));
+function damageEnemy(e, direction, damage = 1) {
+  if (!hitEnemy(e, direction, damage)) return;
+  levelSound(e.boss && e.hp <= 0 ? "boss_death" : damage === 2 ? "enemy_hit" : "enemy_boomerang_hit");
 }
 
 function hurtPlayer() {
@@ -650,7 +665,7 @@ function hurtPlayer() {
   G.energy = Math.max(0, G.energy - 100 / G.maxHearts); p.inv = 1;
   if (G.energy < 1e-7) G.energy = 0;
   beginPlayerDamage(p);
-  Audio2.sfx(SFX + "enemy_hit.ogg");
+  levelSound("enemy_hit"); levelSound("v_death1");
 }
 
 function enemyShoot(e) {
@@ -658,23 +673,15 @@ function enemyShoot(e) {
   const c = Game.charCache.get(kind);
   const anim = c?.anims.length ? new AnimPlayer(c.anims) : null;
   if (anim?.has(e.behavior === "snail" ? "normal" : "bullet")) anim.set(e.behavior === "snail" ? "normal" : "bullet");
-  const x = e.x + e.dir * (e.behavior === "flower" ? 20 : 0), y = e.y - (e.behavior === "flower" ? 40 : 20);
-  Game.shots.push({ kind, x, y, prevX: x, prevY: y, vx: e.dir * 180, life: 4, anim });
+  Game.shots.push(createEnemyShot(e, anim)); levelSound("willyFire");
 }
 
 function updateEnemyShots(dt) {
   const G = Game, p = G.player;
   for (const shot of G.shots) {
-    shot.life -= dt;
-    const nx = shot.x + shot.vx * dt;
-    const wall = terrainHit(shot.x, shot.y, nx, shot.y, tileAt, 6);
-    const player = segmentBox(shot.x, shot.y, nx, shot.y,
-      p.x - p.w / 2 - 6, p.y - (p.crouch ? 28 : p.h) - 6, p.x + p.w / 2 + 6, p.y + 6);
-    if (player !== null && (wall === null || player < wall)) { hurtPlayer(); shot.life = 0; }
-    else if (wall !== null) shot.life = 0;
-    shot.x = nx; shot.anim?.update(dt);
+    updateEnemyShot(shot, p, dt, { tileAt, hurtPlayer, camera: { x: G.camX, y: G.camY } });
   }
-  G.shots = G.shots.filter(s => s.life > 0);
+  G.shots = G.shots.filter(s => !s.removed);
 }
 
 function openDialog(text, portrait, duration = HELP_DIALOG.duration, source = null) {
@@ -683,7 +690,7 @@ function openDialog(text, portrait, duration = HELP_DIALOG.duration, source = nu
   const pages = [];
   for (let i = 0; i < lines.length; i += 3) pages.push(lines.slice(i, i + 3));
   Game.dlg = { text, shown: text.length, t: 0, remaining: duration, portrait, source, pages, page: 0, layout };
-  Audio2.sfx(SFX + "help.ogg", 0.6);
+  if (portrait === "dialogBannerLampi") levelSound("help");
 }
 
 function drawTile(ctx, raw, tilesets, x, y) {
@@ -761,13 +768,13 @@ export function gameDraw(ctx, alpha = 1) {
   }
   // enemigos con sprites reales
   for (const e of G.enemies) {
-    if (e.defeated || (e.hp <= 0 && e.deadT > 1.2)) continue;
+    if (e.defeated || e.removed) continue;
     const c = Game.charCache.get(e.kind);
     if (c?.img && e.anim) {
       ctx.save();
       if (e.behavior === "scorpion-boss" && e.state === "dying" && e.stateTime >= 3) ctx.filter = "brightness(0) invert(1)";
       drawAnimFrame(ctx, c.img, c.atlas, e.cur, x(e) - cx, y(e) - cy,
-        { flip: enemySpriteFlip(e), round: false, alpha: e.hp <= 0 ? Math.max(0, 1 - e.deadT / 1.2) : e.hurtT > 0 ? .65 : 1 });
+        { flip: enemySpriteFlip(e), round: false, alpha: e.hp > 0 && e.hurtT > 0 ? .85 : 1 });
       ctx.restore();
     } else {
       ctx.fillStyle = "#ffd75e";

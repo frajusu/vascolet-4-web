@@ -3,19 +3,20 @@
 import { TILE_SOLID, TILE_UP } from "./tmx.js";
 import { ENEMY_PROFILES, enemyRandom } from "./enemy-profiles.js";
 import { damageScorpion, updateScorpion } from "./scorpion-boss.js";
+import { subjectY, MAP_SKIN } from "./physics.js";
 const clamp = (v, limit) => Math.max(-limit, Math.min(v, limit));
 
 export function createEnemy(object, boss = false, seed = 0x45a91) {
   const profile = ENEMY_PROFILES[object.name] ?? { behavior: "unverified",
     hp: boss ? 100 : 10, w: boss ? 100 : 40, h: boss ? 100 : 44, speed: boss ? 30 : 45, gravity: 900 };
   const commands = new Set((object.type || "").split(/[,;\s]+/));
-  const x = object.x + 16, y = object.y + (profile.behavior === "flower" ? 32 : 16);
+  const x = object.x + 16, y = subjectY(object);
   const e = { ...profile, kind: object.name, boss, fwd: commands.has("forward"),
     dontFall: commands.has("dontFall") || Object.hasOwn(object.props || {}, "dontFall"),
     x, y, homeX: x, homeY: y, prevX: x, prevY: y, vx: 0, vy: 0,
     dir: commands.has("forward") ? 1 : -1, t: 0, hp: profile.hp, maxhp: profile.hp,
     state: "normal", cooldown: 0, stateTime: 0, seed: seed >>> 0 || 1, hurtT: 0, deadT: 0, ground: false, active: false,
-    anim: null, cur: null };
+    anim: null, cur: null, skin: MAP_SKIN };
   if (profile.behavior === "fly") e.vx = e.dir * e.speed;
   if (profile.attackDelay) e.cooldown = profile.attackDelay + enemyRandom(e) * profile.attackSpread;
   if (profile.behavior === "scorpion-boss") { e.state = "waiting"; e.fight = false; e.defeated = false; }
@@ -32,16 +33,18 @@ export function enemySpriteFlip(e) {
   return e.dir > 0;
 }
 
-export function hitEnemy(e, direction = 1) {
+export function hitEnemy(e, direction = 1, damage = 1) {
   if (e.behavior === "scorpion-boss") return damageScorpion(e);
   if (e.hp <= 0 || e.hurtT > 0) return false;
-  e.hp = Math.max(0, e.hp - 1); e.hurtT = .16;
+  e.hp = Math.max(0, e.hp - damage); e.hurtT = .25;
   if (!e.hp) {
-    e.state = "dead"; e.deadT = 0; e.vx = direction * 65; e.vy = -220;
-    enemyAnimation(e, "dead", true);
-  } else {
-    // Don't abandon jump windup on damage or its PhysicEvent would be lost.
-    if (e.state !== "windup" && e.state !== "attack") enemyAnimation(e, "damage", true);
+    e.state = "dead"; e.deadT = 0;
+    e.vx = e.behavior === "flower" ? 0 : direction * 60;
+    e.vy = e.behavior === "flower" ? 0 : -120;
+    // Snail's exported damage/dead sprite has a zero-width source rectangle.
+    // Native living enemies blink/shake in their current animation; damage is
+    // not a request to switch to their death-looking (or empty) asset.
+    if (e.kind !== "Snail") enemyAnimation(e, "dead", true);
   }
   return true;
 }
@@ -51,7 +54,7 @@ export function updateEnemy(e, player, dt, { moveBody, tileAt, shoot, booms = []
   e.t += dt; e.stateTime += dt; e.hurtT = Math.max(0, e.hurtT - dt); e.cooldown -= dt;
   if (e.hp <= 0) {
     e.deadT += dt;
-    e.vy += 700 * dt; e.x += e.vx * dt; e.y += e.vy * dt;
+    if (e.behavior !== "flower") { e.vy += 560 * dt; e.x += e.vx * dt; e.y += e.vy * dt; }
     if (e.anim) { e.anim.update(dt); e.cur = e.anim.frame; e.anim.drainEvents(); }
     return;
   }
@@ -65,7 +68,9 @@ export function updateEnemy(e, player, dt, { moveBody, tileAt, shoot, booms = []
     if ((e.homeX - e.x) * e.dir > 0) e.vx += e.dir * e.acceleration * dt;
     e.vx = clamp(e.vx, e.speed);
     e.vy = clamp(e.vy + Math.sign(player.y - e.y) * e.verticalAcceleration * dt, e.speed);
-    moveBody(e, dt, 0);
+    // FLY_BASE_STATE is a static/situable subject: tile collision must never
+    // change its spawn-relative patrol, including when it crosses solid ground.
+    e.x += e.vx * dt; e.y += e.vy * dt; e.hitWall = false; e.ground = false;
   } else if (e.behavior === "flower") {
     e.vx = e.vy = 0;
     if (e.state !== "attack") {

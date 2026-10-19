@@ -10,7 +10,7 @@ Estas coordenadas son las del marcador del mapa:
 | &P-SustainJump | 4096,192 | Permite sostener el salto manteniendo Z/S |
 | &P-JumpAttack | 6240,224 | Permite dañar/rebotar al caer sobre enemigos compatibles |
 | &Life1 / &Life2 | 7168,128 / 9248,256 | Un corazón máximo adicional por verdura |
-| &B-Item1 / &B-Item2 | 9984,192 / 12224,160 | Capacidad adicional de boomerangs |
+| &B-Item1 / &B-Item2 | 9984,192 / 12224,160 | Capacidad, velocidad y alcance adicionales de boomerangs |
 | &Key1 | 11456,224 | Alimento/trofeo persistente |
 | Energy, cinco instancias | 2880,128; 5600,224; 5472,192; 12128,320; 12320,256 | Recupera un corazón hasta el máximo |
 | FullEnergy | 13152,256 | Recupera toda la energía |
@@ -79,9 +79,22 @@ de seis segundos del TMX y se entra en el nivel 2.
 - `test:browser`, `test:menus`, `test:options-video`, `test:help-rendering`:
   navegación, controles, video, ayuda, Lampi y filtrado.
 
+### Cierre de la tanda de combate/audio/pausa — 18/10/2026
+
+Pasaron **75 tests**, smoke de navegador, menús, Opciones/video, ayuda/render y
+la prueba controlada de objetos/arena/transición. La referencia independiente de
+marcha/salto inicial de Windows se reproduce con tolerancia de medio píxel.
+El original también caminó y saltó en el nuevo runner invisible con input privado.
+
 **Pendiente:** recorrido continuo completo desde una partida nueva hasta derrotar
-al escorpión, comparado con el original. El bot exploratorio consiguió subir al
-árbol y recoger SustainJump, pero agotó las vidas antes de terminar el mapa.
+al escorpión, comparado con el original. Hubo un recorrido exploratorio web completo
+antes de los últimos cambios de física/tiro; no acredita el estado actual. En la
+última ejecución el bot recogió SustainJump, activó el primer checkpoint y se trabó
+en x=4636. El original sólo se recorrió hasta el primer checkpoint/árbol.
 Esto no demuestra un bloqueo del mapa ni acredita que el recorrido completo pase.
-También quedan por medir geometría exacta de colisión, secuencia de actualización
-del salto, cadencias del tiro, RNG y presentación fina de daño/explosiones.
+
+La prueba `test:gameplay` de retorno con salto/cambio de dirección es intermitente:
+puede sobrepasar al jugador y chocar contra el suelo. Se conserva la aserción y la
+telemetría para investigarlo. También quedan por contrastar geometría completa de
+colisión, cadencias, RNG, audio integral y presentación fina de daño/explosiones.
+Detalles de esta tanda y fuentes: [notas de comportamiento](behavior-notes.md).

@@ -18,16 +18,16 @@ const powers = {
   "&P-JumpAttack": "jumpAttack", "&P-Swim": "swim",
 };
 export function itemDefinition(kind) {
-  if (powers[kind]) return { animation: powers[kind], permanent: true, effect: "power", sound: "key.ogg" };
+  if (powers[kind]) return { animation: powers[kind], permanent: true, effect: "power", sound: "vascolet.ogg" };
   let match = /^&B-Item([1-5])$/.exec(kind);
-  if (match) return { animation: `boomerang${match[1]}`, permanent: true, effect: "fruit", sound: "key.ogg" };
+  if (match) return { animation: `boomerang${match[1]}`, permanent: true, effect: "fruit", sound: "vascolet.ogg" };
   match = /^&Life([1-5])$/.exec(kind);
-  if (match) return { animation: `life${match[1]}`, permanent: true, effect: "vegetable", sound: "energy.ogg" };
+  if (match) return { animation: `life${match[1]}`, permanent: true, effect: "vegetable", sound: "vascolet.ogg" };
   match = /^&Key([1-5])$/.exec(kind);
-  if (match) return { animation: `key${match[1]}`, permanent: true, effect: "food", sound: "key.ogg" };
+  if (match) return { animation: `key${match[1]}`, permanent: true, effect: "food", sound: "vascolet.ogg" };
   return ({
     Energy: { animation: "energy", effect: "energy", sound: "energy.ogg" },
-    FullEnergy: { animation: "fullEnergy", effect: "full", sound: "energy.ogg" },
+    FullEnergy: { animation: "fullEnergy", effect: "full", sound: "extraLife.ogg" },
     ExtraLive: { animation: "extraLive", effect: "life", sound: "extraLife.ogg" },
   })[kind] || null;
 }

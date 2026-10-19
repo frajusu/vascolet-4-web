@@ -1,0 +1,18 @@
+{
+  "scope": "Windows original, new level 1, no powers; read-only physics-position telemetry",
+  "executableSha256": "ae84856da8528fcd1f0e8694398447992f1b2849bbd0e29c8d8541300b85a640",
+  "rate": 60,
+  "start": {"x":272,"y":382},
+  "right": [
+    {"frame":6,"x":276.489563}, {"frame":12,"x":292.054352},
+    {"frame":18,"x":308.054352}, {"frame":24,"x":324.054352},
+    {"frame":30,"x":340.054352}
+  ],
+  "shortJump": [
+    {"frame":6,"y":364.650513}, {"frame":12,"y":349.560486},
+    {"frame":18,"y":343.455048}, {"frame":24,"y":346.455078},
+    {"frame":30,"y":358.455078}
+  ],
+  "tolerancePixels":0.5,
+  "note":"Samples taken about every 0.1 seconds; this tolerance covers capture/polling phase, not full-level equivalence."
+}

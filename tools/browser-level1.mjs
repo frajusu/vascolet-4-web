@@ -34,7 +34,7 @@ try {
   page.on("response",r=>{if(r.status()>=400)report.errors.push(`${r.status()} ${r.url()}`);});
   await page.goto(url);await page.locator("#boot").waitFor({state:"detached"});
   await key("Enter");await key("Enter");await key("Enter");
-  await page.waitForFunction(async()=>Boolean((await import("/js/game.js")).Game.player));
+  await page.waitForFunction(async()=>{const g=(await import("/js/game.js")).Game;return Boolean(g.map&&g.player?.anim&&g.time>0);});
   await key("Escape");
   report.initial=await page.evaluate(async()=>{
     const {Game:g,gameDraw}=await import("/js/game.js");

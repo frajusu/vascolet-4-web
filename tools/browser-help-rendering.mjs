@@ -47,7 +47,7 @@ try {
     return { sign:g.infos[0], player:{x:g.player.x,y:g.player.y}, helper:{x:g.helper.x,y:g.helper.y,phase:g.helper.phase},
       text:g.dlg.text,pages:g.dlg.pages,rects:window.__uiRects };
   });
-  assert.equal(report.first.sign.y,384); assert.equal(report.first.player.y,384);
+  assert.equal(report.first.sign.y,382); assert.equal(report.first.player.y,382);
   for (const r of Object.values(report.first.rects)) assert.ok(r.left>=0&&r.top>=0&&r.right<=512&&r.bottom<=384);
   assert.ok(report.first.helper.y > 100 && report.first.helper.y < 384);
   report.checks.push("Cartel al suelo, retrato y banner completos, texto bitmap y Lampi animado entrando desde arriba");
@@ -85,7 +85,9 @@ try {
   await page.waitForTimeout(80); assert.equal(await page.evaluate(()=>window.__lastFlyFlip),true); await shot("fly-facing-left");
   report.checks.push("Mosca comprobada visualmente en ambos sentidos de movimiento");
 
-  await key("Escape"); await click(256,303); await page.waitForTimeout(150); await shot("options-filter-row-on");
+  await key("Escape"); await shot("pause-native-layout");
+  await click(256,320); await shot("pause-quit-native-layout"); await key("Escape");
+  await click(256,260); await page.waitForTimeout(150); await shot("options-filter-row-on");
   await click(326,306);
   assert.equal(await page.evaluate(async()=>(await import("/js/save.js")).Save.settings().filterTextures),false);
   await shot("options-filter-row-off");

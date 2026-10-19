@@ -7,6 +7,9 @@ import { AnimPlayer } from "../js/sprite.js";
 import { cameraBounds, updateCamera } from "../js/camera.js";
 import { createBoomerang, updateBoomerang } from "../js/projectiles.js";
 import { createEnemy, hitEnemy, updateEnemy, enemySpriteFlip } from "../js/enemies.js";
+import { createEnemyShot, updateEnemyShot } from "../js/enemy-projectiles.js";
+import { LEVEL_SOUNDS, levelSound } from "../js/level-sounds.js";
+import { Audio2 } from "../js/audio.js";
 
 const dom = new JSDOM();
 const xml = text => new dom.window.DOMParser().parseFromString(text, "text/xml");
@@ -16,8 +19,8 @@ const player = () => ({ x: 256, y: 320, face: 1, crouch: false });
 const empty = () => 0;
 const callbacks = (extra = {}) => ({ tileAt: empty, hitEnemy() {}, wallHit() {}, impact() {}, ...extra });
 
-test("standing throw decelerates, reverses around 200 logical pixels and is caught within the observed time window", () => {
-  const p = player(), b = createBoomerang(p);
+test("two-fruit standing throw reaches the observed ~200px and is caught within the original capture window", () => {
+  const p = {...player(),boomerangLevel:2}, b = createBoomerang(p);
   let peak = b.x, elapsed = 0;
   for (; elapsed < 3 && b.life > 0; elapsed += 1 / 60) {
     updateBoomerang(b, p, [], 1 / 60, callbacks()); peak = Math.max(peak, b.x);
@@ -26,6 +29,18 @@ test("standing throw decelerates, reverses around 200 logical pixels and is caug
   assert.ok(elapsed > 1.0 && elapsed < 1.5, `catch time ${elapsed}`);
   assert.equal(b.life, 0);
   assert.equal(b.caught, true, "must be caught, not expire");
+});
+
+test("new-game throws have the native shorter range; fruits increase speed, flight time and range", () => {
+  const peaks=[];
+  for(const level of [0,1,2,5]) {
+    const p={...player(),boomerangLevel:level},b=createBoomerang(p);let peak=b.x;
+    for(let i=0;i<180&&b.life>0;i++){updateBoomerang(b,p,[],1/60,callbacks());peak=Math.max(peak,b.x);}
+    peaks.push(peak-p.x);assert.equal(b.caught,true);
+  }
+  assert.ok(peaks[0]>130&&peaks[0]<160,JSON.stringify(peaks));
+  assert.ok(peaks[2]>180&&peaks[2]<220,JSON.stringify(peaks));
+  assert.ok(peaks.every((p,i)=>!i||p>peaks[i-1]));
 });
 
 test("return catches a player who has changed height and keeps moving", () => {
@@ -41,7 +56,7 @@ test("return catches a player who has changed height and keeps moving", () => {
 
 test("outbound world trajectory is independent of running, jumping, facing and crouching after release", () => {
   const still = player(), moving = player(), a = createBoomerang(still), b = createBoomerang(moving);
-  for (let i = 0; i < 32; i++) {
+  for (let i = 0; i < 32 && a.state === "out"; i++) {
     moving.x += 5; moving.y -= 4; moving.face *= -1; moving.crouch = i % 2 === 0;
     updateBoomerang(a, still, [], 1 / 60, callbacks());
     updateBoomerang(b, moving, [], 1 / 60, callbacks());
@@ -76,7 +91,9 @@ test("swept boomerang collision hits only the nearest enemy and cannot damage th
   const enemies = [createEnemy({ name: "Fly", x: 320, y: 300 }), createEnemy({ name: "Fly", x: 288, y: 300 })];
   const hits = [], b = createBoomerang(player());
   updateBoomerang(b, player(), enemies, .2, callbacks({ hitEnemy(e) { hits.push(e); } }));
-  assert.deepEqual(hits, [enemies[1]]); assert.equal(b.life, 0);
+  assert.deepEqual(hits, [enemies[1]]); assert.equal(b.state, "falling");assert.ok(b.life>0);
+  for(let i=0;i<30;i++)updateBoomerang(b,player(),enemies,1/60,callbacks({hitEnemy(e){hits.push(e);}}));
+  assert.equal(hits.length,1,"the spent boomerang cannot deal another hit while bouncing");
   const blocked = createBoomerang(player()); hits.length = 0;
   updateBoomerang(blocked, player(), [enemies[0]], .2, callbacks({ tileAt: x => x === 9 ? TILE_SOLID : 0,
     hitEnemy(e) { hits.push(e); } }));
@@ -110,7 +127,7 @@ const floorPhysics = (b, dt, gravity = 1500) => {
 };
 const services = { moveBody: floorPhysics, tileAt: () => TILE_SOLID, shoot() {} };
 async function enemy(kind, x = 320) {
-  const e = createEnemy({ name: kind, x, y: kind === "Flower" ? 288 : 304 });
+  const e = createEnemy({ name: kind, x, y: 290 });
   const anims = parseAnims(await asset(`characters/${kind.toLowerCase()}/animData/${kind}.xml`));
   e.anim = new AnimPlayer(anims); e.anim.set("normal"); e.cur = e.anim.frame; e.ground = true;
   return e;
@@ -195,7 +212,7 @@ test("first-area right-facing atlases turn with movement and stationary facing",
 });
 
 test("scorpion waits for the camera, jumps/drops minions, limits reinforcements and finishes its four-second death", async () => {
-  const e=createEnemy({name:"BigScorpion",x:320,y:304},true),p=player();
+  const e=createEnemy({name:"BigScorpion",x:320,y:290},true),p=player();
   e.anim=new AnimPlayer(parseAnims(await asset("characters/big-scorpion-v02/animData/Big-scorpion-v02.xml")));
   const drops=[],shakes=[];let starts=0,defeats=0,explosions=0,inCamera=false;
   const api={...services,inCamera:()=>inCamera,minionCount:()=>drops.length,
@@ -218,4 +235,77 @@ test("scorpion waits for the camera, jumps/drops minions, limits reinforcements 
   for(let i=0;i<4;i++)updateEnemy(e,p,1/60,api);
   assert.equal(e.defeated,true);assert.equal(defeats,1);
   updateEnemy(e,p,1/60,api);assert.equal(defeats,1);
+});
+
+test("verified factory life counts require one damage unit per boomerang; living frog/snail never select death art", async () => {
+  for (const [kind,hp] of [["Frog",4],["Flower",5],["Beetle",10],["Snail",10]]) {
+    const e=await enemy(kind);assert.equal(e.hp,hp);
+    for(let hit=1;hit<=hp;hit++) {
+      e.hurtT=0;assert.equal(hitEnemy(e),true);assert.equal(e.hp,hp-hit);
+      if(e.hp>0) {
+        assert.notEqual(e.anim.cur.name,"damage");assert.notEqual(e.anim.cur.name,"dead");
+        assert.ok(e.cur.sprites.every(s=>s.img!=="snailDamage" && s.img!=="dead"));
+        updateEnemy(e,{x:2000,y:320},1/60,services);
+      }
+    }
+  }
+  const stomp=await enemy("Beetle");hitEnemy(stomp,1,2);assert.equal(stomp.hp,8);
+});
+
+test("flower death stays rooted and finishes its own animation instead of using the flying death impulse", async () => {
+  const e=await enemy("Flower"),x=e.x,y=e.y;e.hp=1;hitEnemy(e);
+  for(let i=0;i<240;i++)updateEnemy(e,player(),1/60,services);
+  assert.equal(e.x,x);assert.equal(e.y,y);assert.equal(e.vx,0);assert.equal(e.vy,0);
+  assert.equal(e.anim.cur.name,"dead");assert.equal(e.anim.finished,true);
+  assert.equal(e.cur.sprites[0].img,"dead04");
+});
+
+test("fly patrol passes through solid terrain without a floor/wall physics callback", async () => {
+  const e=await enemy("Fly");let furthestY=e.y;
+  for(let i=0;i<600;i++) {
+    updateEnemy(e,{x:2000,y:450},1/60,{...services,tileAt:()=>TILE_SOLID,
+      moveBody(){assert.fail("fly must not collide with floor or platforms");}});
+    furthestY=Math.max(furthestY,e.y);
+  }
+  assert.ok(furthestY>450);assert.ok(Math.abs(e.x-e.homeX)<105);
+});
+
+test("flower shots cross solids and survive player contact and four seconds while remaining on camera", () => {
+  const shot=createEnemyShot({behavior:"flower",x:100,y:320,dir:1});
+  assert.equal(shot.vx,240);let hurts=0;
+  for(let i=0;i<360;i++) {
+    const p={x:shot.x+4,y:320,w:8,h:60};
+    updateEnemyShot(shot,p,1/60,{tileAt:()=>TILE_SOLID,camera:{x:shot.x-256,y:0},hurtPlayer(){hurts++;}});
+    assert.equal(shot.removed,false);
+  }
+  assert.ok(hurts>0);assert.ok(shot.x>1500);
+  updateEnemyShot(shot,{x:0,y:0,w:8,h:60},1/60,{tileAt:empty,camera:{x:0,y:0},hurtPlayer(){}});
+  assert.equal(shot.removed,true);
+});
+
+test("snail fireballs use native speed and visible extinction frames at solids, without a lifetime cutoff", async () => {
+  const anim=new AnimPlayer(parseAnims(await asset("characters/fireball/animData/Fireball.xml")));anim.set("normal");
+  const shot=createEnemyShot({behavior:"snail",x:350,y:320,dir:1},anim),p={x:10000,y:0,w:8,h:60};
+  assert.equal(shot.vx,480);
+  const api={tileAt:x=>x===12?TILE_SOLID:0,camera:{x:0,y:0},hurtPlayer(){assert.fail("wall must shield the distant player");}};
+  updateEnemyShot(shot,p,.1,api);assert.equal(shot.ending,true);assert.equal(shot.removed,false);
+  assert.equal(shot.anim.cur.name,"ending");assert.ok(shot.anim.frame.sprites[0].img.startsWith("fireball0"));
+  updateEnemyShot(shot,p,.1,api);assert.equal(shot.removed,false);
+  updateEnemyShot(shot,p,.1,api);assert.equal(shot.removed,true);
+});
+
+test("level sound gains match the effect library and do not alter menu audio settings", () => {
+  const old=Audio2.sfx,calls=[];Audio2.sfx=(...args)=>calls.push(args);
+  try {levelSound("footStep1");levelSound("jumpAir");levelSound("v_death1");}
+  finally {Audio2.sfx=old;}
+  assert.deepEqual(calls.map(c=>c[1]),[.1,.4,.25]);
+  assert.equal(LEVEL_SOUNDS.enemy_boomerang_hit,.5);assert.equal(LEVEL_SOUNDS.save,.5);
+});
+
+test("camera accumulates native 60px look-ahead and does not chase upward during a low-area jump", async () => {
+  const map=parseTMX(await asset("data/maps/level1.tmx"));
+  const g={map,player:{x:272,y:384,ground:true},camX:0,camY:0};updateCamera(g,0,true);
+  g.player.x=360;updateCamera(g,1/60);assert.equal(g.camX,164);
+  g.player.ground=false;g.player.y=300;updateCamera(g,1/60);assert.equal(g.camY,96);
+  g.player.x=340;updateCamera(g,1/60);assert.equal(g.cameraTrack.leadX,40);
 });

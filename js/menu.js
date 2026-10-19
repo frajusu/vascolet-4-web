@@ -403,10 +403,15 @@ export function achDraw(ctx) {
 // Salir pide confirmación con crop "quitConfirmation" + Si/No.
 let pauseAtlas = null, pauseSel = 0, pauseConfirm = false, pauseConfirmSel = 1, onPauseAction = null;
 const PAUSE_BTN = [
-  { id: "volver", up: "volverUp", over: "volverOver", x: 201, y: 230 },
-  { id: "opciones", up: "opcionesUp", over: "opcionesOver", x: 201, y: 288 },
-  { id: "salir", up: "salirUp", over: "salirOver", x: 201, y: 346 },
+  { id: "volver", up: "volverUp", over: "volverOver", x: 201, y: 205 },
+  { id: "opciones", up: "opcionesUp", over: "opcionesOver", x: 201, y: 245 },
+  { id: "salir", up: "salirUp", over: "salirOver", x: 201, y: 305 },
 ];
+// QuitConfirmDialog: manager (256,192), children (0,100)/(0,137),
+// minus the shared menu-button pivot (55,15).
+export const PAUSE_CONFIRM_RECTS = Object.freeze([
+  { x: 201, y: 277, w: 110, h: 30 }, { x: 201, y: 314, w: 110, h: 30 },
+]);
 
 export async function pauseInit(action) {
   onPauseAction = action;
@@ -426,13 +431,13 @@ function pauseBtnRect(b) {
 export function pauseUpdate() {
   const m = Input.mouse;
   if (pauseConfirm) {
-    if (Input.pressed.has("left")) { pauseConfirmSel = 0; Audio2.sfx("assets/audio/button.wav"); }
-    if (Input.pressed.has("right")) { pauseConfirmSel = 1; Audio2.sfx("assets/audio/button.wav"); }
+    if (Input.pressed.has("left") || Input.pressed.has("up")) { pauseConfirmSel = 0; Audio2.sfx("assets/audio/button.wav"); }
+    if (Input.pressed.has("right") || Input.pressed.has("down")) { pauseConfirmSel = 1; Audio2.sfx("assets/audio/button.wav"); }
     if (m.inside) {
-      if (inRect(m.x, m.y, { x: 196, y: 272, w: 110, h: 30 })) pauseConfirmSel = 0;
-      if (inRect(m.x, m.y, { x: 316, y: 272, w: 110, h: 30 })) pauseConfirmSel = 1;
+      const hit = PAUSE_CONFIRM_RECTS.findIndex(r => inRect(m.x, m.y, r));
+      if (hit >= 0) pauseConfirmSel = hit;
       if (Input.pressed.has("click")) {
-        if (!inRect(m.x, m.y, { x: 196, y: 272, w: 110, h: 30 }) && !inRect(m.x, m.y, { x: 316, y: 272, w: 110, h: 30 })) return;
+        if (hit < 0) return;
         if (pauseConfirmSel === 0) onPauseAction && onPauseAction("salir");
         else { pauseConfirm = false; return; }
         return;
@@ -480,8 +485,8 @@ export function pauseDraw(ctx) {
     const sSi = atlas && atlas[pauseConfirmSel === 0 ? "siOver" : "siUp"];
     const sNo = atlas && atlas[pauseConfirmSel === 1 ? "noOver" : "noUp"];
     ctx.imageSmoothingEnabled = false;
-    if (msheet && sSi) ctx.drawImage(msheet, sSi.x, sSi.y, sSi.w, sSi.h, 196, 272, sSi.w, sSi.h);
-    if (msheet && sNo) ctx.drawImage(msheet, sNo.x, sNo.y, sNo.w, sNo.h, 316, 272, sNo.w, sNo.h);
+    if (msheet && sSi) ctx.drawImage(msheet, sSi.x, sSi.y, sSi.w, sSi.h, PAUSE_CONFIRM_RECTS[0].x, PAUSE_CONFIRM_RECTS[0].y, sSi.w, sSi.h);
+    if (msheet && sNo) ctx.drawImage(msheet, sNo.x, sNo.y, sNo.w, sNo.h, PAUSE_CONFIRM_RECTS[1].x, PAUSE_CONFIRM_RECTS[1].y, sNo.w, sNo.h);
     ctx.imageSmoothingEnabled = true;
     return;
   }
