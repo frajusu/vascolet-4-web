@@ -254,3 +254,12 @@ resuelto ni se elimina la aserción. El test conserva muestras de esa trayectori
 El bot exploratorio actual llegó a x=4636 con SustainJump y un checkpoint, pero
 se trabó. El recorrido original llegó al primer checkpoint/árbol y no terminó.
 No se acredita comparación completa de nivel ni comparación auditiva integral.
+
+## Séptima corrección: monturas y rutas automáticas — 23/10/2026
+
+La siguiente tanda respeta los jugadores Hormiga/Mariposa de los TMX, implementa
+sus controles/animaciones, las rutas automáticas numeradas y las áreas Exit reales.
+Se añadió tinte rojo al recibir daño y se eliminó el redondeo prematuro de la
+cámara normal. Fuentes, constantes, pruebas, apoyo de modelos gratuitos y el
+inventario de pendientes de los 18 niveles están en
+[mecánicas por nivel](level-mechanics.md).

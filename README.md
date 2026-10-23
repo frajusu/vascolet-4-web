@@ -79,6 +79,12 @@ proyectiles, alcance del boomerang según frutas, física inicial y panel de pau
 [Estado y alcance de su validación](docs/level1-status.md): todavía está pendiente
 cerrar un recorrido continuo completo y la equivalencia exacta con el original.
 
+Los niveles **2/5 (hormiga)** y **8/14 (mariposa)** ya tienen su base específica
+de movimiento, animaciones, cámara automática y salida real. Se corrigió el
+destello rojo de daño y el seguimiento fraccional de la cámara. El
+[inventario de mecánicas de los 18 niveles](docs/level-mechanics.md) distingue
+lo implementado de natación, trampas y jefes que aún faltan.
+
 ### Pulido de animales
 
 [Flujo de comparación con el original](docs/enemy-fidelity-workflow.md): captura
@@ -91,6 +97,8 @@ centrado del canvas durante las cinemáticas.
 orientación de moscas y filtrado persistente con capturas de ambos modos.
 `npm run test:level1` comprueba los objetos, reanudación y pelea/victoria del
 escorpión sobre el mapa real mediante colocaciones controladas explícitas.
+`npm run test:stage-modes` comprueba segmentos iniciales de las cuatro monturas,
+salidas controladas, el destello rojo y la carga inicial de los 18 mapas.
 La [herramienta nativa aislada](tools/native-isolated/README.md) permite observar
 una copia del original en un escritorio invisible, con controles privados y sin
 seleccionar ese escritorio. Su smoke de marcha/salto pasó; no recorre el nivel completo.

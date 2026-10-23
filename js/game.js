@@ -17,6 +17,7 @@ import { progressFromItems, itemDefinition, PLAYER_PHYSICS } from "./progression
 import { levelSound } from "./level-sounds.js";
 import { createEnemyShot, updateEnemyShot } from "./enemy-projectiles.js";
 import { integrateAxis, MAP_SKIN, subjectY } from "./physics.js";
+import { MOUNTED, playerMode, moveMountedPlayer, touchesExit, constrainToAutoCamera } from "./stage-modes.js";
 
 const W = 512, H = 384, TILE = 32;
 const MUS = "assets/audio/music/win/";
@@ -145,6 +146,7 @@ export async function loadLevel(n, fresh = true) {
   G.start = null; G.player = null; G.time = 0;
   G.camX = G.camY = G.prevCamX = G.prevCamY = 0;
   G.bossHP = 0; G.bossMax = 1; G.bossHead = null; G.bossVisible = false;
+  G.exits = [];
   const levelPath = `assets/data/maps/level${n}.tmx`;
   const doc = await loadXML(levelPath);
   G.map = parseTMX(doc);
@@ -185,6 +187,7 @@ export async function loadLevel(n, fresh = true) {
   }
   G.checkpointConsumed = [...(savedRun?.consumed || [])];
   for (const o of group(G.map, "Items")) {
+    if (o.name === "Exit") { G.exits.push({ ...o }); continue; }
     const id = `${n}:${o.name}:${o.x}:${o.y}`, definition = itemDefinition(o.name);
     G.items.push({ id, kind: o.name, definition, x: o.x + 16, y: o.y + 16,
       taken: Save.hasItem(o.name) || G.checkpointConsumed.includes(id), t: 0, anim: null });
@@ -195,6 +198,9 @@ export async function loadLevel(n, fresh = true) {
     inv: 0, fireCd: 0, attack: null, damage: null, run: false, tapD: 0, tapT: -9, crouch: false,
     anim: null, animName: "", cur: null,
   };
+  G.player.mode = playerMode(G.map);
+  const mounted = MOUNTED[G.player.mode];
+  if (mounted) { G.player.w = mounted.width; G.player.vy = mounted.initialVY; }
   G.checkpoint = G.start ? { x: G.start.x, y: G.start.y } : { x: 256, y: 352 };
   if (savedRun && savedRun.checkpoint.x >= 0 && savedRun.checkpoint.x < G.gw * TILE &&
     savedRun.checkpoint.y >= 0 && savedRun.checkpoint.y < G.gh * TILE) {
@@ -208,6 +214,8 @@ export async function loadLevel(n, fresh = true) {
   }
   if (!G.dialogFont) G.dialogFont = await loadBitmapFont("winnie14-or");
   G.player.anim = new AnimPlayer(Game.charCache.get("Vascolet").anims);
+  G.player.animName = mounted?.stand || "stand";
+  G.player.anim.set(G.player.animName);
   // carteles de ayuda/guardado (signposts del original)
   try {
     await loadChar("carteles-ayuda-guardar");
@@ -270,7 +278,7 @@ const EPS = 1e-7;
 function moveBody(b, dt, gravity = GRAV) {
   b.hitWall = false;
   const skin = b.skin ?? 0;
-  const vertical = integrateAxis(b.vy, gravity, 0, 500, dt);
+  const vertical = integrateAxis(b.vy, gravity, 0, b.maxFall ?? 500, dt);
   b.vy = vertical.velocity;
   const prevX = b.x;
   const dx = b.stepX ?? b.vx * dt; b.stepX = undefined;
@@ -359,7 +367,8 @@ export function gameUpdate(dt) {
   G.shakeT = Math.max(0, G.shakeT - dt);
   if (G.gameover) return;
   if (G.won) {
-    p.vx = 0; moveBody(p, dt); p.anim.update(dt); p.cur = p.anim.frame;
+    p.vx = 0; if (MOUNTED[p.mode]) p.vy = 0;
+    moveBody(p, dt, MOUNTED[p.mode] ? 0 : GRAV); p.anim.update(dt); p.cur = p.anim.frame;
     for (const fx of G.effects) fx.anim.update(dt);
     G.effects = G.effects.filter(fx => !fx.anim.finished);
     G.winTimer = Math.max(0, G.winTimer - dt);
@@ -383,55 +392,60 @@ export function gameUpdate(dt) {
   const jumpHeld = () => down("z") || down("s");
   const jumpPressed = () => pressed.has("z") || pressed.has("s");
   const firePressed = () => pressed.has("x") || pressed.has("a");
+  const mounted = MOUNTED[p.mode];
+  const wasGround = p.ground, fallV = p.vy;
+  p.hurt = false;
   let dir = 0;
   if (down("left")) dir -= 1;
   if (down("right")) dir += 1;
-  const now = G.time;
-  if (!p.damage && (pressed.has("left") || pressed.has("right"))) {
-    const d = pressed.has("left") ? -1 : 1;
-    if (G.abilities.run && p.tapD === d && now - p.tapT < 0.3) p.run = true;
-    p.tapD = d; p.tapT = now;
-  }
-  if (dir === 0 || !G.abilities.run) p.run = false;
-  if (dir && !p.attack && !p.damage) p.face = dir;
-  if (p.damage) p.vx = p.damage.phase === "air" ? -p.damage.face * DAMAGE_MOTION.speed : 0;
-  else {
-    const axis = integrateAxis(p.vx, dir * (p.run ? 4800 : PLAYER_PHYSICS.acceleration),
-      p.ground ? PLAYER_PHYSICS.friction : 0, p.run ? RUN : MOVE, dt);
-    p.vx = axis.velocity; p.stepX = axis.displacement;
-  }
-  p.crouch = !p.damage && down("down") && p.ground;
-  if (p.crouch || (p.attack && p.ground)) { p.vx = 0; p.stepX = 0; }
-  if (p.damage) p.buffer = 0;
-  else if (jumpPressed()) p.buffer = 0.12; else p.buffer = Math.max(0, p.buffer - dt);
-  p.coyote = p.ground ? 0.1 : Math.max(0, p.coyote - dt);
-  p.dropT = Math.max(0, p.dropT - dt);
-  if (!p.damage && p.ground && down("down") && p.buffer > 0) {
-    const supports = [];
-    for (let x = Math.floor((p.x - p.w / 2 + EPS) / TILE); x <= Math.floor((p.x + p.w / 2 - EPS) / TILE); x++)
-      supports.push(tileAt(x, Math.floor((p.y + (p.skin ?? 0) + EPS) / TILE)));
-    if (supports.some(f => f & TILE_UP) && !supports.some(f => f & TILE_SOLID)) {
-      p.dropT = .2; p.y += 2; p.vy = 60; p.ground = false; p.coyote = 0; p.buffer = 0;
+  if (mounted) {
+    moveMountedPlayer(p, controls, dt, { moveBody, jumpSound: () => levelSound("jumpAir") });
+  } else {
+    const now = G.time;
+    if (!p.damage && (pressed.has("left") || pressed.has("right"))) {
+      const d = pressed.has("left") ? -1 : 1;
+      if (G.abilities.run && p.tapD === d && now - p.tapT < 0.3) p.run = true;
+      p.tapD = d; p.tapT = now;
     }
+    if (dir === 0 || !G.abilities.run) p.run = false;
+    if (dir && !p.attack && !p.damage) p.face = dir;
+    if (p.damage) p.vx = p.damage.phase === "air" ? -p.damage.face * DAMAGE_MOTION.speed : 0;
+    else {
+      const axis = integrateAxis(p.vx, dir * (p.run ? 4800 : PLAYER_PHYSICS.acceleration),
+        p.ground ? PLAYER_PHYSICS.friction : 0, p.run ? RUN : MOVE, dt);
+      p.vx = axis.velocity; p.stepX = axis.displacement;
+    }
+    p.crouch = !p.damage && down("down") && p.ground;
+    if (p.crouch || (p.attack && p.ground)) { p.vx = 0; p.stepX = 0; }
+    if (p.damage) p.buffer = 0;
+    else if (jumpPressed()) p.buffer = 0.12; else p.buffer = Math.max(0, p.buffer - dt);
+    p.coyote = p.ground ? 0.1 : Math.max(0, p.coyote - dt);
+    p.dropT = Math.max(0, p.dropT - dt);
+    if (!p.damage && p.ground && down("down") && p.buffer > 0) {
+      const supports = [];
+      for (let x = Math.floor((p.x - p.w / 2 + EPS) / TILE); x <= Math.floor((p.x + p.w / 2 - EPS) / TILE); x++)
+        supports.push(tileAt(x, Math.floor((p.y + (p.skin ?? 0) + EPS) / TILE)));
+      if (supports.some(f => f & TILE_UP) && !supports.some(f => f & TILE_SOLID)) {
+        p.dropT = .2; p.y += 2; p.vy = 60; p.ground = false; p.coyote = 0; p.buffer = 0;
+      }
+    }
+    let launched = false;
+    if (!p.damage && p.coyote > 0 && p.buffer > 0) {
+      p.vy = -JUMP; p.buffer = 0; p.coyote = 0; p.ground = false; p.doubleUsed = false;
+      launched = true;
+      levelSound("jumpAir");
+      dust(p.x, p.y, 6);
+    }
+    else if (!p.damage && !p.ground && !p.dropT && jumpPressed() && G.abilities.doubleJump && !p.doubleUsed) {
+      p.vy = -PLAYER_PHYSICS.secondJump; p.doubleUsed = true; p.buffer = 0;
+      launched = true;
+      levelSound("double_jump");
+    }
+    // Native V4: (!jumpHeld OR !canSustainJumpEnabled) AND vy < -240.
+    // Preserve the entry impulse for one step before applying the inherited cut.
+    if (!p.damage && !launched && (!G.abilities.sustainJump || !jumpHeld()) && p.vy < -PLAYER_PHYSICS.cutJump) p.vy = -PLAYER_PHYSICS.cutJump;
+    moveBody(p, dt, p.damage ? DAMAGE_MOTION.gravity : GRAV);
   }
-  let launched = false;
-  if (!p.damage && p.coyote > 0 && p.buffer > 0) {
-    p.vy = -JUMP; p.buffer = 0; p.coyote = 0; p.ground = false; p.doubleUsed = false;
-    launched = true;
-    levelSound("jumpAir");
-    dust(p.x, p.y, 6);
-  }
-  else if (!p.damage && !p.ground && !p.dropT && jumpPressed() && G.abilities.doubleJump && !p.doubleUsed) {
-    p.vy = -PLAYER_PHYSICS.secondJump; p.doubleUsed = true; p.buffer = 0;
-    launched = true;
-    levelSound("double_jump");
-  }
-  // Native V4: (!jumpHeld OR !canSustainJumpEnabled) AND vy < -240.
-  // Preserve the entry impulse for one step before applying the inherited cut.
-  if (!p.damage && !launched && (!G.abilities.sustainJump || !jumpHeld()) && p.vy < -PLAYER_PHYSICS.cutJump) p.vy = -PLAYER_PHYSICS.cutJump;
-  p.hurt = false;
-  const wasGround = p.ground, fallV = p.vy;
-  moveBody(p, dt, p.damage ? DAMAGE_MOTION.gravity : GRAV);
   if (p.ground) p.doubleUsed = false;
   advancePlayerDamage(p, dt);
   if (!wasGround && p.ground && fallV > 300) dust(p.x, p.y, 9);
@@ -439,13 +453,13 @@ export function gameUpdate(dt) {
   p.inv = Math.max(0, p.inv - dt);
   if (p.hurt) hurtPlayer();
   if (!p.damage && firePressed() && p.fireCd <= 0 && !p.attack && G.booms.length < G.abilities.maxBoomerangs) {
-    const name = !p.ground && p.anim.has("jumpAttack") ? "jumpAttack"
-      : p.crouch && p.anim.has("crouchAttack") ? "crouchAttack" : "standAttack";
+    const name = mounted?.attack || (!p.ground && p.anim.has("jumpAttack") ? "jumpAttack"
+      : p.crouch && p.anim.has("crouchAttack") ? "crouchAttack" : "standAttack");
     if (p.anim.has(name)) {
-      p.attack = { name, released: false, crouch: p.crouch, face: p.face };
+      p.attack = { name, released: false, crouch: p.crouch, face: p.face, time: 0 };
       p.animName = name; p.anim.set(name, { restart: true });
       p.fireCd = .15;
-      if (p.crouch) releaseBoomerang();
+      if (p.crouch || mounted) releaseBoomerang();
     }
   }
   p.fireCd = Math.max(0, p.fireCd - dt);
@@ -476,11 +490,12 @@ export function gameUpdate(dt) {
   updateEnemyShots(dt);
   for (const e of G.enemies) {
     if (e.hp <= 0 || Math.abs(p.x - e.x) >= (p.w + e.w) / 2 || p.y <= e.y - e.h || p.y - (p.crouch ? 28 : p.h) >= e.y) continue;
-    if (G.abilities.jumpAttack && !e.boss && e.behavior !== "flower" && p.vy > 0 && p.prevY <= e.y - e.h + 10) {
+    if (!mounted && G.abilities.jumpAttack && !e.boss && e.behavior !== "flower" && p.vy > 0 && p.prevY <= e.y - e.h + 10) {
       damageEnemy(e, p.face, 2); p.vy = -280; p.ground = false;
     } else hurtPlayer();
   }
   updateCamera(G, dt);
+  if (constrainToAutoCamera(G, moveBody)) G.energy = 0;
   for (const item of G.items) {
     if (!item.taken) item.anim?.update(dt);
     if (item.taken || Math.abs(p.x - item.x) > 24 || p.y < item.y - 18 || p.y - p.h > item.y + 18) continue;
@@ -536,10 +551,11 @@ export function gameUpdate(dt) {
   if (p.attack) want = p.attack.name;
   // jumpAttack is the XML's airborne BOOMERANG throw, not the stomp power.
   // Only an explicit fire input may select it; an ordinary apex falls normally.
+  else if (mounted) want = p.mode === "ant" && p.ground && dir ? mounted.walk : mounted.stand;
   else if (!p.ground) want = p.doubleUsed ? "runJumpMid" : p.vy < -120 ? (p.run && p.anim.has("runJump") ? "runJump" : "standJump") : p.vy < 0 ? "standJumpMid" : "fall";
   else if (p.crouch && p.anim.has("crouch")) want = "crouch";
   else if (dir !== 0) want = p.run ? "run" : "walk";
-  if (p.damage) want = ({ air: "damage", fall: "damageFall", rise: "damageRaise" })[p.damage.phase];
+  if (p.damage) want = mounted?.damage || ({ air: "damage", fall: "damageFall", rise: "damageRaise" })[p.damage.phase];
   if (want !== p.animName && p.anim.has(want)) { p.animName = want; p.anim.set(want); }
   const r = p.anim.update(dt);
   p.cur = r.frame;
@@ -548,7 +564,12 @@ export function gameUpdate(dt) {
     if (event.type === "MakeEffect") dust(p.x, p.y - 4);
     if (p.attack && event.animation === p.attack.name && event.type === "Custom") releaseBoomerang();
   }
-  if (p.attack && (p.anim.finished || (p.attack.name === "jumpAttack" && (p.ground || p.anim.i >= p.anim.cur.loop)))) p.attack = null;
+  if (p.attack) {
+    p.attack.time += dt;
+    const finished = p.mode === "butterfly" ? p.attack.time >= .25
+      : p.anim.finished || (p.attack.name === "jumpAttack" && (p.ground || p.anim.i >= p.anim.cur.loop));
+    if (finished) p.attack = null;
+  }
   if (p.damage?.phase === "rise" && (p.animName === "damageRaise" ? p.anim.finished : p.damage.time >= .2)) p.damage = null;
   // muerte: energia o caida al vacio -> pierde vida, respawn o game over
   if ((G.energy <= 0 || p.y > G.gh * TILE + 80) && !G.won) {
@@ -559,9 +580,9 @@ export function gameUpdate(dt) {
     } else {
       G.energy = 100;
       const s = G.checkpoint || G.start;
-      p.x = s.x; p.y = s.y; p.vx = 0; p.vy = 0; p.inv = 2;
+      p.x = s.x; p.y = s.y; p.vx = 0; p.vy = mounted?.initialVY || 0; p.inv = 2;
       p.attack = null; p.damage = null; p.run = false; p.ground = false; p.coyote = 0; p.buffer = 0; p.dropT = 0; p.doubleUsed = false; p.tapT = -9;
-      p.crouch = false; p.fireCd = 0; p.animName = "stand"; p.anim.restart("stand"); p.cur = p.anim.frame;
+      p.crouch = false; p.fireCd = 0; p.animName = mounted?.stand || "stand"; p.anim.restart(p.animName); p.cur = p.anim.frame;
       G.booms = []; G.shots = []; G.effects = []; G.parts = []; G.dlg = null; G.helper = null; G.shakeT = 0; G.inputFrames = [];
       G.bossVisible = false; G.bossHP = 0;
       G.enemies = G.spawnDescriptors.map(o => attachEnemyAnimation(createEnemy(o, BOSSES.has(o.name))));
@@ -578,7 +599,7 @@ export function gameUpdate(dt) {
       const bosses = G.enemies.filter(e => e.kind === G.win.target);
       if (bosses.length && bosses.every(e => e.behavior === "scorpion-boss" ? e.defeated : e.hp <= 0)) finishLevel();
     } else if (G.win.kind === "exit") {
-      if (p.x > G.gw * TILE - 64) {
+      if (touchesExit(p, G.exits)) {
         finishLevel();
       }
     }
@@ -630,7 +651,7 @@ function finishLevel() {
   const G = Game;
   G.won = true; G.winSent = false; G.winTimer = Math.max(0, Number(G.map.props.winEffect?.split(",")[1]) || 0);
   G.player.attack = null; G.player.damage = null; G.player.inv = 0; G.player.vx = 0;
-  G.player.anim.set("stand"); G.player.cur = G.player.anim.frame;
+  G.player.anim.set(MOUNTED[G.player.mode]?.stand || "stand"); G.player.cur = G.player.anim.frame;
   G.booms = []; G.shots = []; G.dlg = null; Save.completeLevel(G.level);
   void Audio2.music(MUS + (G.map.props["music,win"] || "win_level.ogg"));
   if (!G.winTimer) { G.winSent = true; G.events.push({ type: "win" }); }
@@ -662,7 +683,7 @@ function damageEnemy(e, direction, damage = 1) {
 function hurtPlayer() {
   const G = Game, p = G.player;
   if (p.inv > 0 || G.won) return;
-  G.energy = Math.max(0, G.energy - 100 / G.maxHearts); p.inv = 1;
+  G.energy = Math.max(0, G.energy - 100 / G.maxHearts); p.inv = MOUNTED[p.mode] ? 1.5 : 1;
   if (G.energy < 1e-7) G.energy = 0;
   beginPlayerDamage(p);
   levelSound("enemy_hit"); levelSound("v_death1");
@@ -774,7 +795,8 @@ export function gameDraw(ctx, alpha = 1) {
       ctx.save();
       if (e.behavior === "scorpion-boss" && e.state === "dying" && e.stateTime >= 3) ctx.filter = "brightness(0) invert(1)";
       drawAnimFrame(ctx, c.img, c.atlas, e.cur, x(e) - cx, y(e) - cy,
-        { flip: enemySpriteFlip(e), round: false, alpha: e.hp > 0 && e.hurtT > 0 ? .85 : 1 });
+        { flip: enemySpriteFlip(e), round: false,
+          tint: e.hurtT > 0 && Math.floor(e.hurtT / (1 / 30)) % 2 ? "rgba(255,32,32,0.7)" : null });
       ctx.restore();
     } else {
       ctx.fillStyle = "#ffd75e";

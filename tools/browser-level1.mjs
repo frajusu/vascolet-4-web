@@ -33,8 +33,9 @@ try {
   page.on("console",m=>{if(["error","warning"].includes(m.type()))report.errors.push(m.text());});
   page.on("response",r=>{if(r.status()>=400)report.errors.push(`${r.status()} ${r.url()}`);});
   await page.goto(url);await page.locator("#boot").waitFor({state:"detached"});
+  await page.evaluate(async()=>{window.__game=(await import("/js/game.js")).Game;});
   await key("Enter");await key("Enter");await key("Enter");
-  await page.waitForFunction(async()=>{const g=(await import("/js/game.js")).Game;return Boolean(g.map&&g.player?.anim&&g.time>0);});
+  await page.waitForFunction(()=>Boolean(window.__game.player?.anim&&window.__game.time>0));
   await key("Escape");
   report.initial=await page.evaluate(async()=>{
     const {Game:g,gameDraw}=await import("/js/game.js");
@@ -103,7 +104,7 @@ try {
     for(let i=0;i<365;i++){gameUpdate(1/60);Input.endStep();}
   });
   await key("Escape");await page.waitForTimeout(150);await key("Enter");
-  await page.waitForFunction(async()=>{const g=(await import("/js/game.js")).Game;return g.level===2&&Boolean(g.player);});
+  await page.waitForFunction(()=>window.__game.level===2&&Boolean(window.__game.player?.anim));
   report.next=await page.evaluate(async()=>{const {Game:g}=await import("/js/game.js");const {Save}=await import("/js/save.js");return {level:g.level,lives:g.lives,unlocked:Save.unlocked(),completed:Save.read().completed,abilities:g.abilities};});
   assert.equal(report.next.lives,4);assert.equal(report.next.unlocked,2);assert.ok(report.next.completed.includes(1));
   await shot("level2-unlocked");report.checks.push("Defeated sequence, six-second win effect, native goto:level2 action and persistent unlock");

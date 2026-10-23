@@ -27,6 +27,20 @@ export function drawAtlas(ctx, atlasImg, entry, dx, dy, opts = {}) {
 
 // Draw only this frame's sprites, in XML order. Empty frames draw nothing.
 // atlasImg may also be a Map or resolver(sourceImage) for multi-page libraries.
+const tintedImages = new WeakMap();
+function tintImage(image, tint) {
+  let cache = tintedImages.get(image);
+  if (!cache) tintedImages.set(image, cache = new Map());
+  if (!cache.has(tint)) {
+    const canvas = document.createElement("canvas"); canvas.width = image.width; canvas.height = image.height;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(image, 0, 0); ctx.globalCompositeOperation = "source-atop";
+    ctx.fillStyle = tint; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    cache.set(tint, canvas);
+  }
+  return cache.get(tint);
+}
+
 export function drawAnimFrame(ctx, atlasImg, atlas, frame, dx, dy, opts = {}) {
   const sprites = frame?.sprites ?? (frame?.img ? [frame] : []);
   let count = 0;
@@ -37,8 +51,9 @@ export function drawAnimFrame(ctx, atlasImg, atlas, frame, dx, dy, opts = {}) {
     for (const sp of sprites) {
       const entry = sp.img && atlas?.[sp.img];
       if (!entry) continue;
-      const image = typeof atlasImg === "function" ? atlasImg(entry.img)
+      let image = typeof atlasImg === "function" ? atlasImg(entry.img)
         : atlasImg instanceof Map ? atlasImg.get(entry.img) : atlasImg;
+      if (opts.tint && image) image = tintImage(image, opts.tint);
       if (drawAtlas(ctx, image, entry, sp.ox ?? 0, sp.oy ?? 0, { ...sp, ox: 0, oy: 0, round: false })) count++;
     }
   } finally { ctx.restore(); }

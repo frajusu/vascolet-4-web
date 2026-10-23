@@ -1,3 +1,4 @@
+import { autoCameraPath, advanceAutoCamera } from "./stage-modes.js";
 // TMX Camera lines bound the playable regions, not the (much taller) tile canvas.
 // Named point markers belong to scrolling stages and are not solid barriers.
 export function cameraBounds(map, subject, width = 512, height = 384) {
@@ -19,10 +20,20 @@ export function cameraBounds(map, subject, width = 512, height = 384) {
 export function updateCamera(game, dt, snap = false) {
   const p = game.player, b = cameraBounds(game.map, p);
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(v, hi));
+  if (snap) {
+    const points = autoCameraPath(game.map);
+    game.autoCamera = points.length > 1 ? { points, x: points[0].x, y: points[0].y, index: 1 } : null;
+  }
+  if (game.autoCamera) {
+    advanceAutoCamera(game.autoCamera, dt);
+    game.camX = clamp(game.autoCamera.x - 256, 0, b.maxX);
+    game.camY = clamp(game.autoCamera.y - 192, 0, b.maxY);
+    return;
+  }
   // GameSubjectCamera::updateOnSubject accumulates displacement, clamped to
   // +/-60. It is not an exponential chase behind the player's movement.
-  if (snap || !game.cameraTrack) game.cameraTrack = { lastX: Math.floor(p.x), leadX: 0, floorY: p.y };
-  const track = game.cameraTrack, px = Math.floor(p.x);
+  if (snap || !game.cameraTrack) game.cameraTrack = { lastX: p.x, leadX: 0, floorY: p.y };
+  const track = game.cameraTrack, px = p.x;
   track.leadX = clamp(track.leadX + px - track.lastX, -60, 60); track.lastX = px;
   if (p.ground || p.y > track.floorY) track.floorY = p.y;
   const jumpCorrection = Math.max(0, track.floorY - p.y) * .5;

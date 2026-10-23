@@ -387,6 +387,64 @@ test("the stomp power never triggers the airborne boomerang animation at a jump 
   tick(60);assert.equal(Game.player.attack,null);
 });
 
+async function realStage(number) {
+  Save.clear();Input.reset();clearAssets();
+  Game.chars=JSON.parse(await readFile(new URL("../assets/chars.json",import.meta.url),"utf8"));
+  const fixture=fixtures.get(`assets/data/maps/level${number}.tmx`);
+  fixtures.delete(`assets/data/maps/level${number}.tmx`);
+  try { await loadLevel(number); }
+  finally { if(fixture!==undefined)fixtures.set(`assets/data/maps/level${number}.tmx`,fixture); }
+}
+
+test("mounted stages load their own mode/poses and numbered auto-camera path, with Exit separated from pickups", async () => {
+  for(const [number,mode,pose] of [[2,"ant","withAntStand"],[5,"ant","withAntStand"],
+    [8,"butterfly","flyingWithButterfly"],[14,"butterfly","flyingWithButterfly"]]) {
+    await realStage(number);
+    assert.equal(Game.player.mode,mode);assert.equal(Game.player.anim.cur.name,pose);
+    assert.equal(Game.autoCamera.points.length,2);assert.equal(Game.exits.length,1);
+    assert.ok(!Game.items.some(i=>i.kind==="Exit"));assert.equal(Game.abilities.run,false);
+    const {x,y}=Game.autoCamera;tick(60);
+    assert.ok(Math.abs(Math.hypot(Game.autoCamera.x-x,Game.autoCamera.y-y)-60)<1e-7);
+  }
+});
+
+test("ant jump and attack are independent of normal-player powers; scroll crush resets the stage without crossing rock", async () => {
+  await realStage(2);Game.enemies=[];Game.infos=[];
+  Game.grid.fill(0);Game.grid.fill(TILE_SOLID,14*Game.gw,15*Game.gw);tick();
+  const startY=Game.player.y;Input.pressed.add("z");tick(3);Input.reset();
+  let apex=Game.player.y;
+  for(let i=0;i<60;i++){tick();apex=Math.min(apex,Game.player.y);}
+  assert.ok(startY-apex>80,"ant must not inherit the unpowered 40px jump cut");
+  assert.equal(Game.player.ground,true);assert.equal(Game.player.doubleUsed,false);
+  Input.pressed.add("x");tick(3);
+  assert.equal(Game.player.animName,"withAntAttack");assert.equal(Game.booms.length,1,"mounted attack releases directly");
+  Object.assign(Game.player,{x:336,y:446,vx:0,vy:0,damage:null});Input.reset();Game.inputFrames=[];
+  for(const row of [12,13])Game.grid[row*Game.gw+11]=TILE_SOLID;
+  Game.autoCamera.x=611;const lives=Game.lives;tick();
+  assert.equal(Game.lives,lives-1);assert.equal(Game.player.x,Game.start.x);
+  assert.equal(Game.player.mode,"ant");assert.equal(Game.autoCamera.x,352);
+});
+
+test("butterfly flaps again in midair, keeps its damage pose, and only the real Exit rectangle wins", async () => {
+  await realStage(8);Game.enemies=[];Game.infos=[];Game.grid.fill(0);
+  Input.pressed.add("x");tick(3);Input.reset();tick(10);
+  assert.equal(Game.player.animName,"flyingWithButterflyAttack");assert.ok(Game.player.attack);
+  tick(6);assert.equal(Game.player.attack,null,"native returnToPrevAnim timer, not the shorter XML end");
+  Input.pressed.add("z");tick(3);Input.reset();tick(25);
+  assert.ok(Game.player.vy>0);
+  Input.pressed.add("z");tick(3);assert.ok(Game.player.vy<0,"a second flap must work without DoubleJump");
+  assert.equal(Game.player.doubleUsed,false);Input.reset();
+  const fly=createEnemy({name:"Fly",x:Game.player.x-16,y:Game.player.y-30});fly.active=true;
+  Game.enemies=[fly];tick();assert.equal(Game.player.damage?.phase,"mounted");
+  tick();assert.equal(Game.player.animName,"flyingWithButterflyDamage");Game.enemies=[];tick(40);
+  assert.equal(Game.player.damage,null);
+  Game.autoCamera=null;Game.player.damage=null;Game.inputFrames=[];
+  const exit=Game.exits[0];Object.assign(Game.player,{x:exit.x+16,y:exit.y-20,vx:0,vy:0});tick();
+  assert.equal(Game.won,false,"same X above the actual exit must not win");
+  Object.assign(Game.player,{y:exit.y+80,vy:0});tick();
+  assert.equal(Game.won,true);assert.equal(Game.winAction,"goto:level9");
+});
+
 test("an open map bottom loses a life and restores the checkpoint instead of creating an invisible floor", async () => {
   await freshLevel(); Game.grid.fill(0);
   for(let i=0;i<180 && Game.lives===5;i++) tick();

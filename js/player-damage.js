@@ -3,12 +3,17 @@ export const DAMAGE_MOTION = Object.freeze({ jump: -200, speed: 60, gravity: 900
 export function beginPlayerDamage(p) {
   p.attack = null; p.run = false; p.buffer = 0; p.coyote = 0; p.crouch = false;
   p.damage = { phase: "air", time: 0, face: p.face };
+  if (p.mode === "ant" || p.mode === "butterfly") {
+    p.damage.phase = "mounted"; p.vx = -60 * p.face; p.vy = -120; p.ground = false;
+    return;
+  }
   p.vx = -p.face * DAMAGE_MOTION.speed; p.vy = DAMAGE_MOTION.jump; p.ground = false;
 }
 export function advancePlayerDamage(p, dt) {
   const d = p.damage;
   if (!d) return;
   d.time += dt;
+  if (d.phase === "mounted") { if (d.time >= .6) p.damage = null; return; }
   if (d.phase === "air") {
     if (p.ground) { d.phase = "fall"; d.time = 0; p.vx = 0; }
     else if (d.time >= DAMAGE_MOTION.airLimit) p.damage = null;

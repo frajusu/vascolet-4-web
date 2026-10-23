@@ -309,3 +309,24 @@ test("camera accumulates native 60px look-ahead and does not chase upward during
   g.player.ground=false;g.player.y=300;updateCamera(g,1/60);assert.equal(g.camY,96);
   g.player.x=340;updateCamera(g,1/60);assert.equal(g.cameraTrack.leadX,40);
 });
+
+test("fractional movement keeps the camera continuous instead of alternating one-pixel holds and jumps", async () => {
+  const map=parseTMX(await asset("data/maps/level1.tmx"));
+  const g={map,player:{x:400.1,y:382,ground:true},camX:0,camY:0};updateCamera(g,0,true);
+  for(let i=0;i<40;i++) {
+    const before=g.camX;g.player.x+=.2;updateCamera(g,1/60);
+    assert.ok(Math.abs(g.camX-before-.4)<1e-9,`tick ${i}: camera=${g.camX-before}`);
+  }
+});
+
+test("numbered auto-camera routes advance independently of the player, including the upward tower in level 17", async () => {
+  for(const level of [2,5,8,11,14,17]) {
+    const map=parseTMX(await asset(`data/maps/level${level}.tmx`));
+    const g={map,player:{x:272,y:382},camX:0,camY:0};updateCamera(g,0,true);
+    const {x,y}=g.autoCamera;updateCamera(g,1);
+    assert.ok(Math.abs(Math.hypot(g.autoCamera.x-x,g.autoCamera.y-y)-60)<1e-7);
+    if(level===17){assert.equal(g.autoCamera.x,x);assert.equal(g.autoCamera.y,y-60);}
+    updateCamera(g,1000);const end=g.autoCamera.points.at(-1);
+    assert.equal(g.autoCamera.x,end.x);assert.equal(g.autoCamera.y,end.y);
+  }
+});

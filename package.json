@@ -12,7 +12,8 @@
     "test:animals": "node tools/enemy-lab.mjs",
     "test:options-video": "node tools/browser-options-video.mjs",
     "test:help-rendering": "node tools/browser-help-rendering.mjs",
-    "test:level1": "node tools/browser-level1.mjs"
+    "test:level1": "node tools/browser-level1.mjs",
+    "test:stage-modes": "node tools/browser-stage-modes.mjs"
   },
   "keywords": [],
   "author": "",

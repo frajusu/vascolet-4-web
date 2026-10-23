@@ -10,7 +10,8 @@ from elftools.elf.elffile import ELFFile
 
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--subject', choices=['Fly', 'Frog', 'Flower', 'Beetle', 'Snail', 'PlayerDamage', 'PlayerProgress', 'BigScorpion'], default='Frog')
+parser.add_argument('--subject', choices=['Fly', 'Frog', 'Flower', 'Beetle', 'Snail', 'PlayerDamage', 'PlayerProgress', 'BigScorpion', 'MountedPlayers', 'AutoCamera'], default='Frog')
+parser.add_argument('--compact', action='store_true', help='Only annotated strings/actions/constants, for focused review')
 parser.add_argument('--binary', type=Path, default=root.parent / 'Vascolet4.activity/bin/vascolet4')
 parser.add_argument('--output', type=Path, default=root / 'analysis/native-evidence')
 args = parser.parse_args()
@@ -24,6 +25,10 @@ ranges = {
     'PlayerProgress': [(0x080c6180, 0x080c6be2), (0x080d57f0, 0x080d5a28),
                        (0x080d66ac, 0x080d680c), (0x081e8740, 0x081e876a), (0x08201040, 0x0820108d)],
     'BigScorpion': [(0x08176a3e, 0x08178c8e)],
+    'MountedPlayers': [(0x081679f0, 0x0816c8f5), (0x08078ad4, 0x08078c18),
+                       (0x0807a67d, 0x0807a7c9), (0x081e7680, 0x081e76fe), (0x081e9a70, 0x081e9bc2)],
+    'AutoCamera': [(0x081cfad0, 0x081d01b2), (0x081d40a0, 0x081d4b15),
+                   (0x082012d0, 0x082014f3), (0x08202ac0, 0x08202d07)],
 }
 with args.binary.open('rb') as f:
     elf = ELFFile(f)
@@ -65,7 +70,8 @@ for start, end in ranges[args.subject]:
             elif va >= 0x3b000000:
                 value = struct.unpack('<f', struct.pack('<I', va))[0]
                 if .001 < abs(value) < 100000: notes.append('literal=' + str(value))
-        lines.append(f'{ins.address:#x} {ins.mnemonic:8} {ins.op_str} ; {" ".join(notes)}')
+        if notes or not args.compact:
+            lines.append(f'{ins.address:#x} {ins.mnemonic:8} {ins.op_str} ; {" ".join(notes)}')
     file = args.output / f'{args.subject}-{start:08x}.txt'
     file.write_text('\n'.join(lines), encoding='utf-8'); files.append(str(file))
 manifest = {'subject': args.subject, 'binary': str(args.binary), 'sha256': hashlib.sha256(args.binary.read_bytes()).hexdigest(),

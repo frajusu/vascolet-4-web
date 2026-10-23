@@ -31,6 +31,7 @@ try {
     };
   });
   await page.goto(url); await page.locator("#boot").waitFor({ state: "detached" });
+  await page.evaluate(async()=>{window.__game=(await import("/js/game.js")).Game;});
   for (const [name, steps] of [["help", 2], ["credits", 1]]) {
     for (let i = 0; i < steps; i++) await key("ArrowDown");
     await page.evaluate(() => window.__drawnText.clear());
@@ -41,7 +42,7 @@ try {
   report.checks.push("Ayuda y Créditos sin texto agregado");
   for (let i = 0; i < 3; i++) await key("ArrowUp");
   await key("Enter"); await key("Enter"); await key("Enter");
-  await page.waitForFunction(async () => { const g=(await import("/js/game.js")).Game; return Boolean(g.map&&g.player?.anim&&g.time>0); });
+  await page.waitForFunction(() => Boolean(window.__game.player?.anim&&window.__game.time>0));
   await shot("level1-camera");
   const state = () => page.evaluate(async () => {
     const { Game: g } = await import("/js/game.js");
@@ -98,7 +99,7 @@ try {
     const { Game: g, loadLevel } = await import("/js/game.js"); await loadLevel(1); g.infos = []; g.dlg = null;
   });
   await key("Escape"); await key("x");
-  await page.waitForFunction(async () => (await import("/js/game.js")).Game.booms.length === 1);
+  await page.waitForFunction(() => window.__game.booms.length === 1);
   await page.evaluate(async () => {
     const { Game:g }=await import("/js/game.js"); window.__movingBoom=g.booms[0]; window.__movingSamples=[];
     window.__movingTimer=setInterval(()=>{const b=window.__movingBoom,p=g.player;
@@ -130,7 +131,7 @@ try {
     return { start: { x: g.player.x, y: g.player.y } };
   });
   await key("Escape");
-  await page.waitForFunction(async () => Boolean((await import("/js/game.js")).Game.player.damage));
+  await page.waitForFunction(() => Boolean(window.__game.player.damage));
   await page.evaluate(async () => { (await import("/js/game.js")).Game.enemies = []; });
   await page.waitForTimeout(80); await shot("player-recoil");
   await page.waitForTimeout(1000);
