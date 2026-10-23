@@ -94,7 +94,7 @@ try {
       Save.clear();Input.reset();await loadLevel(level);for(let i=0;i<3;i++){gameUpdate(1/60);Input.endStep();}
       gameDraw(document.querySelector("#game").getContext("2d"),1);
       return {level,mode:g.player.mode,autoCamera:Boolean(g.autoCamera),
-        provisionalEnemies:[...new Set(g.enemies.filter(e=>e.behavior==="unverified").map(e=>e.kind))]};
+        provisionalEnemies:[...new Set(g.enemies.filter(e=>e.behavior==="unverified"||e.behavior.endsWith("pending")).map(e=>e.kind))]};
     },level));
   }
   assert.deepEqual(report.errors,[]);report.ok=true;

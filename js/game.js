@@ -18,13 +18,14 @@ import { levelSound } from "./level-sounds.js";
 import { createEnemyShot, updateEnemyShot } from "./enemy-projectiles.js";
 import { integrateAxis, MAP_SKIN, subjectY } from "./physics.js";
 import { MOUNTED, playerMode, moveMountedPlayer, touchesExit, constrainToAutoCamera } from "./stage-modes.js";
+import { CHARACTER_CATALOG } from "./character-catalog.js";
 
 const W = 512, H = 384, TILE = 32;
 const MUS = "assets/audio/music/win/";
 const HUD = "assets/images/hud/hud.png";
 
 export const Game = {
-  map: null, tsx: [], grid: null, gw: 0, gh: 0,
+  map: null, tsx: [], grid: null, gw: 0, gh: 0, death: null,
   bgs: [], // {tilesets, layers:[{w,h,hScale,vScale,visible,opacity,data}]}
   player: null, enemies: [], items: [], infos: [], saves: [],
   booms: [], parts: [], shots: [], effects: [],
@@ -91,6 +92,7 @@ async function loadChar(tmxName) {
 }
 
 function tmxDir(n) {
+  if (CHARACTER_CATALOG[n]) return CHARACTER_CATALOG[n].asset;
   const map = {
     Vascolet: "vascolet", Fly: "fly", Frog: "frog", Flower: "flower", Beetle: "beetle",
     Snail: "snail", BigScorpion: "big-scorpion-v02", Scorpion: "escorpion", Items: "items", TopoNinja: "topo-ninja", BigBird: "big-bird",
@@ -129,8 +131,8 @@ async function loadTilesets(map, base) {
   }));
 }
 
-const BOSSES = new Set(["BigScorpion", "TopoNinja", "BigBird", "BigSnake", "BigBat", "BigGhost",
-  "BigSpider", "BigAnguila", "BigPirana", "BigPiranaBlowFish", "BigUglyDragon", "GiantDragonfly",
+const BOSSES = new Set(["BigScorpion", "TopoNinja", "BigBird", "BigBat", "BigGhost",
+  "BigSpider", "BigAnguila", "BigPirana", "BigUglyDragon", "GiantDragonfly",
   "FurryCritter", "Malmark", "Malmark2"]);
 
 export async function loadLevel(n, fresh = true) {
@@ -139,7 +141,7 @@ export async function loadLevel(n, fresh = true) {
   G.level = n; G.enemies = []; G.items = []; G.infos = []; G.saves = [];
   G.booms = []; G.parts = []; G.shots = []; G.effects = []; G.dlg = null;
   G.helper = null; G.helperSerial = 0; G.inputFrames = [];
-  G.coins = 0; G.energy = 100; G.tip = ""; G.tipT = 0; G.shakeT = 0; G.winTimer = 0;
+  G.coins = 0; G.energy = 100; G.tip = ""; G.tipT = 0; G.shakeT = 0; G.winTimer = 0; G.death = null;
   const run = Save.run(), savedRun = fresh && run?.level === n ? run : null;
   if (fresh) G.lives = Number.isInteger(savedRun?.lives) ? savedRun.lives : 5;
   G.abilities = progressFromItems(Save.read()?.items); G.maxHearts = G.abilities.maxHearts;
@@ -180,8 +182,10 @@ export async function loadLevel(n, fresh = true) {
     if (o.name === "*Save") G.saves.push({ x: o.x + 16, y: subjectY(o), tip: o.props.info, used: false, anim: null });
   }
   const foes = group(G.map, "Enemies");
-  G.spawnDescriptors = (foes.length ? foes : group(G.map, "Scenes")).map(o => ({ ...o }));
-  for (const o of foes.length ? foes : group(G.map, "Scenes")) {
+  const subjects = foes.length ? foes : group(G.map, "Scenes");
+  G.markers = subjects.filter(o => /^Spot\d+$/.test(o.name));
+  G.spawnDescriptors = subjects.filter(o => !/^Spot\d+$/.test(o.name)).map(o => ({ ...o }));
+  for (const o of G.spawnDescriptors) {
     const isBoss = BOSSES.has(o.name);
     G.enemies.push(createEnemy(o, isBoss));
   }
@@ -208,6 +212,7 @@ export async function loadLevel(n, fresh = true) {
   }
   await ensureChar("Vascolet");
   await Promise.all(["Boomerang", "effects", "fireball", "LightBug", "Items", "Scorpion"].map(ensureChar));
+  if (G.enemies.some(e => e.kind === "Panal")) await ensureChar("Bee");
   const itemChar = G.charCache.get("Items");
   for (const item of G.items) if (itemChar?.anims.some(a => a.name === item.definition?.animation)) {
     item.anim = new AnimPlayer(itemChar.anims); item.anim.set(item.definition.animation);
@@ -236,7 +241,7 @@ export async function loadLevel(n, fresh = true) {
     const c = await ensureChar(e.kind);
     e.anim = c.anims.length ? new AnimPlayer(c.anims) : null;
     if (e.anim) {
-      const pref = ["stand", "normal", "idle", "walk", "fly"].find(a => e.anim.has(a));
+      const pref = [e.pose, "stand", "normal", "idle", "walk", "fly"].find(a => a && e.anim.has(a));
       if (pref) e.anim.set(pref);
       e.cur = e.anim.frame;
     }
@@ -245,6 +250,7 @@ export async function loadLevel(n, fresh = true) {
   const mus = (selector && G.map.props[`music,${selector}`]) || G.map.props["music,normal"]
     || (selector?.endsWith(".ogg") ? selector : "");
   void Audio2.music(mus ? MUS + mus : null);
+  G.musicMode = selector || "normal";
   updateCamera(G, 0, true);
   snapshotPositions();
   G.tip = `NIVEL ${n}`; G.tipT = 3;
@@ -366,6 +372,16 @@ export function gameUpdate(dt) {
   G.time += dt;
   G.shakeT = Math.max(0, G.shakeT - dt);
   if (G.gameover) return;
+  if (G.death) {
+    G.death.time += dt;
+    if (G.death.phase === "out") {
+      p.vx = 0; moveBody(p, dt); p.anim.update(dt); p.cur = p.anim.frame;
+      if (G.death.time >= G.death.duration) {
+        respawnPlayer(); if (!G.gameover) G.death = { phase: "in", time: 0, duration: .3 };
+      }
+    } else if (G.death.time >= G.death.duration) { G.death = null; G.inputFrames = []; }
+    return;
+  }
   if (G.won) {
     p.vx = 0; if (MOUNTED[p.mode]) p.vy = 0;
     moveBody(p, dt, MOUNTED[p.mode] ? 0 : GRAV); p.anim.update(dt); p.cur = p.anim.frame;
@@ -467,15 +483,25 @@ export function gameUpdate(dt) {
     if (!e.active && Math.abs(e.x - p.x) < 512 && Math.abs(e.y - p.y) < 420) e.active = true;
     const finishingBoss = e.behavior === "scorpion-boss" && e.state === "dying";
     if (!finishingBoss && (!e.active || Math.abs(e.x - p.x) > 900 || Math.abs(e.y - p.y) > 700)) continue;
+    if (e.boss && e.behavior !== "scorpion-boss" && e.hp > 0 && !e.fight &&
+      e.x >= G.camX && e.x <= G.camX + W && e.y >= G.camY && e.y <= G.camY + H) {
+      e.fight = true; G.musicMode = "boss";
+      void Audio2.music(G.map.props["music,boss"] ? MUS + G.map.props["music,boss"] : null);
+    }
     updateEnemy(e, p, dt, { moveBody, tileAt, shoot: enemyShoot, booms: G.booms,
       inCamera: b => b.x >= G.camX && b.x <= G.camX + W && b.y >= G.camY && b.y <= G.camY + H,
-      bossStart: () => void Audio2.music(G.map.props["music,boss"] ? MUS + G.map.props["music,boss"] : null),
+      bossStart: () => { G.musicMode = "boss"; void Audio2.music(G.map.props["music,boss"] ? MUS + G.map.props["music,boss"] : null); },
       minionCount: () => G.enemies.filter(m => m.minion && m.hp > 0).length, spawnMinion,
+      spawn: spawnEnemy, nearby: (kind,owner) => G.enemies.filter(other => other.kind === kind && other.owner === owner && other.hp > 0 && !other.removed).length,
       shake: time => { G.shakeT = Math.max(G.shakeT, time); },
       explosion: b => { impact(b.x + Math.sin(b.stateTime * 47) * 45, b.y - 30 + Math.cos(b.stateTime * 31) * 30, 2); levelSound("v_explosion"); },
       bossDefeated: b => { G.shakeT = .2; impact(b.x, b.y - 30, 4); levelSound("v_explosion"); },
     });
     if (e.y > G.gh * TILE + 160 && e.hp > 0) { e.hp = 0; e.deadT = 2; }
+  }
+  if (G.musicMode === "boss" && !bossesDefeated(G) &&
+    !G.enemies.some(e => e.boss && e.fight && !e.defeated && (e.hp > 0 || e.state === "dying"))) {
+    G.musicMode = "normal"; void Audio2.music(G.map.props["music,normal"] ? MUS + G.map.props["music,normal"] : null);
   }
   for (const b of G.booms) {
     updateBoomerang(b, p, G.enemies, dt, { tileAt, hitEnemy: (e, boom) => damageEnemy(e, Math.sign(boom.vx)),
@@ -489,7 +515,7 @@ export function gameUpdate(dt) {
   G.booms = G.booms.filter(b => b.life > 0);
   updateEnemyShots(dt);
   for (const e of G.enemies) {
-    if (e.hp <= 0 || Math.abs(p.x - e.x) >= (p.w + e.w) / 2 || p.y <= e.y - e.h || p.y - (p.crouch ? 28 : p.h) >= e.y) continue;
+    if (e.hp <= 0 || e.removed || e.visible === false || e.contact === false || Math.abs(p.x - e.x) >= (p.w + e.w) / 2 || p.y <= e.y - e.h || p.y - (p.crouch ? 28 : p.h) >= e.y) continue;
     if (!mounted && G.abilities.jumpAttack && !e.boss && e.behavior !== "flower" && p.vy > 0 && p.prevY <= e.y - e.h + 10) {
       damageEnemy(e, p.face, 2); p.vy = -280; p.ground = false;
     } else hurtPlayer();
@@ -571,39 +597,50 @@ export function gameUpdate(dt) {
     if (finished) p.attack = null;
   }
   if (p.damage?.phase === "rise" && (p.animName === "damageRaise" ? p.anim.finished : p.damage.time >= .2)) p.damage = null;
-  // muerte: energia o caida al vacio -> pierde vida, respawn o game over
+  // TMX loseEffect supplies a visible two-second losing phase before relocating.
   if ((G.energy <= 0 || p.y > G.gh * TILE + 80) && !G.won) {
     G.lives -= 1;
     levelSound("vasco_death");
-    if (G.lives < 0) {
-      G.gameover = true; Save.write({ run: null }); G.events.push({ type: "gameover" });
-    } else {
-      G.energy = 100;
-      const s = G.checkpoint || G.start;
-      p.x = s.x; p.y = s.y; p.vx = 0; p.vy = mounted?.initialVY || 0; p.inv = 2;
-      p.attack = null; p.damage = null; p.run = false; p.ground = false; p.coyote = 0; p.buffer = 0; p.dropT = 0; p.doubleUsed = false; p.tapT = -9;
-      p.crouch = false; p.fireCd = 0; p.animName = mounted?.stand || "stand"; p.anim.restart(p.animName); p.cur = p.anim.frame;
-      G.booms = []; G.shots = []; G.effects = []; G.parts = []; G.dlg = null; G.helper = null; G.shakeT = 0; G.inputFrames = [];
-      G.bossVisible = false; G.bossHP = 0;
-      G.enemies = G.spawnDescriptors.map(o => attachEnemyAnimation(createEnemy(o, BOSSES.has(o.name))));
-      for (const item of G.items) item.taken = Save.hasItem(item.kind) || G.checkpointConsumed.includes(item.id);
-      for (const info of G.infos) { info.shown = false; info.dismissed = false; }
-      void Audio2.music(G.map.props["music,normal"] ? MUS + G.map.props["music,normal"] : null);
-      saveCheckpoint();
-      updateCamera(G, 0, true); snapshotPositions();
-    }
+    p.attack = null; p.damage = null; p.vx = 0; p.inv = 0;
+    if (p.y <= G.gh * TILE) p.vy = -200;
+    p.animName = mounted?.damage || "damage"; p.anim.set(p.animName); p.cur = p.anim.frame;
+    G.death = { phase: "out", time: 0, duration: Math.max(.3, Number(G.map.props.loseEffect?.split(",")[1]) || 2) };
+    G.inputFrames = []; G.dlg = null; G.helper = null; G.shots = []; G.booms = [];
+    return;
   }
   // victoria segun props del mapa
   if (!G.gameover && !G.won && G.win) {
     if (G.win.kind === "boss") {
-      const bosses = G.enemies.filter(e => e.kind === G.win.target);
-      if (bosses.length && bosses.every(e => e.behavior === "scorpion-boss" ? e.defeated : e.hp <= 0)) finishLevel();
+      if (bossesDefeated(G)) finishLevel();
     } else if (G.win.kind === "exit") {
       if (touchesExit(p, G.exits)) {
         finishLevel();
       }
     }
   }
+}
+
+function respawnPlayer() {
+  const G = Game, p = G.player, mounted = MOUNTED[p.mode];
+  if (G.lives < 0) {
+    G.gameover = true; G.death = null; Save.write({ run: null }); G.events.push({ type: "gameover" });
+    return;
+  }
+  G.energy = 100;
+  const s = G.checkpoint || G.start;
+  p.x = s.x; p.y = s.y; p.vx = 0; p.vy = mounted?.initialVY || 0; p.inv = 2;
+  p.attack = null; p.damage = null; p.run = false; p.ground = false; p.coyote = 0; p.buffer = 0; p.dropT = 0; p.doubleUsed = false; p.tapT = -9;
+  p.crouch = false; p.fireCd = 0; p.animName = mounted?.stand || "stand"; p.anim.restart(p.animName); p.cur = p.anim.frame;
+  G.booms = []; G.shots = []; G.effects = []; G.parts = []; G.dlg = null; G.helper = null; G.shakeT = 0; G.inputFrames = [];
+  G.bossVisible = false; G.bossHP = 0;
+  G.enemies = G.spawnDescriptors.map(o => attachEnemyAnimation(createEnemy(o, BOSSES.has(o.name))));
+  for (const item of G.items) item.taken = Save.hasItem(item.kind) || G.checkpointConsumed.includes(item.id);
+  for (const info of G.infos) { info.shown = false; info.dismissed = false; }
+  // Same normal track is reused instead of recreating the media element on each life.
+  const selector = G.map.props.defaultMusic || "normal";
+  G.musicMode = selector;
+  void Audio2.music(G.map.props[`music,${selector}`] ? MUS + G.map.props[`music,${selector}`] : null);
+  saveCheckpoint(); updateCamera(G, 0, true); snapshotPositions();
 }
 
 function dust(x, y) {
@@ -615,7 +652,7 @@ function attachEnemyAnimation(e) {
   const c = Game.charCache.get(e.kind);
   if (c?.anims.length) {
     e.anim = new AnimPlayer(c.anims);
-    const normal = ["normal", "walk", "flying", "stand", "idle"].find(name => e.anim.has(name));
+    const normal = [e.pose, "normal", "walk", "flying", "stand", "idle"].find(name => name && e.anim.has(name));
     if (normal) e.anim.set(normal);
     e.cur = e.anim.frame;
   }
@@ -625,6 +662,11 @@ function attachEnemyAnimation(e) {
 function spawnMinion(x, y, dir) {
   const e = attachEnemyAnimation(createEnemy({ name: "Scorpion", x: x - 16, y: y - 32 + MAP_SKIN, type: dir > 0 ? "forward" : "" }));
   e.minion = true; e.active = true; Game.enemies.push(e);
+}
+
+function spawnEnemy(kind, x, y, dir, owner = null) {
+  const e = attachEnemyAnimation(createEnemy({ name: kind, x: x - 16, y: y - 32 + MAP_SKIN, type: dir > 0 ? "forward" : "" }));
+  e.active = true; e.owner = owner; Game.enemies.push(e);
 }
 
 function saveCheckpoint() {
@@ -647,13 +689,19 @@ function collectItem(item) {
   item.taken = true; levelSound(d.sound); impact(item.x, item.y);
 }
 
+function bossesDefeated(game) {
+  if (game.win?.kind !== "boss") return false;
+  const bosses = game.enemies.filter(e => e.kind === game.win.target);
+  return bosses.length > 0 && bosses.every(e => e.behavior === "scorpion-boss" ? e.defeated : e.hp <= 0);
+}
+
 function finishLevel() {
   const G = Game;
   G.won = true; G.winSent = false; G.winTimer = Math.max(0, Number(G.map.props.winEffect?.split(",")[1]) || 0);
   G.player.attack = null; G.player.damage = null; G.player.inv = 0; G.player.vx = 0;
   G.player.anim.set(MOUNTED[G.player.mode]?.stand || "stand"); G.player.cur = G.player.anim.frame;
   G.booms = []; G.shots = []; G.dlg = null; Save.completeLevel(G.level);
-  void Audio2.music(MUS + (G.map.props["music,win"] || "win_level.ogg"));
+  void Audio2.music(MUS + (G.map.props["music,win"] || "win_level.ogg"), { loop: false });
   if (!G.winTimer) { G.winSent = true; G.events.push({ type: "win" }); }
 }
 
@@ -689,12 +737,12 @@ function hurtPlayer() {
   levelSound("enemy_hit"); levelSound("v_death1");
 }
 
-function enemyShoot(e) {
-  const kind = e.behavior === "snail" ? "fireball" : "effects";
+function enemyShoot(e, options = {}) {
+  const kind = options.fireball || e.behavior === "snail" ? "fireball" : "effects";
   const c = Game.charCache.get(kind);
   const anim = c?.anims.length ? new AnimPlayer(c.anims) : null;
-  if (anim?.has(e.behavior === "snail" ? "normal" : "bullet")) anim.set(e.behavior === "snail" ? "normal" : "bullet");
-  Game.shots.push(createEnemyShot(e, anim)); levelSound("willyFire");
+  if (anim?.has(kind === "fireball" ? "normal" : "bullet")) anim.set(kind === "fireball" ? "normal" : "bullet");
+  Game.shots.push(createEnemyShot(e, anim, { ...options, target: Game.player })); levelSound("willyFire");
 }
 
 function updateEnemyShots(dt) {
@@ -723,9 +771,7 @@ function drawTile(ctx, raw, tilesets, x, y) {
   const cols = Math.floor((T.imgW - 2 * T.margin + T.spacing) / (T.tileW + T.spacing));
   const sx = T.margin + (local % cols) * (T.tileW + T.spacing);
   const sy = T.margin + Math.floor(local / cols) * (T.tileH + T.spacing);
-  // inset de 0.5px contra bleeding de tiles vecinos
-  const inset = ctx.imageSmoothingEnabled ? .5 : 0;
-  const ix = sx + inset, iy = sy + inset, iw = T.tileW - 2 * inset, ih = T.tileH - 2 * inset;
+  const ix = sx, iy = sy, iw = T.tileW, ih = T.tileH;
   if (raw & 0xe0000000) {
     ctx.save();
     ctx.translate(x + TILE / 2, y + TILE / 2);
@@ -736,19 +782,31 @@ function drawTile(ctx, raw, tilesets, x, y) {
   } else ctx.drawImage(ts.image, ix, iy, iw, ih, x, y, TILE, TILE);
 }
 
+const tileWindows = new WeakMap();
 function drawTileLayer(ctx, L, tsxList, cx, cy, repeatX = false) {
   if (L.visible === false || L.opacity === 0 || !L.w || !L.h) return;
   cx -= (L.x || 0) * TILE + (L.offsetX || 0);
   cy -= (L.y || 0) * TILE + (L.offsetY || 0);
-  const x0 = repeatX ? Math.floor(cx / TILE) : Math.max(0, Math.floor(cx / TILE));
-  const x1 = repeatX ? Math.ceil((cx + W) / TILE) - 1 : Math.min(L.w - 1, Math.ceil((cx + W) / TILE) - 1);
-  const y0 = Math.max(0, Math.floor(cy / TILE)), y1 = Math.min(L.h - 1, Math.ceil((cy + H) / TILE) - 1);
+  const x0 = Math.floor(cx / TILE) - 1, y0 = Math.floor(cy / TILE) - 1;
+  let cached = tileWindows.get(L);
+  if (!cached || cached.x0 !== x0 || cached.y0 !== y0 || cached.tsxList !== tsxList || cached.repeatX !== repeatX) {
+    const canvas = cached?.canvas || document.createElement("canvas");
+    canvas.width = W + 2 * TILE; canvas.height = H + 2 * TILE;
+    canvas.dataset.tileLayer = L.name;
+    const raster = canvas.getContext("2d"); raster.imageSmoothingEnabled = false;
+    for (let row = 0; row < canvas.height / TILE; row++) for (let col = 0; col < canvas.width / TILE; col++) {
+      const tx = x0 + col, ty = y0 + row;
+      if (ty < 0 || ty >= L.h || (!repeatX && (tx < 0 || tx >= L.w))) continue;
+      const wx = repeatX ? ((tx % L.w) + L.w) % L.w : tx;
+      drawTile(raster, L.data[ty * L.w + wx], tsxList, col * TILE, row * TILE);
+    }
+    cached = { x0, y0, tsxList, repeatX, canvas }; tileWindows.set(L, cached);
+  }
   ctx.save();
   ctx.globalAlpha *= L.opacity ?? 1;
-  for (let ty = y0; ty <= y1; ty++) for (let tx = x0; tx <= x1; tx++) {
-    const wx = repeatX ? ((tx % L.w) + L.w) % L.w : tx;
-    drawTile(ctx, L.data[ty * L.w + wx], tsxList, tx * TILE - cx, ty * TILE - cy);
-  }
+  // Sample one continuous image. Independently filtered translucent tile edges
+  // exposed seams and flickered as the interpolated camera moved during a jump.
+  ctx.drawImage(cached.canvas, x0 * TILE - cx, y0 * TILE - cy);
   ctx.restore();
 }
 
@@ -789,7 +847,7 @@ export function gameDraw(ctx, alpha = 1) {
   }
   // enemigos con sprites reales
   for (const e of G.enemies) {
-    if (e.defeated || e.removed) continue;
+    if (e.defeated || e.removed || e.visible === false) continue;
     const c = Game.charCache.get(e.kind);
     if (c?.img && e.anim) {
       ctx.save();
@@ -851,6 +909,12 @@ export function gameDraw(ctx, alpha = 1) {
     ctx.fillText(G.tip.split("\n")[0], (W - tw) / 2, 52);
   }
   if (G.dlg) drawDialog(ctx);
+  if (G.death) {
+    const d = G.death;
+    const opacity = d.phase === "in" ? 1 - d.time / d.duration
+      : Math.max(0, (d.time - Math.max(0, d.duration - .4)) / Math.min(.4, d.duration));
+    ctx.fillStyle = `rgba(0,0,0,${Math.max(0, Math.min(1, opacity))})`; ctx.fillRect(0, 0, W, H);
+  }
   ctx.imageSmoothingEnabled = true;
 }
 

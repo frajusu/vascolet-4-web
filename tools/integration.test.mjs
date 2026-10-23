@@ -103,6 +103,10 @@ async function freshLevel({ preserveSave = false } = {}) {
 function tick(count = 1) {
   for (let i = 0; i < count; i++) { gameUpdate(1 / 60); Input.endStep(); }
 }
+function finishDeath() {
+  for(let i=0;i<180&&Game.death;i++)tick();
+  assert.equal(Game.death,null,"losing phase and fade-in must finish");
+}
 function key(type, value, code = value) {
   dom.window.dispatchEvent(new dom.window.KeyboardEvent(type, { key: value, code, bubbles: true }));
 }
@@ -175,10 +179,10 @@ test("shipped parallax retains four layer heights and draws only its two visible
   Game.camX = Game.camY = Game.prevCamX = Game.prevCamY = 0; Game.tipT = 0;
   bg.layers[0].opacity = 0.25;
   const ctx = context(); gameDraw(ctx);
-  const tiles = ctx.draws.filter(call => call.image === bg.tilesets[0].image);
-  assert.equal(tiles.length, 16 * 12 * 2);
-  assert.equal(tiles.filter(call => call.alpha === 0.25).length, 16 * 12);
-  assert.equal(tiles.filter(call => call.alpha === 1).length, 16 * 12);
+  const windows = ctx.draws.filter(call => call.image.dataset?.tileLayer);
+  assert.equal(windows.length,2,"one filtered composite per visible layer, with no independently filtered tile edges");
+  assert.deepEqual(windows.map(call=>call.alpha),[.25,1]);
+  assert.ok(windows.every(call=>call.image._ctx.draws.some(d=>d.image===bg.tilesets[0].image)));
   assert.equal(ctx.globalAlpha, 1);
   Game.map = savedMap;
 });
@@ -408,6 +412,32 @@ test("mounted stages load their own mode/poses and numbered auto-camera path, wi
   }
 });
 
+test("all map actors resolve original character libraries; ordinary snakes/fish are not bosses and Spot markers are not enemies", async () => {
+  for(let level=1;level<=18;level++) {
+    await realStage(level);
+    assert.equal(music.at(-1),`assets/audio/music/win/${Game.map.props["music,normal"]}`);
+    for(const e of Game.enemies) {
+      assert.notEqual(e.behavior,"unverified",`level ${level}: ${e.kind}`);
+      assert.ok(Game.charCache.get(e.kind)?.img,`missing library for ${e.kind}`);
+      assert.ok(e.anim?.cur?.frames.length,`missing animation for ${e.kind}`);
+      if(e.kind==="Bat")assert.match(Game.charCache.get(e.kind).img.src,/big-bat-child/);
+      if(e.kind==="Panal") {assert.match(Game.charCache.get(e.kind).img.src,/bee/);assert.equal(e.anim.cur.name,"panal");}
+      if(e.kind==="FrontColumn")assert.match(Game.charCache.get(e.kind).img.src,/center-column/);
+      if(["BigSnake","BigPiranaBlowFish"].includes(e.kind))assert.equal(e.boss,false);
+    }
+    if(level===2)assert.deepEqual(Object.fromEntries([...new Set(Game.enemies.map(e=>e.kind))].map(kind=>
+      [kind,Game.enemies.filter(e=>e.kind===kind).length])),{Fly:23,Beetle:3,Frog:8,Flower:5});
+    if(level===18){assert.equal(Game.markers.length,5);assert.ok(!Game.enemies.some(e=>e.kind.startsWith("Spot")));}
+  }
+});
+
+test("final boss defeat switches directly to the one-shot victory track without restarting normal music in between", async () => {
+  await realStage(1);const boss=Game.enemies.find(e=>e.kind==="BigScorpion");
+  Object.assign(boss,{hp:0,defeated:true,state:"defeated",fight:true});Game.enemies=[boss];Game.musicMode="boss";
+  music.length=0;tick();assert.equal(Game.won,true);
+  assert.deepEqual(music,["assets/audio/music/win/win_level.ogg"]);
+});
+
 test("ant jump and attack are independent of normal-player powers; scroll crush resets the stage without crossing rock", async () => {
   await realStage(2);Game.enemies=[];Game.infos=[];
   Game.grid.fill(0);Game.grid.fill(TILE_SOLID,14*Game.gw,15*Game.gw);tick();
@@ -421,7 +451,9 @@ test("ant jump and attack are independent of normal-player powers; scroll crush 
   Object.assign(Game.player,{x:336,y:446,vx:0,vy:0,damage:null});Input.reset();Game.inputFrames=[];
   for(const row of [12,13])Game.grid[row*Game.gw+11]=TILE_SOLID;
   Game.autoCamera.x=611;const lives=Game.lives;tick();
-  assert.equal(Game.lives,lives-1);assert.equal(Game.player.x,Game.start.x);
+  assert.equal(Game.lives,lives-1);assert.equal(Game.death.phase,"out");
+  assert.ok(Game.player.x<352,"must remain blocked by the rock throughout the losing phase");
+  finishDeath();assert.equal(Game.player.x,Game.start.x);
   assert.equal(Game.player.mode,"ant");assert.equal(Game.autoCamera.x,352);
 });
 
@@ -448,7 +480,10 @@ test("butterfly flaps again in midair, keeps its damage pose, and only the real 
 test("an open map bottom loses a life and restores the checkpoint instead of creating an invisible floor", async () => {
   await freshLevel(); Game.grid.fill(0);
   for(let i=0;i<180 && Game.lives===5;i++) tick();
-  assert.equal(Game.lives,4);assert.equal(Game.player.y,Game.checkpoint.y);
+  assert.equal(Game.lives,4);assert.equal(Game.death.phase,"out");
+  assert.notEqual(Game.player.y,Game.checkpoint.y,"no immediate teleport on the death tick");
+  tick(30);assert.equal(Game.lives,4,"one life per death, not one per frozen frame");
+  finishDeath();assert.equal(Game.player.y,Game.checkpoint.y);
   assert.equal(Save.run().lives,4);assert.equal(Game.energy,100);
 });
 
@@ -489,6 +524,7 @@ test("every real level-1 item has animated art, consumables work, and checkpoint
     assert.equal(checkpoint.used,true); assert.ok(Save.run().consumed.includes(energy.id));
     Game.energy=0; Game.enemies[0].hp=0; tick();
     assert.equal(Game.lives,4); assert.equal(Game.player.x,checkpoint.x);
+    assert.equal(Game.death.phase,"out");finishDeath();
     assert.equal(Game.enemies.length,expectedEnemies); assert.ok(Game.enemies.every(e=>e.hp===e.maxhp));
     assert.equal(Game.booms.length,0); assert.equal(Game.shots.length,0);
     assert.equal(Game.enemies.find(e=>e.kind==="BigScorpion").fight,false);
@@ -498,7 +534,7 @@ test("every real level-1 item has animated art, consumables work, and checkpoint
     assert.equal(Game.abilities.sustainJump,true); assert.equal(Game.maxHearts,7);
     Game.items.push({kind:"ExtraLive",definition:itemDefinition("ExtraLive"),x:Game.player.x,y:Game.player.y-16});
     tick(); assert.equal(Game.lives,5);
-    Game.lives=0; Game.energy=0; tick(4);
+    Game.lives=0; Game.energy=0; tick(4);finishDeath();
     assert.equal(Game.events.filter(e=>e.type==="gameover").length,1); assert.equal(Save.run(),null);
     assert.equal(Save.hasItem("&P-SustainJump"),true);
   } finally { fixtures.set("assets/data/maps/level1.tmx",fixture); clearAssets(); Save.clear(); Input.reset(); }

@@ -91,7 +91,7 @@ export function updateBoomerang(b, player, enemies, dt, { tileAt, hitEnemy, wall
   let first = terrainHit(b.x, b.y, nx, ny, tileAt, 4, b.state === "falling");
   let victim = null;
   if (b.state !== "falling") for (const e of enemies) {
-    if (e.hp <= 0) continue;
+    if (e.hp <= 0 || e.removed || e.visible === false || e.contact === false) continue;
     const t = segmentBox(b.x, b.y, nx, ny, e.x - e.w / 2 - 13, e.y - e.h, e.x + e.w / 2 + 13, e.y + 16);
     if (t !== null && (first === null || t < first)) { first = t; victim = e; }
   }

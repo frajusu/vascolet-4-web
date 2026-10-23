@@ -196,10 +196,10 @@ async function showEnd(kind) {
   stopVideo();
   if (kind === "gameover") {
     await loadAssets(["assets/gui/gameover/gameover.png"]).catch(() => {});
-    void Audio2.music("assets/audio/music/win/gameover.ogg");
+    void Audio2.music("assets/audio/music/win/gameover.ogg", { loop: false });
   } else {
     await loadAssets(["assets/gui/win/win.png"]).catch(() => {});
-    void Audio2.music("assets/audio/music/win/win_game.ogg");
+    void Audio2.music("assets/audio/music/win/win_game.ogg", { loop: false });
   }
   if (state === "fatal") return;
   Input.endStep(); setBoot(null); state = kind;
@@ -209,9 +209,11 @@ function drawEnd(ctx, path, fallback) {
   ctx.imageSmoothingEnabled = true;
   const bg = img(path);
   if (bg) ctx.drawImage(bg, 0, 0, 512, 384, 0, 0, 512, 384);
-  else { ctx.fillStyle = "#000"; ctx.fillRect(0, 0, 512, 384); }
-  ctx.font = "bold 20px sans-serif"; ctx.fillStyle = "#ffd75e";
-  ctx.fillText(fallback + "   (ENTER: continuar)", 60, 360);
+  else {
+    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, 512, 384);
+    ctx.font = "bold 20px sans-serif"; ctx.fillStyle = "#ffd75e";
+    ctx.fillText(fallback + "   (ENTER: continuar)", 60, 360);
+  }
 }
 
 function drawStatic(kind) {

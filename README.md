@@ -84,6 +84,10 @@ de movimiento, animaciones, cámara automática y salida real. Se corrigió el
 destello rojo de daño y el seguimiento fraccional de la cámara. El
 [inventario de mecánicas de los 18 niveles](docs/level-mechanics.md) distingue
 lo implementado de natación, trampas y jefes que aún faltan.
+La última revisión corrige el footer del menú, introduce una transición de muerte,
+compone las capas para evitar costuras y conserva la música al reaparecer. También
+configura bibliotecas y familias de enemigos de los 18 mapas; los patrones finos
+y jefes posteriores continúan pendientes. [Detalle y contraste con Windows](docs/presentation-and-content.md).
 
 ### Pulido de animales
 
@@ -99,6 +103,9 @@ orientación de moscas y filtrado persistente con capturas de ambos modos.
 escorpión sobre el mapa real mediante colocaciones controladas explícitas.
 `npm run test:stage-modes` comprueba segmentos iniciales de las cuatro monturas,
 salidas controladas, el destello rojo y la carga inicial de los 18 mapas.
+`npm run test:presentation` comprueba menú, muerte, continuidad musical y costuras
+de render mediante muestras de píxeles. Con el original local,
+`python tools/audit-level-content.py` contrasta mapas y audio por hash.
 La [herramienta nativa aislada](tools/native-isolated/README.md) permite observar
 una copia del original en un escritorio invisible, con controles privados y sin
 seleccionar ese escritorio. Su smoke de marcha/salto pasó; no recorre el nivel completo.

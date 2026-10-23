@@ -76,14 +76,18 @@ export const Audio2 = {
     if (this.musicEl) this.musicEl.pause();
     this.musicEl = null; this._musicPath = null; this._pendingMusic = false;
   },
-  async music(path) {
+  async music(path, { loop = true, restart = false } = {}) {
+    if (path && this.errors.has(`music:${path}`)) return false;
+    if (!restart && path && path === this._musicPath && this.musicEl) {
+      this.musicEl.loop = loop;
+      return this._pendingMusic ? this._playMusic() : true;
+    }
     this.stopMusic();
     if (!path) return true;
-    if (this.errors.has(`music:${path}`)) return false;
     try {
       const target = this._target ?? globalThis.window ?? globalThis;
       const el = new target.Audio(path);
-      el.loop = true; el.volume = this.musicVolume ?? this.volume;
+      el.loop = loop; el.volume = this.musicVolume ?? this.volume;
       this.musicEl = el; this._musicPath = path;
       el.addEventListener("error", () => {
         if (this.musicEl !== el) return;

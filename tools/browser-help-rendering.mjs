@@ -25,6 +25,8 @@ try {
     const draw = CanvasRenderingContext2D.prototype.drawImage;
     CanvasRenderingContext2D.prototype.drawImage = function(image, ...args) {
       const result = draw.call(this,image,...args);
+      if(this.canvas.id==="game"&&image.dataset?.tileLayer&&window.__tileSamples.length<200)
+        window.__tileSamples.push({smoothing:this.imageSmoothingEnabled,sw:image.width,sh:image.height,composite:true});
       if (this.canvas.id !== "game" || args.length !== 8) return result;
       const src = image.src || "", [sx,sy,sw,sh,x,y,w,h] = args, m = this.getTransform();
       if (src.endsWith("/fly.png")) window.__lastFlyFlip = m.a < 0;
@@ -94,7 +96,7 @@ try {
   await key("Escape"); await key("Escape");
   await page.evaluate(()=>{window.__tileSamples=[];}); await page.waitForTimeout(100);
   const nearest=await page.evaluate(()=>window.__tileSamples);
-  assert.ok(nearest.length>0&&nearest.every(d=>!d.smoothing&&d.sw===32&&d.sh===32));
+  assert.ok(nearest.length>0&&nearest.every(d=>!d.smoothing&&d.composite&&d.sw===576&&d.sh===448));
   assert.equal(await page.locator("#game").evaluate(c=>c.style.imageRendering),"pixelated");
   await shot("world-nearest-unfiltered");
   await page.reload(); await page.locator("#boot").waitFor({state:"detached"});

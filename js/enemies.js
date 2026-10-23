@@ -4,6 +4,7 @@ import { TILE_SOLID, TILE_UP } from "./tmx.js";
 import { ENEMY_PROFILES, enemyRandom } from "./enemy-profiles.js";
 import { damageScorpion, updateScorpion } from "./scorpion-boss.js";
 import { subjectY, MAP_SKIN } from "./physics.js";
+import { updateLaterEnemy } from "./later-enemies.js";
 const clamp = (v, limit) => Math.max(-limit, Math.min(v, limit));
 
 export function createEnemy(object, boss = false, seed = 0x45a91) {
@@ -18,6 +19,7 @@ export function createEnemy(object, boss = false, seed = 0x45a91) {
     state: "normal", cooldown: 0, stateTime: 0, seed: seed >>> 0 || 1, hurtT: 0, deadT: 0, ground: false, active: false,
     anim: null, cur: null, skin: MAP_SKIN };
   if (profile.behavior === "fly") e.vx = e.dir * e.speed;
+  if (profile.behavior === "falling-trap" || profile.behavior === "snake") e.visible = false;
   if (profile.attackDelay) e.cooldown = profile.attackDelay + enemyRandom(e) * profile.attackSpread;
   if (profile.behavior === "scorpion-boss") { e.state = "waiting"; e.fight = false; e.defeated = false; }
   return e;
@@ -59,7 +61,10 @@ export function updateEnemy(e, player, dt, { moveBody, tileAt, shoot, booms = []
     return;
   }
   const dx = player.x - e.x;
-  if (e.behavior === "fly") {
+  const handled = updateLaterEnemy(e, player, dt, { moveBody, tileAt, shoot, booms, ...bossApi });
+  if (handled) {
+    // Later actors have explicit families; never fall through to land patrol.
+  } else if (e.behavior === "fly") {
     // X patrol is relative to spawn, NEVER to player X. Original SeekObject has
     // zero X force and 600 Y force: altitude reacts, horizontal pursuit does not.
     const towardHome = (e.homeX - e.x) * e.dir > 0;
@@ -113,7 +118,7 @@ export function updateEnemy(e, player, dt, { moveBody, tileAt, shoot, booms = []
     }
   }
   if (e.state === "normal" && e.hurtT <= 0) {
-    const normal = ["normal", "flying", "walk", "fly", "stand", "idle"].find(a => e.anim?.has(a));
+    const normal = [e.pose, "normal", "flying", "walk", "fly", "stand", "idle"].find(a => a && e.anim?.has(a));
     if (normal) enemyAnimation(e, normal);
   }
   if (e.anim) {

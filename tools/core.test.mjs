@@ -430,6 +430,15 @@ test("music track replacement cannot resurrect an older in-flight play request",
   assert.ok(instances[0].pauseCalls >= 1);
 });
 
+test("same music requests preserve the live track/playhead; victory tracks can be one-shot", async t => {
+  const {audio,instances}=fakeAudio(t);
+  await audio.music("autoscroll.ogg");instances[0].currentTime=43.2;
+  await audio.music("autoscroll.ogg");
+  assert.equal(instances.length,1);assert.equal(instances[0].currentTime,43.2);
+  assert.equal(instances[0].playCalls,1);assert.equal(instances[0].pauseCalls,0);
+  await audio.music("win_level.ogg",{loop:false});assert.equal(instances[1].loop,false);
+});
+
 test("SFX requests share decode, cap active and pending voices, route through master gain and release nodes", async t => {
   const { audio, sources, decodes } = fakeAudio(t);
   let fetchCalls = 0;

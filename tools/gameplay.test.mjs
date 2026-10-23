@@ -330,3 +330,40 @@ test("numbered auto-camera routes advance independently of the player, including
     assert.equal(g.autoCamera.x,end.x);assert.equal(g.autoCamera.y,end.y);
   }
 });
+
+test("later swimmers and flyers use their own motion without terrestrial gravity; fish swims at the recovered 100px/s", () => {
+  const api={tileAt:empty,shoot(){},moveBody(){assert.fail("swimmers/flyers must not enter land physics");}};
+  for(const kind of ["Fish","Bat","DragonFly","Mosquito","Pirana2","Blowfish"]) {
+    const e=createEnemy({name:kind,x:320,y:288}),start={x:e.x,y:e.y};
+    for(let i=0;i<60;i++)updateEnemy(e,{x:1000,y:220},1/60,api);
+    assert.ok(Number.isFinite(e.x)&&Number.isFinite(e.y));
+    if(kind==="Fish"){assert.ok(Math.abs(Math.abs(e.x-start.x)-100)<1e-8);assert.equal(e.y,start.y);}
+    if(kind==="Bat")assert.ok(e.x>start.x,"bat seeks the player with the small-bat controller");
+  }
+});
+
+test("hives spawn their own limited bee group; front columns stay rooted and shoot an aimed fan", () => {
+  const hive=createEnemy({name:"Panal",x:320,y:288}),bees=[];
+  const services={tileAt:empty,moveBody(){assert.fail("static map actors must stay rooted");},shoot(){},
+    nearby:(kind,owner)=>bees.filter(e=>e.kind===kind&&e.owner===owner).length,
+    spawn:(kind,x,y,dir,owner)=>bees.push({kind,x,y,dir,owner})};
+  for(let i=0;i<700;i++)updateEnemy(hive,player(),1/60,services);
+  assert.equal(bees.length,4);assert.ok(bees.every(b=>b.owner===hive));
+  const column=createEnemy({name:"FrontColumn",x:320,y:288}),shots=[],x=column.x,y=column.y;
+  column.cooldown=0;updateEnemy(column,player(),1/60,{...services,shoot:(e,options)=>shots.push(options)});
+  assert.equal(column.contact,false);assert.equal(column.x,x);assert.equal(column.y,y);
+  assert.deepEqual(shots.map(s=>s.angle),[-.35,0,.35]);assert.ok(shots.every(s=>s.aim));
+});
+
+test("cutlery traps are hidden until approached, then fall; aimed bullets and gravity shots retain both axes", () => {
+  const e=createEnemy({name:"Knife",x:320,y:160}),services={tileAt:empty,shoot(){},moveBody(){assert.fail("trap has its own falling motion");}};
+  updateEnemy(e,{x:2000,y:320},1/60,services);assert.equal(e.visible,false);
+  updateEnemy(e,{x:340,y:320},1/60,services);assert.equal(e.visible,true);
+  const start=e.y;for(let i=0;i<90;i++)updateEnemy(e,{x:400,y:320},1/60,services);
+  assert.ok(e.y>start+100);assert.ok(e.vy>0);
+  const aimed=createEnemyShot({behavior:"shell",x:100,y:320,dir:1},null,{aim:true,target:{x:300,y:100}});
+  assert.ok(aimed.vx>0&&aimed.vy<0);assert.ok(Math.abs(Math.hypot(aimed.vx,aimed.vy)-240)<1e-8);
+  const arc=createEnemyShot({behavior:"volcano",x:100,y:320,dir:1},null,{fireball:true,vx:0,vy:-240,gravity:960});
+  const y=arc.y;updateEnemyShot(arc,{x:2000,y:0,w:8,h:60},.1,{tileAt:empty,camera:{x:0,y:0},hurtPlayer(){}});
+  assert.ok(arc.y<y);assert.equal(arc.vy,-144);
+});

@@ -55,6 +55,7 @@ try {
     const checkpoint=g.saves.at(-1);
     Object.assign(g.player,{x:checkpoint.x,y:checkpoint.y,vx:0,vy:0,damage:null});gameUpdate(1/60);Input.endStep();
     g.energy=0;gameUpdate(1/60);Input.endStep();
+    for(let i=0;i<160&&g.death;i++){gameUpdate(1/60);Input.endStep();}
     await loadLevel(1);gameDraw(document.querySelector("canvas").getContext("2d"));
     return {collected,abilities:g.abilities,hearts:g.maxHearts,lives:g.lives,position:{x:g.player.x,y:g.player.y},checkpoint:{x:checkpoint.x,y:checkpoint.y},run:Save.run()};
   });

@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { JSDOM } from "jsdom";
-import { menuInit, chaptersInit, chaptersUpdate, chaptersDraw, chPos, achInit, achDraw, achUpdate, optionsInit, optionsUpdate, optionsDraw, onOptionsDone, pauseInit, pauseUpdate, pauseDraw } from "../js/menu.js";
+import { menuInit, menuDraw, menuUpdate, TRASH, chaptersInit, chaptersUpdate, chaptersDraw, chPos, achInit, achDraw, achUpdate, optionsInit, optionsUpdate, optionsDraw, onOptionsDone, pauseInit, pauseUpdate, pauseDraw } from "../js/menu.js";
 import { Input } from "../js/input.js";
 import { Save } from "../js/save.js";
 import { Audio2 } from "../js/audio.js";
@@ -40,6 +40,17 @@ async function fresh(unlocked, callback = () => {}) {
   localStorage.clear(); Input.reset(); Input.mouse.inside = false;
   Save.unlock(unlocked); await menuInit(() => {}); await chaptersInit(callback);
 }
+
+test("main-menu version uses native centered bitmap text and the bin matches the original foot area", async () => {
+  await fresh(1);const ctx=context();menuDraw(ctx);
+  const bin=ctx.draws.find(d=>d.src.endsWith("reciclebin.png"));
+  assert.deepEqual(TRASH,{x:434,y:332,w:32,h:32});assert.deepEqual(bin.rect.slice(4),[434,332,32,32]);
+  const glyphs=ctx.draws.filter(d=>d.src.endsWith("winnie14-ob.png"));
+  assert.equal(glyphs.length,10);assert.ok(glyphs.every(d=>d.rect[5]===364));
+  assert.equal(ctx.texts.length,0,"no unrelated system-font version label");
+  const before=Save.read();Object.assign(Input.mouse,{inside:true,x:488,y:332});Input.pressed.add("click");menuUpdate();Input.endStep();
+  assert.deepEqual(Save.read(),before,"the old out-of-place bin location is inert");
+});
 
 test("chapter nodes use native manual anchors and correct red/grey/blue crops", async () => {
   await fresh(3);

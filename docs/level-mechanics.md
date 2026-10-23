@@ -28,6 +28,9 @@ más las reglas del nivel 1 a todos los demás.
 `Spot1…5` son marcadores asociados al encuentro; no deben tratarse como enemigos
 comunes. Las columnas, cubiertos y hachas también necesitan interpretación propia.
 Actualmente varias entidades posteriores conservan movimiento provisional.
+La [tanda de catálogo y presentación](presentation-and-content.md) configura sus
+bibliotecas y familias de IA; «pendiente» en la tabla sigue indicando que falta
+cerrar la equivalencia de patrones y los combates, no que falte cargar su sprite.
 
 ## Tanda de hormiga y mariposa — 23/10/2026
 

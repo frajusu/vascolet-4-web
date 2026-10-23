@@ -263,3 +263,13 @@ Se añadió tinte rojo al recibir daño y se eliminó el redondeo prematuro de l
 cámara normal. Fuentes, constantes, pruebas, apoyo de modelos gratuitos y el
 inventario de pendientes de los 18 niveles están en
 [mecánicas por nivel](level-mechanics.md).
+
+## Octava corrección: presentación, muerte y catálogo — 23/10/2026
+
+Se contrastó el footer con una nueva captura Windows, se añadió la espera de
+muerte de los TMX con fundido de reaparición y se compusieron las capas antes de
+filtrarlas para eliminar costuras. La música ya no se reinicia al solicitar la
+misma pista. Se configuraron bibliotecas por especie para los 18 mapas, con
+familias de comportamiento posteriores y marcadores separados de enemigos.
+Fuentes, pruebas y límites de las IA/jefes están en
+[presentación y contenido](presentation-and-content.md).

@@ -8,7 +8,7 @@ import { parseAtlas } from "./tmx.js";
 import { Input } from "./input.js";
 import { Save } from "./save.js";
 import { Audio2 } from "./audio.js";
-import { loadBitmapFont, drawBitmapText } from "./bitmap-font.js";
+import { loadBitmapFont, drawBitmapText, measureBitmapText } from "./bitmap-font.js";
 import { TROPHIES } from "./trophies.js";
 import { setTextureFiltering } from "./render-settings.js";
 
@@ -24,6 +24,7 @@ const BTN = [
 ];
 let atlas = null, sel = 0, onChoose = null;
 let trashHover = false, confirming = false, confirmSel = 0;
+let menuFont = null;
 
 export async function menuInit(choose) {
   onChoose = choose;
@@ -32,10 +33,11 @@ export async function menuInit(choose) {
     atlas = parseAtlas(doc);
   }
   sel = 0; confirming = false; confirmSel = 0;
+  if (!menuFont) menuFont = await loadBitmapFont("winnie14-ob");
   await loadAssets(["assets/gui/menu/reciclebin.png", "assets/gui/menu/reciclebin-over.png"]).catch(() => {});
 }
 
-const TRASH = { x: 472, y: 316, w: 32, h: 32 };
+export const TRASH = Object.freeze({ x: 434, y: 332, w: 32, h: 32 });
 function inRect(mx, my, r) {
   return mx >= r.x && mx < r.x + r.w && my >= r.y && my < r.y + r.h;
 }
@@ -105,9 +107,8 @@ export function menuDraw(ctx) {
   });
   ctx.imageSmoothingEnabled = true;
   // footer y hints vienen horneados en el fondo; solo Versión es texto
-  ctx.font = "bold 14px sans-serif";
-  ctx.fillStyle = "#ffd75e";
-  ctx.fillText("Versión: 1", 428, 368);
+  // MainMenuState: horizontal center 449, bottom screenHeight-3; native bitmap font.
+  if (menuFont) drawBitmapText(ctx, menuFont, "Versión: 1", 449 - measureBitmapText(menuFont, "Versión: 1") / 2, 364);
   // papelera: borra el guardado con aviso (hover cambia el icono)
   const trash = img(trashHover && Save.read() ? "assets/gui/menu/reciclebin-over.png" : "assets/gui/menu/reciclebin.png");
   if (trash && Save.read()) {
