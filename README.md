@@ -51,17 +51,24 @@ en ese nivel permite reanudar desde el checkpoint. Sin cuenta ni servidor.
   (igual a cualquier refresh rate) e interpola el render.
 - **Texturas HD sin romper nada:** el mundo vive en píxeles del juego (512×384);
   los atlas se recortan por rect + pivot y el escalado es uniforme.
-- **Sin build:** HTML+JS estático, deploy directo a Pages. Tests:
+- **Publicación estática:** el build genera un único JS versionado para evitar
+  bloqueos por nombre de módulo y mezclas de caché. Pages publica `_site`. Tests:
   `npm test`; smoke de navegador: `npm run test:browser`;
   recorrido y combate con teclado: `npm run test:gameplay`.
 
 ## Desarrollo local
 
 ```sh
+npm ci
+npm run build
 # servir la carpeta (los módulos ES y fetch exigen http, no file://)
-python -m http.server 8123
+python -m http.server 8123 --directory _site
 # abrir http://127.0.0.1:8123/
 ```
+
+El arranque muestra un error recuperable si un archivo es bloqueado, en lugar de
+quedar indefinidamente en «Cargando…». `npm run test:startup` prueba el artefacto
+publicable simulando el bloqueo de fullscreen. [Detalle](docs/startup-and-deployment.md).
 
 Estructura: `js/main.js` (estados/boot), `js/game.js` (nivel/jugador/enemigos/HUD),
 `js/menu.js` (menús/capítulos/opciones/pausa/videos), `js/tmx.js` (parsers),

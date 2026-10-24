@@ -307,4 +307,5 @@ function frame(ts) {
 }
 
 setBoot("Iniciando…");
-void boot().catch(fatal);
+export const startup = boot();
+void startup.catch(fatal);

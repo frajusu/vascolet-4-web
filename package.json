@@ -4,6 +4,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "build": "node tools/build-site.mjs",
     "test": "node --test --test-reporter=spec tools/core.test.mjs tools/integration.test.mjs tools/gameplay.test.mjs tools/menu.test.mjs tools/help.test.mjs tools/world-mechanics.test.mjs tools/bosses.test.mjs tools/later-enemies.test.mjs tools/fullscreen.test.mjs",
     "serve": "node tools/serve.mjs",
     "test:browser": "node tools/browser-smoke.mjs",
@@ -16,7 +17,8 @@
     "test:stage-modes": "node tools/browser-stage-modes.mjs",
     "test:presentation": "node tools/browser-presentation.mjs",
     "test:campaign": "node tools/browser-campaign.mjs",
-    "test:fullscreen-trash": "node tools/browser-fullscreen-trash.mjs"
+    "test:fullscreen-trash": "node tools/browser-fullscreen-trash.mjs",
+    "test:startup": "node tools/browser-startup.mjs"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +28,7 @@
     "jsdom": "^29.1.1"
   },
   "devDependencies": {
+    "esbuild": "0.25.12",
     "playwright-core": "^1.64.1"
   }
 }
