@@ -1,5 +1,10 @@
 # Mecánicas por nivel y siguiente etapa del port
 
+**Estado actual:** los controladores y las mecánicas de esta tabla ya están
+integrados. La tabla conserva el inventario de la primera planificación; sus
+pendientes fueron abordados en la [validación de campaña](campaign-status.md),
+que distingue funcionalidad probada de equivalencia nativa todavía no certificada.
+
 Inventario de los **18 TMX originales**, no una lista de niveles terminados.
 Reproducible con `python tools/inspect-levels.py`; permite evitar trasladar sin
 más las reglas del nivel 1 a todos los demás.

@@ -10,7 +10,7 @@ from elftools.elf.elffile import ELFFile
 
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--subject', choices=['Fly', 'Frog', 'Flower', 'Beetle', 'Snail', 'PlayerDamage', 'PlayerProgress', 'BigScorpion', 'MountedPlayers', 'AutoCamera'], default='Frog')
+parser.add_argument('--subject', choices=['Fly', 'Frog', 'Flower', 'Beetle', 'Snail', 'PlayerDamage', 'PlayerProgress', 'BigScorpion', 'MountedPlayers', 'AutoCamera', 'Swimming', 'Platforms'], default='Frog')
 parser.add_argument('--compact', action='store_true', help='Only annotated strings/actions/constants, for focused review')
 parser.add_argument('--binary', type=Path, default=root.parent / 'Vascolet4.activity/bin/vascolet4')
 parser.add_argument('--output', type=Path, default=root / 'analysis/native-evidence')
@@ -29,6 +29,8 @@ ranges = {
                        (0x0807a67d, 0x0807a7c9), (0x081e7680, 0x081e76fe), (0x081e9a70, 0x081e9bc2)],
     'AutoCamera': [(0x081cfad0, 0x081d01b2), (0x081d40a0, 0x081d4b15),
                    (0x082012d0, 0x082014f3), (0x08202ac0, 0x08202d07)],
+    'Swimming': [(0x080d37b0, 0x080d505c), (0x081eeef0, 0x081effa1)],
+    'Platforms': [(0x081d3a70, 0x081d3e88), (0x0821a440, 0x0821a85f), (0x082025f0, 0x08202ab8)],
 }
 with args.binary.open('rb') as f:
     elf = ELFFile(f)

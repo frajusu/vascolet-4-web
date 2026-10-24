@@ -2,6 +2,8 @@
 // provisional values are separated in docs/presentation-and-content.md.
 import { CHARACTER_CATALOG } from "./character-catalog.js";
 const later = {
+  FurryCritterChild: { behavior:"patrol",speed:120,pose:"walk" },
+  Anguila: { behavior:"swim-patrol",speed:60 },
   Bee: { behavior:"fly",hp:1,speed:240,patrolTurn:32,acceleration:480,verticalAcceleration:600 },
   Panal: { behavior:"hive",speed:0,attackDelay:2,attackSpread:0,pose:"panal" },
   Mosquito: { behavior:"flying-shooter",speed:120,acceleration:600,attackDelay:2,attackSpread:0 },
@@ -25,7 +27,7 @@ const later = {
 };
 export const ENEMY_PROFILES = Object.freeze({
   ...Object.fromEntries(Object.entries(CHARACTER_CATALOG).map(([kind,desc])=>[kind,{
-    ...desc,behavior:"boss-pending",speed:0,...later[kind],
+    ...desc,behavior:"native-boss",speed:0,...later[kind],
   }])),
   Fly: { behavior: "fly", hp: 1, w: 40, h: 48, speed: 240, gravity: 0,
     patrolTurn: 32, acceleration: 480, verticalAcceleration: 600 },

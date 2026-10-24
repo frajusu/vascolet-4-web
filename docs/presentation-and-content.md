@@ -1,5 +1,9 @@
 # Menú, muerte, render y catálogo de enemigos — 23/10/2026
 
+Este documento conserva la evidencia de esa tanda. Los jefes estáticos y sistemas
+que aquí se describen como pendientes fueron integrados en la
+[tanda de campaña completa](campaign-status.md); las calibraciones siguen explícitas.
+
 ## Contraste con Windows
 
 Se volvió a capturar el menú del original en el runner invisible, sin seleccionar

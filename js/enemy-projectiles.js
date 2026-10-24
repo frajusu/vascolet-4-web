@@ -5,18 +5,22 @@ export function createEnemyShot(e, anim = null, options = {}) {
   let vx = e.dir * (fire ? 480 : 240), vy = 0;
   if (options.aim && options.target) {
     const angle = Math.atan2(options.target.y - 30 - y, options.target.x - x) + (options.angle || 0);
-    vx = Math.cos(angle) * 240; vy = Math.sin(angle) * 240;
+    vx = Math.cos(angle) * (fire ? 480 : 240); vy = Math.sin(angle) * (fire ? 480 : 240);
   }
-  return { kind: fire ? "fireball" : "effects", x, y, prevX: x, prevY: y,
+  return { kind: options.library || (fire ? "fireball" : "effects"), x, y, prevX: x, prevY: y,
     vx: options.vx ?? vx, vy: options.vy ?? vy, gravity: options.gravity || 0,
+    cosmetic:!!options.cosmetic, life:options.life, terrain:!!options.terrain,
+    endAnimation:options.endAnimation || "ending",
     anim, ending: false, removed: false, seen: false };
 }
 
 export function updateEnemyShot(shot, player, dt, { tileAt, camera, hurtPlayer }) {
   if (shot.removed) return;
+  if (shot.life !== undefined && (shot.life -= dt) <= 0) { shot.removed = true; return; }
   if (shot.ending) {
+    shot.endingT = (shot.endingT || 0) + dt;
     shot.anim?.update(dt);
-    if (!shot.anim || shot.anim.finished) shot.removed = true;
+    if (!shot.anim || shot.anim.finished || shot.endingT > .5) shot.removed = true;
     return;
   }
   const nx = shot.x + shot.vx * dt, ny = shot.y + (shot.vy || 0) * dt + .5 * (shot.gravity || 0) * dt * dt, radius = 6;
@@ -26,13 +30,13 @@ export function updateEnemyShot(shot, player, dt, { tileAt, camera, hurtPlayer }
     player.x + player.w / 2 + radius, player.y + radius);
   // GenericBullet has no map collision. Fireball has an explicit solid-tile
   // extinction rule and plays its ending animation instead of vanishing.
-  const wall = shot.kind === "fireball" ? terrainHit(shot.x, shot.y, nx, ny, tileAt, radius) : null;
-  if (hit !== null && (wall === null || hit <= wall)) hurtPlayer();
-  if (shot.kind === "fireball" && (hit !== null || wall !== null)) {
+  const wall = shot.kind === "fireball" || shot.terrain ? terrainHit(shot.x, shot.y, nx, ny, tileAt, radius) : null;
+  if (!shot.cosmetic && hit !== null && (wall === null || hit <= wall)) hurtPlayer();
+  if ((shot.kind === "fireball" || shot.terrain) && (hit !== null || wall !== null)) {
     const contact = Math.min(hit ?? 1, wall ?? 1);
     shot.x += (nx - shot.x) * contact; shot.y += (ny - shot.y) * contact;
     shot.vx = 0; shot.ending = true;
-    if (shot.anim?.has("ending")) shot.anim.restart("ending");
+    if (shot.anim?.has(shot.endAnimation || "ending")) shot.anim.restart(shot.endAnimation || "ending");
     else shot.removed = true;
   } else { shot.x = nx; shot.y = ny; }
   shot.anim?.update(dt);

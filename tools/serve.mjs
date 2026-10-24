@@ -12,6 +12,7 @@ const mime = {
   ".tsx": "application/xml; charset=utf-8", ".css": "text/css; charset=utf-8",
   ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
   ".ogg": "audio/ogg", ".wav": "audio/wav", ".mp3": "audio/mpeg",
+  ".mp4": "video/mp4",
   ".svg": "image/svg+xml", ".ico": "image/x-icon",
 };
 const inside = (root, file) => {

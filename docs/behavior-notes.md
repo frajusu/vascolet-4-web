@@ -273,3 +273,12 @@ misma pista. Se configuraron bibliotecas por especie para los 18 mapas, con
 familias de comportamiento posteriores y marcadores separados de enemigos.
 Fuentes, pruebas y límites de las IA/jefes están en
 [presentación y contenido](presentation-and-content.md).
+
+## Novena corrección: campaña funcional y todos los controladores — 24/10/2026
+
+Se integraron los 11 jefes restantes, la lógica posterior de enemigos, natación,
+plataformas móviles, crías/proyectiles, video final y una prueba secuencial de los
+18 niveles con inventario real acumulado. También se corrigió el retorno vertical
+del boomerang que fallaba tras saltar. La comprobación es explícitamente por
+fixtures controlados, no un recorrido natural completo ni garantía de equivalencia.
+[Estado de campaña, resultados y fuentes](campaign-status.md).

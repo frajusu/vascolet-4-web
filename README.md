@@ -65,10 +65,10 @@ Estructura: `js/main.js` (estados/boot), `js/game.js` (nivel/jugador/enemigos/HU
 ## Estado del port
 
 Port en desarrollo: usa mapas, arte, animaciones, audio y textos originales.
-Se ajustaron boomerang y cámara comparando el ejecutable, y se implementaron
-comportamientos separados de mosca, rana, flor, escarabajo y caracol tomando
-también como referencia el proyecto Godot del usuario. La física exacta,
-presentación, especies posteriores y otros patrones de jefes siguen en recuperación.
+Los 18 niveles tienen sus tipos de enemigo y jefes integrados, junto con natación,
+monturas, plataformas móviles, objetos, habilidades y progresión hasta el final.
+La prueba secuencial completa los 18 mapas mediante fixtures controlados; todavía
+no certifica recorridos naturales ni equivalencia exacta de física, tiempos y RNG.
 Fuentes, observaciones y ajustes provisionales: [notas de comportamiento](docs/behavior-notes.md).
 
 El nivel 1 incorpora sus 13 objetos con animaciones, habilidades obtenidas durante
@@ -82,12 +82,13 @@ cerrar un recorrido continuo completo y la equivalencia exacta con el original.
 Los niveles **2/5 (hormiga)** y **8/14 (mariposa)** ya tienen su base específica
 de movimiento, animaciones, cámara automática y salida real. Se corrigió el
 destello rojo de daño y el seguimiento fraccional de la cámara. El
-[inventario de mecánicas de los 18 niveles](docs/level-mechanics.md) distingue
-lo implementado de natación, trampas y jefes que aún faltan.
+[estado funcional de la campaña](docs/campaign-status.md) detalla los controles,
+las pruebas nivel por nivel y las diferencias de calibración que siguen abiertas.
 La última revisión corrige el footer del menú, introduce una transición de muerte,
 compone las capas para evitar costuras y conserva la música al reaparecer. También
-configura bibliotecas y familias de enemigos de los 18 mapas; los patrones finos
-y jefes posteriores continúan pendientes. [Detalle y contraste con Windows](docs/presentation-and-content.md).
+configura bibliotecas y familias de enemigos de los 18 mapas. Los jefes posteriores
+ya tienen controladores activos; sus fuentes y ajustes finos están documentados.
+[Historial de presentación y contraste con Windows](docs/presentation-and-content.md).
 
 ### Pulido de animales
 
@@ -106,6 +107,9 @@ salidas controladas, el destello rojo y la carga inicial de los 18 mapas.
 `npm run test:presentation` comprueba menú, muerte, continuidad musical y costuras
 de render mediante muestras de píxeles. Con el original local,
 `python tools/audit-level-content.py` contrasta mapas y audio por hash.
+`npm run test:campaign` verifica los 18 niveles en orden, objetos, poderes,
+combates de estado, vidas/desbloqueos y video final, con colocaciones controladas
+y protección temporal del jugador declaradas en el informe.
 La [herramienta nativa aislada](tools/native-isolated/README.md) permite observar
 una copia del original en un escritorio invisible, con controles privados y sin
 seleccionar ese escritorio. Su smoke de marcha/salto pasó; no recorre el nivel completo.

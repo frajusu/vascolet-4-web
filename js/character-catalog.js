@@ -21,6 +21,8 @@ const rows = [
   ["BigPirana","big-pirana",30,92,96,0], ["BigBat","big-bat",30,90,42,0],
   ["BigGhost","ghost2",30,62,64,0], ["BigSpider","big-spider",70,92,108,0],
   ["Malmark2","malmark2",100,30,120,0],
+  ["FurryCritterChild","furry-critter-child",5,40,20,900],
+  ["Anguila","anguila-child",2,64,16,0],
 ];
 export const CHARACTER_CATALOG = Object.freeze(Object.fromEntries(rows.map(([kind,asset,hp,w,h,gravity]) =>
   [kind,Object.freeze({asset,hp,w,h,gravity})])));

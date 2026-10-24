@@ -19,6 +19,8 @@ import { createEnemyShot, updateEnemyShot } from "./enemy-projectiles.js";
 import { integrateAxis, MAP_SKIN, subjectY } from "./physics.js";
 import { MOUNTED, playerMode, moveMountedPlayer, touchesExit, constrainToAutoCamera } from "./stage-modes.js";
 import { CHARACTER_CATALOG } from "./character-catalog.js";
+import { waterZones, waterAt, updateSwimming } from "./water.js";
+import { createPlatforms, updatePlatforms, carryPlatform, landOnPlatform } from "./platforms.js";
 
 const W = 512, H = 384, TILE = 32;
 const MUS = "assets/audio/music/win/";
@@ -98,7 +100,7 @@ function tmxDir(n) {
     Snail: "snail", BigScorpion: "big-scorpion-v02", Scorpion: "escorpion", Items: "items", TopoNinja: "topo-ninja", BigBird: "big-bird",
     BigSnake: "big-snake", VolcanoFlower: "volcano-flower", Panal: "fly", Bat: "big-bat",
     LittleSpider: "little-spider", Fish: "fish", Piranha: "pirana", Pirana2: "pirana2",
-    Blowfish: "blowfish", Shell: "shell", Mosquito: "mosquito", DragonFly: "dragon-fly",
+    Blowfish: "blowfish", Shell: "shell", Mosquito: "mosquito", DragonFly: "dragon-fly", Platform: "plataforma",
     Bee: "bee", GiantDragonfly: "giant-dragonfly", BigUglyDragon: "ugly-dragon",
     FurryCritter: "furry-critter", Mouse: "mouse", BigBat: "big-bat", BigGhost: "ghost2",
     BigSpider: "big-spider", BigAnguila: "anguila2", BigPirana: "big-pirana",
@@ -152,6 +154,7 @@ export async function loadLevel(n, fresh = true) {
   const levelPath = `assets/data/maps/level${n}.tmx`;
   const doc = await loadXML(levelPath);
   G.map = parseTMX(doc);
+  G.water = waterZones(G.map); G.platforms = createPlatforms(G.map);
   G.gw = G.map.w; G.gh = G.map.h;
   if (G.map.tw !== TILE || G.map.th !== TILE) throw new Error(`Unsupported tile size in ${levelPath}`);
   G.tsx = await loadTilesets(G.map, levelPath);
@@ -213,6 +216,11 @@ export async function loadLevel(n, fresh = true) {
   await ensureChar("Vascolet");
   await Promise.all(["Boomerang", "effects", "fireball", "LightBug", "Items", "Scorpion"].map(ensureChar));
   if (G.enemies.some(e => e.kind === "Panal")) await ensureChar("Bee");
+  const helpers = new Set();
+  for (const e of G.enemies) for (const kind of ({ FurryCritter:["FurryCritterChild"], BigAnguila:["Anguila"],
+    BigPirana:["BigPiranaBlowFish"], BigBat:["Bat"], BigSpider:["LittleSpider"], Malmark2:["Bat","DragonFly","Bee"] })[e.kind] || []) helpers.add(kind);
+  await Promise.all([...helpers].map(ensureChar));
+  if (G.platforms.length) { await ensureChar("Platform"); attachPlatforms(); }
   const itemChar = G.charCache.get("Items");
   for (const item of G.items) if (itemChar?.anims.some(a => a.name === item.definition?.animation)) {
     item.anim = new AnimPlayer(itemChar.anims); item.anim.set(item.definition.animation);
@@ -261,6 +269,9 @@ export async function loadLevel(n, fresh = true) {
     if (k === "winCondition,exit") G.win = { kind: "exit" };
   }
   G.winAction = G.map.props["winAction"] || "";
+  // A chapter without Save signs still needs to preserve the lives carried into
+  // it when the page is reloaded. Starting a chapter is its initial checkpoint.
+  Save.saveRun({level:n,checkpoint:{...G.checkpoint},lives:G.lives,consumed:[...G.checkpointConsumed]});
 }
 
 async function ensureChar(tmxName) { return loadChar(tmxName); }
@@ -340,12 +351,13 @@ function moveBody(b, dt, gravity = GRAV) {
   }
   for (let ty = Math.floor((b.y - b.h + EPS) / TILE); ty <= Math.floor((b.y + skin - EPS) / TILE); ty++)
     for (let tx = x0; tx <= x1; tx++) if (tileAt(tx, ty) & TILE_DAMAGE) b.hurt = true;
+  landOnPlatform(b, prevBottom, Game.platforms || []);
 }
 
 function snapshotPositions() {
   const G = Game;
   G.prevCamX = G.camX; G.prevCamY = G.camY;
-  for (const b of [G.player, G.helper, ...G.enemies, ...G.booms, ...G.parts, ...G.shots, ...G.effects]) {
+  for (const b of [G.player, G.helper, ...(G.platforms || []), ...G.enemies, ...G.booms, ...G.parts, ...G.shots, ...G.effects]) {
     if (b) { b.prevX = b.x; b.prevY = b.y; }
   }
 }
@@ -383,10 +395,9 @@ export function gameUpdate(dt) {
     return;
   }
   if (G.won) {
-    p.vx = 0; if (MOUNTED[p.mode]) p.vy = 0;
-    moveBody(p, dt, MOUNTED[p.mode] ? 0 : GRAV); p.anim.update(dt); p.cur = p.anim.frame;
-    for (const fx of G.effects) fx.anim.update(dt);
-    G.effects = G.effects.filter(fx => !fx.anim.finished);
+    p.vx = p.vy = 0;
+    p.anim.update(dt); p.cur = p.anim.frame;
+    updateEffects(dt);
     G.winTimer = Math.max(0, G.winTimer - dt);
     if (!G.winTimer && !G.winSent) { G.winSent = true; G.events.push({ type: "win" }); }
     return;
@@ -411,10 +422,15 @@ export function gameUpdate(dt) {
   const mounted = MOUNTED[p.mode];
   const wasGround = p.ground, fallV = p.vy;
   p.hurt = false;
+  updatePlatforms(G.platforms || [], dt); carryPlatform(p, G.platforms || []);
+  const swimming = !mounted && updateSwimming(p, G.abilities, G.water || [], controls, dt,
+    { moveBody, sound: levelSound, bubble: makeBubble });
   let dir = 0;
   if (down("left")) dir -= 1;
   if (down("right")) dir += 1;
-  if (mounted) {
+  if (swimming) {
+    // updateSwimming owns both axes and bank exits for this step.
+  } else if (mounted) {
     moveMountedPlayer(p, controls, dt, { moveBody, jumpSound: () => levelSound("jumpAir") });
   } else {
     const now = G.time;
@@ -441,8 +457,9 @@ export function gameUpdate(dt) {
       const supports = [];
       for (let x = Math.floor((p.x - p.w / 2 + EPS) / TILE); x <= Math.floor((p.x + p.w / 2 - EPS) / TILE); x++)
         supports.push(tileAt(x, Math.floor((p.y + (p.skin ?? 0) + EPS) / TILE)));
-      if (supports.some(f => f & TILE_UP) && !supports.some(f => f & TILE_SOLID)) {
+      if ((p.platformId != null || supports.some(f => f & TILE_UP)) && !supports.some(f => f & TILE_SOLID)) {
         p.dropT = .2; p.y += 2; p.vy = 60; p.ground = false; p.coyote = 0; p.buffer = 0;
+        p.platformId = null;
       }
     }
     let launched = false;
@@ -469,21 +486,22 @@ export function gameUpdate(dt) {
   p.inv = Math.max(0, p.inv - dt);
   if (p.hurt) hurtPlayer();
   if (!p.damage && firePressed() && p.fireCd <= 0 && !p.attack && G.booms.length < G.abilities.maxBoomerangs) {
-    const name = mounted?.attack || (!p.ground && p.anim.has("jumpAttack") ? "jumpAttack"
+    const name = mounted?.attack || (p.swimming ? (G.abilities.swim ? "swimming2Attack" : "swimmingAttack") : !p.ground && p.anim.has("jumpAttack") ? "jumpAttack"
       : p.crouch && p.anim.has("crouchAttack") ? "crouchAttack" : "standAttack");
     if (p.anim.has(name)) {
       p.attack = { name, released: false, crouch: p.crouch, face: p.face, time: 0 };
       p.animName = name; p.anim.set(name, { restart: true });
       p.fireCd = .15;
-      if (p.crouch || mounted) releaseBoomerang();
+      if (p.crouch || mounted || p.swimming) releaseBoomerang();
     }
   }
   p.fireCd = Math.max(0, p.fireCd - dt);
   for (const e of G.enemies) {
     if (!e.active && Math.abs(e.x - p.x) < 512 && Math.abs(e.y - p.y) < 420) e.active = true;
-    const finishingBoss = e.behavior === "scorpion-boss" && e.state === "dying";
+    const finishingBoss = e.boss && e.state === "dying";
     if (!finishingBoss && (!e.active || Math.abs(e.x - p.x) > 900 || Math.abs(e.y - p.y) > 700)) continue;
-    if (e.boss && e.behavior !== "scorpion-boss" && e.hp > 0 && !e.fight &&
+    carryPlatform(e, G.platforms || []);
+    if (e.boss && !["scorpion-boss","native-boss"].includes(e.behavior) && e.hp > 0 && !e.fight &&
       e.x >= G.camX && e.x <= G.camX + W && e.y >= G.camY && e.y <= G.camY + H) {
       e.fight = true; G.musicMode = "boss";
       void Audio2.music(G.map.props["music,boss"] ? MUS + G.map.props["music,boss"] : null);
@@ -493,6 +511,7 @@ export function gameUpdate(dt) {
       bossStart: () => { G.musicMode = "boss"; void Audio2.music(G.map.props["music,boss"] ? MUS + G.map.props["music,boss"] : null); },
       minionCount: () => G.enemies.filter(m => m.minion && m.hp > 0).length, spawnMinion,
       spawn: spawnEnemy, nearby: (kind,owner) => G.enemies.filter(other => other.kind === kind && other.owner === owner && other.hp > 0 && !other.removed).length,
+      waterAt: (x,y) => !!waterAt(G.water || [],x,y), sound: levelSound, markers: G.markers, bounds: bossBounds(e),
       shake: time => { G.shakeT = Math.max(G.shakeT, time); },
       explosion: b => { impact(b.x + Math.sin(b.stateTime * 47) * 45, b.y - 30 + Math.cos(b.stateTime * 31) * 30, 2); levelSound("v_explosion"); },
       bossDefeated: b => { G.shakeT = .2; impact(b.x, b.y - 30, 4); levelSound("v_explosion"); },
@@ -516,7 +535,7 @@ export function gameUpdate(dt) {
   updateEnemyShots(dt);
   for (const e of G.enemies) {
     if (e.hp <= 0 || e.removed || e.visible === false || e.contact === false || Math.abs(p.x - e.x) >= (p.w + e.w) / 2 || p.y <= e.y - e.h || p.y - (p.crouch ? 28 : p.h) >= e.y) continue;
-    if (!mounted && G.abilities.jumpAttack && !e.boss && e.behavior !== "flower" && p.vy > 0 && p.prevY <= e.y - e.h + 10) {
+    if (!mounted && !p.swimming && G.abilities.jumpAttack && !e.boss && e.behavior !== "flower" && p.vy > 0 && p.prevY <= e.y - e.h + 10) {
       damageEnemy(e, p.face, 2); p.vy = -280; p.ground = false;
     } else hurtPlayer();
   }
@@ -564,24 +583,24 @@ export function gameUpdate(dt) {
   G.bossHP = 0; G.bossMax = 1; G.bossHead = null; G.bossVisible = false;
   for (const e of G.enemies) {
     if (!e.boss || e.defeated) continue;
-    if (e.behavior === "scorpion-boss" ? !e.fight : e.hp <= 0 || Math.hypot(e.x - p.x, e.y - p.y) > 520) continue;
+    if (e.behavior === "scorpion-boss" || e.behavior === "native-boss" ? !e.fight : e.hp <= 0 || Math.hypot(e.x - p.x, e.y - p.y) > 520) continue;
     G.bossVisible = true; G.bossHP = Math.max(0, e.hp); G.bossMax = e.maxhp; G.bossHead = e.kind;
   }
   // particulas de polvo
   for (const q of G.parts) { q.life -= dt; q.x += q.vx * dt; q.y += q.vy * dt; }
   G.parts = G.parts.filter(q => q.life > 0);
-  for (const fx of G.effects) fx.anim.update(dt);
-  G.effects = G.effects.filter(fx => !fx.anim.finished);
+  updateEffects(dt);
   // anim jugador con NOMBRES REALES (ataque tiene prioridad mientras dura)
   let want = "stand";
   if (p.attack) want = p.attack.name;
   // jumpAttack is the XML's airborne BOOMERANG throw, not the stomp power.
   // Only an explicit fire input may select it; an ordinary apex falls normally.
   else if (mounted) want = p.mode === "ant" && p.ground && dir ? mounted.walk : mounted.stand;
+  else if (p.swimming) want = G.abilities.swim ? "swimming2" : "swimming";
   else if (!p.ground) want = p.doubleUsed ? "runJumpMid" : p.vy < -120 ? (p.run && p.anim.has("runJump") ? "runJump" : "standJump") : p.vy < 0 ? "standJumpMid" : "fall";
   else if (p.crouch && p.anim.has("crouch")) want = "crouch";
   else if (dir !== 0) want = p.run ? "run" : "walk";
-  if (p.damage) want = mounted?.damage || ({ air: "damage", fall: "damageFall", rise: "damageRaise" })[p.damage.phase];
+  if (p.damage) want = mounted?.damage || (p.swimming ? "damageUnderWater" : ({ air: "damage", fall: "damageFall", rise: "damageRaise" })[p.damage.phase]);
   if (want !== p.animName && p.anim.has(want)) { p.animName = want; p.anim.set(want); }
   const r = p.anim.update(dt);
   p.cur = r.frame;
@@ -592,7 +611,7 @@ export function gameUpdate(dt) {
   }
   if (p.attack) {
     p.attack.time += dt;
-    const finished = p.mode === "butterfly" ? p.attack.time >= .25
+    const finished = p.mode === "butterfly" || p.attack.name.startsWith("swimming") ? p.attack.time >= .25
       : p.anim.finished || (p.attack.name === "jumpAttack" && (p.ground || p.anim.i >= p.anim.cur.loop));
     if (finished) p.attack = null;
   }
@@ -630,10 +649,12 @@ function respawnPlayer() {
   const s = G.checkpoint || G.start;
   p.x = s.x; p.y = s.y; p.vx = 0; p.vy = mounted?.initialVY || 0; p.inv = 2;
   p.attack = null; p.damage = null; p.run = false; p.ground = false; p.coyote = 0; p.buffer = 0; p.dropT = 0; p.doubleUsed = false; p.tapT = -9;
+  p.swimming = false; p.waterExitT = 0; p.swimFastT = 0; p.platformId = null;
   p.crouch = false; p.fireCd = 0; p.animName = mounted?.stand || "stand"; p.anim.restart(p.animName); p.cur = p.anim.frame;
   G.booms = []; G.shots = []; G.effects = []; G.parts = []; G.dlg = null; G.helper = null; G.shakeT = 0; G.inputFrames = [];
   G.bossVisible = false; G.bossHP = 0;
   G.enemies = G.spawnDescriptors.map(o => attachEnemyAnimation(createEnemy(o, BOSSES.has(o.name))));
+  G.platforms = createPlatforms(G.map); attachPlatforms();
   for (const item of G.items) item.taken = Save.hasItem(item.kind) || G.checkpointConsumed.includes(item.id);
   for (const info of G.infos) { info.shown = false; info.dismissed = false; }
   // Same normal track is reused instead of recreating the media element on each life.
@@ -646,6 +667,32 @@ function respawnPlayer() {
 function dust(x, y) {
   for (let i = 0; i < 5; i++)
     Game.parts.push({ x: x + (Math.random() - 0.5) * 20, y, vx: (Math.random() - 0.5) * 60, vy: -30 - Math.random() * 40, life: 0.4 });
+}
+
+function makeBubble(x, y) {
+  const c = Game.charCache.get("effects");
+  if (!c?.anims.some(a => a.name === "bubble")) return;
+  const anim = new AnimPlayer(c.anims); anim.set("bubble");
+  Game.effects.push({ x, y, prevX:x, prevY:y, vy:-30, life:2, anim });
+}
+
+function updateEffects(dt) {
+  for (const fx of Game.effects) { fx.anim.update(dt); fx.y += (fx.vy || 0) * dt; if (fx.life !== undefined) fx.life -= dt; }
+  Game.effects = Game.effects.filter(fx => !fx.anim.finished && (fx.life === undefined || fx.life > 0));
+}
+
+function attachPlatforms() {
+  const c = Game.charCache.get("Platform");
+  for (const p of Game.platforms || []) if (c?.anims.length) { p.anim = new AnimPlayer(c.anims); p.anim.set("normal"); }
+}
+
+function bossBounds(e) {
+  const G = Game;
+  let left = Math.max(0,e.homeX-640), right = Math.min(G.gw*TILE,e.homeX+640);
+  if (e.kind === "Malmark2" && G.markers.length) {
+    left = Math.max(0,Math.min(...G.markers.map(m=>m.x))-96);right = Math.min(G.gw*TILE,Math.max(...G.markers.map(m=>m.x))+128);
+  }
+  return {left,right,top:Math.max(e.h,e.homeY-480),bottom:Math.min(G.gh*TILE-2,e.homeY+480)};
 }
 
 function attachEnemyAnimation(e) {
@@ -692,14 +739,14 @@ function collectItem(item) {
 function bossesDefeated(game) {
   if (game.win?.kind !== "boss") return false;
   const bosses = game.enemies.filter(e => e.kind === game.win.target);
-  return bosses.length > 0 && bosses.every(e => e.behavior === "scorpion-boss" ? e.defeated : e.hp <= 0);
+  return bosses.length > 0 && bosses.every(e => ["scorpion-boss","native-boss"].includes(e.behavior) ? e.defeated : e.hp <= 0);
 }
 
 function finishLevel() {
   const G = Game;
   G.won = true; G.winSent = false; G.winTimer = Math.max(0, Number(G.map.props.winEffect?.split(",")[1]) || 0);
   G.player.attack = null; G.player.damage = null; G.player.inv = 0; G.player.vx = 0;
-  G.player.anim.set(MOUNTED[G.player.mode]?.stand || "stand"); G.player.cur = G.player.anim.frame;
+  G.player.anim.set(MOUNTED[G.player.mode]?.stand || (G.player.swimming ? G.abilities.swim ? "swimming2" : "swimming" : "stand")); G.player.cur = G.player.anim.frame;
   G.booms = []; G.shots = []; G.dlg = null; Save.completeLevel(G.level);
   void Audio2.music(MUS + (G.map.props["music,win"] || "win_level.ogg"), { loop: false });
   if (!G.winTimer) { G.winSent = true; G.events.push({ type: "win" }); }
@@ -738,11 +785,12 @@ function hurtPlayer() {
 }
 
 function enemyShoot(e, options = {}) {
-  const kind = options.fireball || e.behavior === "snail" ? "fireball" : "effects";
+  const kind = options.library || (options.fireball || e.behavior === "snail" ? "fireball" : "effects");
   const c = Game.charCache.get(kind);
   const anim = c?.anims.length ? new AnimPlayer(c.anims) : null;
-  if (anim?.has(kind === "fireball" ? "normal" : "bullet")) anim.set(kind === "fireball" ? "normal" : "bullet");
-  Game.shots.push(createEnemyShot(e, anim, { ...options, target: Game.player })); levelSound("willyFire");
+  const pose=options.animation || (kind === "fireball" ? "normal" : "bullet");
+  if (anim?.has(pose)) anim.set(pose);
+  Game.shots.push(createEnemyShot(e, anim, { ...options, target: Game.player })); if (!options.cosmetic) levelSound("willyFire");
 }
 
 function updateEnemyShots(dt) {
@@ -829,6 +877,9 @@ export function gameDraw(ctx, alpha = 1) {
   const L = layer(G.map, "Tiles");
   if (L) drawTileLayer(ctx, L, G.tsx, cx, cy);
   const F = layer(G.map, "foreground");
+  const platformChar = G.charCache.get("Platform");
+  for (const p of G.platforms || []) if (platformChar?.img && p.anim)
+    drawAnimFrame(ctx, platformChar.img, platformChar.atlas, p.anim.frame, x(p) - cx, y(p) - cy, { round:false });
   // items
   for (const i of G.items) {
     if (i.taken) continue;
@@ -851,7 +902,7 @@ export function gameDraw(ctx, alpha = 1) {
     const c = Game.charCache.get(e.kind);
     if (c?.img && e.anim) {
       ctx.save();
-      if (e.behavior === "scorpion-boss" && e.state === "dying" && e.stateTime >= 3) ctx.filter = "brightness(0) invert(1)";
+      if (e.boss && e.state === "dying" && e.stateTime >= 3) ctx.filter = "brightness(0) invert(1)";
       drawAnimFrame(ctx, c.img, c.atlas, e.cur, x(e) - cx, y(e) - cy,
         { flip: enemySpriteFlip(e), round: false,
           tint: e.hurtT > 0 && Math.floor(e.hurtT / (1 / 30)) % 2 ? "rgba(255,32,32,0.7)" : null });
@@ -948,7 +999,7 @@ function drawHUD(ctx) {
       const wpx = Math.floor(e.w * frac);
       pixel(ctx, () => ctx.drawImage(him, e.x, e.y, wpx, e.h, bx, by, wpx, e.h));
     }
-    const heads = { BigScorpion: "headBigScorpion", TopoNinja: "headTopoNinja", BigBird: "headBigBird", BigBat: "headBigBat", BigGhost: "headGhost", BigSpider: "headBigSpider", BigAnguila: "headElectricEel", BigPirana: "headPiranha", GiantDragonfly: "headGiantDragonfly", BigUglyDragon: "headUglyDragon", FurryCritter: "headFurryCritter", Malmark: "headMalmark" };
+    const heads = { BigScorpion: "headBigScorpion", TopoNinja: "headTopoNinja", BigBird: "headBigBird", BigBat: "headBigBat", BigGhost: "headGhost", BigSpider: "headBigSpider", BigAnguila: "headElectricEel", BigPirana: "headPiranha", GiantDragonfly: "headGiantDragonfly", BigUglyDragon: "headUglyDragon", FurryCritter: "headFurryCritter", Malmark: "headMalmark", Malmark2: "headMalmark" };
     const hk = heads[G.bossHead];
     if (hk) put(hk, 448, 327);
   }

@@ -85,7 +85,12 @@ export function updateBoomerang(b, player, enemies, dt, { tileAt, hitEnemy, wall
       return Math.max(-cap, Math.min(cap, v));
     };
     b.vx = accelerate(b.vx, Math.sign(player.x - b.x) * 960, 640);
-    b.vy = accelerate(b.vy, Math.sign(handY(player) - b.y) * 350, 240);
+    // Arrival steering brakes the vertical seek before crossing the owner's
+    // height. Pure sign acceleration oscillated into the floor after jumps.
+    const dy = handY(player) - b.y;
+    const desiredVY = Math.sign(dy) * Math.min(240, Math.sqrt(2 * 350 * Math.abs(dy)));
+    const forceY = Math.max(-350, Math.min(350, (desiredVY - b.vy) / Math.max(dt, 1e-9)));
+    b.vy = accelerate(b.vy, forceY, 240);
   }
   const nx = b.x + (oldVX + b.vx) * .5 * dt, ny = b.y + (oldVY + b.vy) * .5 * dt;
   let first = terrainHit(b.x, b.y, nx, ny, tileAt, 4, b.state === "falling");

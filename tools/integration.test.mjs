@@ -431,6 +431,12 @@ test("all map actors resolve original character libraries; ordinary snakes/fish 
   }
 });
 
+test("chapters without save signs preserve carried lives across a reload from their initial checkpoint", async () => {
+  await realStage(2);Game.lives=9;await loadLevel(2,false);
+  assert.equal(Game.saves.length,0);assert.equal(Save.run().lives,9);
+  await loadLevel(2);assert.equal(Game.lives,9);assert.deepEqual({x:Game.player.x,y:Game.player.y},Game.start);
+});
+
 test("final boss defeat switches directly to the one-shot victory track without restarting normal music in between", async () => {
   await realStage(1);const boss=Game.enemies.find(e=>e.kind==="BigScorpion");
   Object.assign(boss,{hp:0,defeated:true,state:"defeated",fight:true});Game.enemies=[boss];Game.musicMode="boss";

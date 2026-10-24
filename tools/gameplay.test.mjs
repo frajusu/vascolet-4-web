@@ -193,13 +193,11 @@ test("fly patrol X is spawn-relative and does not pursue a player on either side
   updateEnemy(e, { x: 2000, y: 320 }, 1, services); assert.ok(e.deadT >= 1);
 });
 
-test("unstudied swimming enemies and bosses accept hits without being forced into land physics", () => {
-  for (const [kind, boss] of [["Fish", false], ["BigBird", true]]) {
-    const e = createEnemy({ name: kind, x: 320, y: 304 }, boss);
-    assert.equal(hitEnemy(e), true); assert.equal(e.hp, e.maxhp - 1);
-    updateEnemy(e, player(), 1 / 60, { ...services, moveBody() { assert.fail("unverified species must not receive patrol gravity"); } });
-    assert.ok(Math.abs(e.y - e.homeY) <= 4);
-  }
+test("swimmers take hits; aerial bosses activate before becoming damageable and do not receive land gravity", () => {
+  const fish=createEnemy({name:"Fish",x:320,y:304});assert.equal(hitEnemy(fish),true);
+  const bird=createEnemy({name:"BigBird",x:320,y:304},true);assert.equal(hitEnemy(bird),false);
+  updateEnemy(bird,player(),1/60,{...services,inCamera:()=>true,moveBody(e,dt,g){assert.equal(g,0);}});
+  assert.equal(bird.fight,true);assert.equal(hitEnemy(bird),true);assert.equal(bird.hp,bird.maxhp-1);
 });
 
 test("first-area right-facing atlases turn with movement and stationary facing", () => {
@@ -366,4 +364,11 @@ test("cutlery traps are hidden until approached, then fall; aimed bullets and gr
   const arc=createEnemyShot({behavior:"volcano",x:100,y:320,dir:1},null,{fireball:true,vx:0,vy:-240,gravity:960});
   const y=arc.y;updateEnemyShot(arc,{x:2000,y:0,w:8,h:60},.1,{tileAt:empty,camera:{x:0,y:0},hurtPlayer(){}});
   assert.ok(arc.y<y);assert.equal(arc.vy,-144);
+});
+
+test("shell opening bubbles are finite cosmetic effects and cannot damage a player crossing them", () => {
+  const bubble=createEnemyShot({behavior:"shell",x:100,y:320,dir:1},null,{cosmetic:true,animation:"bubble",vx:0,vy:-16,life:2});
+  for(let i=0;i<130;i++)updateEnemyShot(bubble,{x:bubble.x,y:bubble.y+20,w:8,h:60},1/60,
+    {tileAt:empty,camera:{x:0,y:0},hurtPlayer(){assert.fail("cosmetic bubble dealt damage");}});
+  assert.equal(bubble.removed,true);
 });

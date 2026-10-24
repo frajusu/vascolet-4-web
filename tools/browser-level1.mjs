@@ -6,6 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import { chromium } from "playwright-core";
 import { startServer } from "./serve.mjs";
+import { startNewGame,pauseGame } from "./browser-session.mjs";
 
 const output=path.join(os.tmpdir(),"opencode",`vascolet-level1-${Date.now()}`);
 await mkdir(output,{recursive:true});
@@ -33,10 +34,7 @@ try {
   page.on("console",m=>{if(["error","warning"].includes(m.type()))report.errors.push(m.text());});
   page.on("response",r=>{if(r.status()>=400)report.errors.push(`${r.status()} ${r.url()}`);});
   await page.goto(url);await page.locator("#boot").waitFor({state:"detached"});
-  await page.evaluate(async()=>{window.__game=(await import("/js/game.js")).Game;});
-  await key("Enter");await key("Enter");await key("Enter");
-  await page.waitForFunction(()=>Boolean(window.__game.player?.anim&&window.__game.time>0));
-  await key("Escape");
+  await startNewGame(page);await pauseGame(page);
   report.initial=await page.evaluate(async()=>{
     const {Game:g,gameDraw}=await import("/js/game.js");
     gameDraw(document.querySelector("canvas").getContext("2d"));

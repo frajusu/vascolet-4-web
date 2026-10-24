@@ -4,7 +4,8 @@ import { TILE_SOLID, TILE_UP } from "./tmx.js";
 import { ENEMY_PROFILES, enemyRandom } from "./enemy-profiles.js";
 import { damageScorpion, updateScorpion } from "./scorpion-boss.js";
 import { subjectY, MAP_SKIN } from "./physics.js";
-import { updateLaterEnemy } from "./later-enemies.js";
+import { updateLaterEnemy, canDamageLaterEnemy } from "./later-enemies.js";
+import { BOSS_KINDS, updateBoss, damageBoss } from "./bosses.js";
 const clamp = (v, limit) => Math.max(-limit, Math.min(v, limit));
 
 export function createEnemy(object, boss = false, seed = 0x45a91) {
@@ -22,6 +23,7 @@ export function createEnemy(object, boss = false, seed = 0x45a91) {
   if (profile.behavior === "falling-trap" || profile.behavior === "snake") e.visible = false;
   if (profile.attackDelay) e.cooldown = profile.attackDelay + enemyRandom(e) * profile.attackSpread;
   if (profile.behavior === "scorpion-boss") { e.state = "waiting"; e.fight = false; e.defeated = false; }
+  if (BOSS_KINDS.has(e.kind)) { e.behavior = "native-boss"; e.state = "waiting"; e.fight = false; e.defeated = false; if(e.kind==="TopoNinja")e.maxFall=1000; }
   return e;
 }
 
@@ -37,6 +39,8 @@ export function enemySpriteFlip(e) {
 
 export function hitEnemy(e, direction = 1, damage = 1) {
   if (e.behavior === "scorpion-boss") return damageScorpion(e);
+  if (BOSS_KINDS.has(e.kind)) return damageBoss(e,direction,damage);
+  if (!canDamageLaterEnemy(e)) return false;
   if (e.hp <= 0 || e.hurtT > 0) return false;
   e.hp = Math.max(0, e.hp - damage); e.hurtT = .25;
   if (!e.hp) {
@@ -53,6 +57,7 @@ export function hitEnemy(e, direction = 1, damage = 1) {
 
 export function updateEnemy(e, player, dt, { moveBody, tileAt, shoot, booms = [], ...bossApi }) {
   if (e.behavior === "scorpion-boss") { e.t += dt; updateScorpion(e, player, dt, { moveBody, ...bossApi }); return; }
+  if (BOSS_KINDS.has(e.kind)) { updateBoss(e,player,dt,{moveBody,tileAt,shoot,booms,...bossApi}); return; }
   e.t += dt; e.stateTime += dt; e.hurtT = Math.max(0, e.hurtT - dt); e.cooldown -= dt;
   if (e.hp <= 0) {
     e.deadT += dt;

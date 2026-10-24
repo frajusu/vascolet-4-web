@@ -59,8 +59,8 @@ export function parseTMX(doc) {
         name: o.getAttribute("name") || "", type: o.getAttribute("type") || "",
         x: number(o, "x"), y: number(o, "y"),
         // Camera barriers are zero-thickness lines; missing sizes must stay zero.
-        w: number(o, "width", g.getAttribute("name") === "Camera" ? 0 : 32),
-        h: number(o, "height", g.getAttribute("name") === "Camera" ? 0 : 32),
+        w: number(o, "width", ["Camera", "Platforms"].includes(g.getAttribute("name")) ? 0 : 32),
+        h: number(o, "height", ["Camera", "Platforms"].includes(g.getAttribute("name")) ? 0 : 32),
         props: properties(o),
       };
       grp.objects.push(obj);

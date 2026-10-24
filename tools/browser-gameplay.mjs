@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { chromium } from "playwright-core";
 import { startServer } from "./serve.mjs";
+import { startNewGame } from "./browser-session.mjs";
 
 const output = path.join(os.tmpdir(), "opencode", `vascolet-gameplay-${Date.now()}`);
 await mkdir(output, { recursive: true });
@@ -40,9 +41,7 @@ try {
     await shot(name); await key("Escape");
   }
   report.checks.push("Ayuda y Créditos sin texto agregado");
-  for (let i = 0; i < 3; i++) await key("ArrowUp");
-  await key("Enter"); await key("Enter"); await key("Enter");
-  await page.waitForFunction(() => Boolean(window.__game.player?.anim&&window.__game.time>0));
+  await startNewGame(page);
   await shot("level1-camera");
   const state = () => page.evaluate(async () => {
     const { Game: g } = await import("/js/game.js");

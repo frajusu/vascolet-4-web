@@ -14,6 +14,7 @@ const ctx = canvas?.getContext("2d", { willReadFrequently: true });
 const bootEl = document.getElementById("boot");
 const STEP = 1 / 60, MAX_STEPS = 5, MAX_DELTA = STEP * MAX_STEPS;
 let state = "boot", last = null, acc = 0, levelData = null;
+export function currentScene() { return state; }
 
 function fit() {
   const s = Math.max(1, Math.floor(Math.min(innerWidth / 512, innerHeight / 384)));
@@ -94,6 +95,7 @@ async function loadLevelData() {
 async function startLevel(n, fresh = true) {
   // video de entrada del nivel (skipeable), luego gameplay
   state = "loading"; resetClock(); Input.reset();
+  Audio2.stopMusic(); // The previous win/level track must not overlap the movie.
   setBoot(null);
   await new Promise(resolve => {
     state = "video";
@@ -182,6 +184,9 @@ async function onLevelWin() {
   Save.completeLevel(Game.level);
   const m = action.match(/goto:level(\d+)/);
   if (action === "toEnding" || Game.level >= 18) {
+    state = "video"; resetClock(); Input.reset(); Audio2.stopMusic();
+    await new Promise(resolve => playVideo(19, resolve));
+    if (state === "fatal") return;
     await showEnd("victory");
   } else if (m) {
     await startLevel(parseInt(m[1], 10), false);
