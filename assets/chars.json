@@ -227,7 +227,7 @@
 "malmark2": {
 "png": "assets/characters\\malmark2/images\\malmark.png",
 "xml": "assets/characters\\malmark2/images\\malmark2.xml",
-"anim": "assets/characters\\malmark2/animData\\Malmark2.xml"
+"anim": "assets/characters\\malmark2/animdata\\Malmark2.xml"
 },
 "mina": {
 "png": "assets/characters\\mina\\minaImages\\Mina.png",

@@ -52,3 +52,8 @@ Puede comprobar directamente la publicación con
 La prueba no depende de desactivar extensiones globalmente ni borra la partida del
 usuario. Un filtro que bloquee también la nueva entrada seguirá pudiendo impedir
 su descarga, pero ahora el fallo se presenta explícitamente y permite reintentar.
+
+La nueva comprobación en Linux detectó además una referencia `animData` que no
+coincidía con la carpeta real `animdata` de Malmark2. Se corrigieron el manifiesto
+y su fixture; una prueba nueva comprueba el caso exacto de todas las rutas de
+personajes incluso cuando se ejecuta desde Windows.

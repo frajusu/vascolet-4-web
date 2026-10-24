@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "node tools/build-site.mjs",
-    "test": "node --test --test-reporter=spec tools/core.test.mjs tools/integration.test.mjs tools/gameplay.test.mjs tools/menu.test.mjs tools/help.test.mjs tools/world-mechanics.test.mjs tools/bosses.test.mjs tools/later-enemies.test.mjs tools/fullscreen.test.mjs",
+    "test": "node --test --test-reporter=spec tools/core.test.mjs tools/integration.test.mjs tools/gameplay.test.mjs tools/menu.test.mjs tools/help.test.mjs tools/world-mechanics.test.mjs tools/bosses.test.mjs tools/later-enemies.test.mjs tools/fullscreen.test.mjs tools/asset-paths.test.mjs",
     "serve": "node tools/serve.mjs",
     "test:browser": "node tools/browser-smoke.mjs",
     "test:gameplay": "node tools/browser-gameplay.mjs",

@@ -23,7 +23,7 @@ const ANIM_FILES = {
   BigBat: "assets/characters/big-bat/animData/Big-bat.xml",
   BigGhost: "assets/characters/ghost2/animData/Ghost2.xml",
   BigSpider: "assets/characters/big-spider/animData/Big-spider.xml",
-  Malmark2: "assets/characters/malmark2/animData/Malmark2.xml",
+  Malmark2: "assets/characters/malmark2/animdata/Malmark2.xml",
 };
 
 const EXPECTED_STATE_ANIMS = {
