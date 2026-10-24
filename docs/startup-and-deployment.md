@@ -48,7 +48,7 @@ que bloquee módulos por nombre, se recomienda servir `_site` como la publicaci�
 4. Archivo gráfico del menú bloqueado → error de inicio visible.
 
 Puede comprobar directamente la publicación con
-`node tools/browser-startup.mjs https://frajusu.github.io/vascolet-web/?v=boot-fix`.
+`node tools/browser-startup.mjs https://frajusu.github.io/vascolet-4-web/?v=boot-fix`.
 La prueba no depende de desactivar extensiones globalmente ni borra la partida del
 usuario. Un filtro que bloquee también la nueva entrada seguirá pudiendo impedir
 su descarga, pero ahora el fallo se presenta explícitamente y permite reintentar.

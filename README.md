@@ -5,7 +5,7 @@ motor `bat::` + DirectX9/OpenAL), hecho en **JavaScript + Canvas** y publicado e
 Proyecto de preservación y homenaje: lee en vivo los archivos de datos originales
 (mapas TMX, tilesets, atlas de sprites, animaciones, música, textos, GUI).
 
-👉 **Jugar:** https://frajusu.github.io/vascolet-web/
+👉 **Jugar:** https://frajusu.github.io/vascolet-4-web/
 
 ## Controles
 
