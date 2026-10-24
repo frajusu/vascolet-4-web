@@ -11,6 +11,7 @@ import { Audio2 } from "./audio.js";
 import { loadBitmapFont, drawBitmapText, measureBitmapText } from "./bitmap-font.js";
 import { TROPHIES } from "./trophies.js";
 import { setTextureFiltering } from "./render-settings.js";
+import { fullscreenActive, setFullscreen } from "./fullscreen.js";
 
 const W = 512, H = 384;
 // layout medido (binario: pitch 40, ultimo gap 60 + screenshots CV):
@@ -25,6 +26,7 @@ const BTN = [
 let atlas = null, sel = 0, onChoose = null;
 let trashHover = false, confirming = false, confirmSel = 0;
 let menuFont = null;
+let menuConfirmAtlas = null;
 
 export async function menuInit(choose) {
   onChoose = choose;
@@ -34,7 +36,8 @@ export async function menuInit(choose) {
   }
   sel = 0; confirming = false; confirmSel = 0;
   if (!menuFont) menuFont = await loadBitmapFont("winnie14-ob");
-  await loadAssets(["assets/gui/menu/reciclebin.png", "assets/gui/menu/reciclebin-over.png"]).catch(() => {});
+  if (!menuConfirmAtlas) menuConfirmAtlas = parseAtlas(await loadXML("assets/gui/hud/quit-confirmation.xml"));
+  await loadAssets(["assets/gui/menu/reciclebin.png", "assets/gui/menu/reciclebin-over.png", "assets/gui/hud/quit-confirmation.png"]);
 }
 
 export const TRASH = Object.freeze({ x: 434, y: 332, w: 32, h: 32 });
@@ -50,13 +53,13 @@ function btnRect(b) {
 export function menuUpdate() {
   const m = Input.mouse;
   if (confirming) {
-    if (Input.pressed.has("left")) { confirmSel = 0; Audio2.sfx("assets/audio/button.wav"); }
-    if (Input.pressed.has("right")) { confirmSel = 1; Audio2.sfx("assets/audio/button.wav"); }
+    if (Input.pressed.has("left") || Input.pressed.has("up")) { confirmSel = 0; Audio2.sfx("assets/audio/button.wav"); }
+    if (Input.pressed.has("right") || Input.pressed.has("down")) { confirmSel = 1; Audio2.sfx("assets/audio/button.wav"); }
     if (m.inside) {
-      if (inRect(m.x, m.y, { x: 196, y: 220, w: 110, h: 30 })) confirmSel = 0;
-      if (inRect(m.x, m.y, { x: 316, y: 220, w: 110, h: 30 })) confirmSel = 1;
+      const hit = PAUSE_CONFIRM_RECTS.findIndex(r => inRect(m.x, m.y, r));
+      if (hit >= 0) confirmSel = hit;
       if (Input.pressed.has("click")) {
-        if (!inRect(m.x, m.y, { x: 196, y: 220, w: 110, h: 30 }) && !inRect(m.x, m.y, { x: 316, y: 220, w: 110, h: 30 })) return;
+        if (hit < 0) return;
         if (confirmSel === 0) Save.clear();
         confirming = false;
         return;
@@ -99,6 +102,17 @@ export function menuDraw(ctx) {
   // 512x512 -> se ven filas 0..384 (1:1); abajo queda fuera; "Versión" es texto renderizado
   if (bg) ctx.drawImage(bg, 0, 0, 512, 384, 0, 0, W, H);
   const sheet = img("assets/gui/menu/menu.png");
+  if (confirming) {
+    // MainMenuState opens QuitConfirmDialog mode4: background_menu and the
+    // confirmContinueLevel02 crop, not a homemade message box over menu buttons.
+    const panel = img("assets/gui/hud/quit-confirmation.png"), crop = menuConfirmAtlas?.confirmContinueLevel02;
+    if (panel && crop) ctx.drawImage(panel,crop.x,crop.y,crop.w,crop.h,0,0,W,H);
+    for (const [i,name] of ["si","no"].entries()) {
+      const e=atlas?.[`${name}${confirmSel===i?"Over":"Up"}`],r=PAUSE_CONFIRM_RECTS[i];
+      if(sheet&&e)ctx.drawImage(sheet,e.x,e.y,e.w,e.h,r.x,r.y,r.w,r.h);
+    }
+    return;
+  }
   ctx.imageSmoothingEnabled = false;
   BTN.forEach((b, i) => {
     const e = atlas[i === sel ? b.over : b.up];
@@ -114,24 +128,6 @@ export function menuDraw(ctx) {
   if (trash && Save.read()) {
     ctx.imageSmoothingEnabled = false;
     ctx.drawImage(trash, 0, 0, trash.width, trash.height, TRASH.x, TRASH.y, TRASH.w, TRASH.h);
-    ctx.imageSmoothingEnabled = true;
-  }
-  if (confirming) {
-    ctx.fillStyle = "rgba(0,0,0,0.6)";
-    ctx.fillRect(0, 0, W, H);
-    ctx.fillStyle = "#7a0d0d";
-    ctx.fillRect(96, 140, 320, 130);
-    ctx.strokeStyle = "#ffd75e"; ctx.lineWidth = 2;
-    ctx.strokeRect(96, 140, 320, 130);
-    ctx.font = "bold 15px sans-serif";
-    ctx.fillStyle = "#ffd75e";
-    ctx.fillText("¿Borrar datos guardados?", 150, 175);
-    const msheet2 = img("assets/gui/menu/menu.png");
-    const sSi = atlas && atlas[confirmSel === 0 ? "siOver" : "siUp"];
-    const sNo = atlas && atlas[confirmSel === 1 ? "noOver" : "noUp"];
-    ctx.imageSmoothingEnabled = false;
-    if (msheet2 && sSi) ctx.drawImage(msheet2, sSi.x, sSi.y, sSi.w, sSi.h, 196, 220, sSi.w, sSi.h);
-    if (msheet2 && sNo) ctx.drawImage(msheet2, sNo.x, sNo.y, sNo.w, sNo.h, 316, 220, sNo.w, sNo.h);
     ctx.imageSmoothingEnabled = true;
   }
 }
@@ -285,6 +281,7 @@ export function optionsUpdate() {
   const m = Input.mouse;
   const activate = control => {
     if (control.type === "back") { optDrag = null; optionsDone?.(); return; }
+    if (control.id === "fullscreen") { void setFullscreen(!fullscreenActive()); return; }
     if (control.type === "mute") s[control.id] = !s[control.id];
     if (control.type === "check") s[control.id] = !s[control.id];
     commitOpt(s);
@@ -323,8 +320,6 @@ export function optionsUpdate() {
 
 export function applyDisplay(s) {
   const canvas = document.getElementById("game");
-  if (s.fullscreen && !document.fullscreenElement) document.documentElement.requestFullscreen?.().catch(() => {});
-  if (!s.fullscreen && document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
   if (canvas) canvas.dataset.stretch = s.stretch === false ? "0" : "1";
   setTextureFiltering(s.filterTextures, canvas);
 }
@@ -353,7 +348,7 @@ export function optionsDraw(ctx) {
     else {
       if (control.type === "slider") { key = "volumeControl"; x += s[control.id] * control.travel; }
       if (control.type === "mute") key = s[control.id] ? "soundOff" : "soundOn";
-      if (control.type === "check") key = s[control.id] ? "check" : "uncheck";
+      if (control.type === "check") key = (control.id === "fullscreen" ? fullscreenActive() : s[control.id]) ? "check" : "uncheck";
       entry = optAtlas?.[key + (selected ? "Selected" : "")];
       if (entry) { x -= entry.ax; y -= entry.ay; }
     }

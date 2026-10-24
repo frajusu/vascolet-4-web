@@ -28,6 +28,12 @@ En Opciones, **Filtrar texturas** activa el suavizado de imágenes. Desmarcarlo 
 muestreo nearest y escalado pixelado para mapas, personajes y demás texturas. La
 preferencia queda guardada en el navegador.
 
+**Pantalla completa:** la preferencia se recuerda y se restaura con el primer
+clic/tecla al reabrir, como exige el navegador. La casilla muestra el estado real.
+Esc pausa sin salir cuando Keyboard Lock está disponible; si el navegador sale de
+fullscreen, la partida se pausa igualmente con esa primera acción.
+[Detalles y pruebas de pantalla completa y papelera](docs/fullscreen-and-trash.md).
+
 ## Progreso guardado
 
 En `localStorage` del navegador: objetos/habilidades, capítulos completados y
@@ -110,6 +116,8 @@ de render mediante muestras de píxeles. Con el original local,
 `npm run test:campaign` verifica los 18 niveles en orden, objetos, poderes,
 combates de estado, vidas/desbloqueos y video final, con colocaciones controladas
 y protección temporal del jugador declaradas en el informe.
+`npm run test:fullscreen-trash` comprueba el diálogo original de borrado, fullscreen,
+Esc y restauración tras recargar usando el navegador real.
 La [herramienta nativa aislada](tools/native-isolated/README.md) permite observar
 una copia del original en un escritorio invisible, con controles privados y sin
 seleccionar ese escritorio. Su smoke de marcha/salto pasó; no recorre el nivel completo.

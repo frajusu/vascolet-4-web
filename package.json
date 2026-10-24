@@ -4,7 +4,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "node --test --test-reporter=spec tools/core.test.mjs tools/integration.test.mjs tools/gameplay.test.mjs tools/menu.test.mjs tools/help.test.mjs tools/world-mechanics.test.mjs tools/bosses.test.mjs tools/later-enemies.test.mjs",
+    "test": "node --test --test-reporter=spec tools/core.test.mjs tools/integration.test.mjs tools/gameplay.test.mjs tools/menu.test.mjs tools/help.test.mjs tools/world-mechanics.test.mjs tools/bosses.test.mjs tools/later-enemies.test.mjs tools/fullscreen.test.mjs",
     "serve": "node tools/serve.mjs",
     "test:browser": "node tools/browser-smoke.mjs",
     "test:gameplay": "node tools/browser-gameplay.mjs",
@@ -15,7 +15,8 @@
     "test:level1": "node tools/browser-level1.mjs",
     "test:stage-modes": "node tools/browser-stage-modes.mjs",
     "test:presentation": "node tools/browser-presentation.mjs",
-    "test:campaign": "node tools/browser-campaign.mjs"
+    "test:campaign": "node tools/browser-campaign.mjs",
+    "test:fullscreen-trash": "node tools/browser-fullscreen-trash.mjs"
   },
   "keywords": [],
   "author": "",

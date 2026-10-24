@@ -282,3 +282,10 @@ plataformas móviles, crías/proyectiles, video final y una prueba secuencial de
 del boomerang que fallaba tras saltar. La comprobación es explícitamente por
 fixtures controlados, no un recorrido natural completo ni garantía de equivalencia.
 [Estado de campaña, resultados y fuentes](campaign-status.md).
+
+## Décima corrección: diálogo de papelera y fullscreen — 24/10/2026
+
+Se reemplazó el aviso inventado por `confirmContinueLevel02` y sus controles
+verticales. Fullscreen separa preferencia guardada de estado real, restaura al
+primer gesto, solicita Keyboard Lock para Esc y pausa al salir del navegador si
+éste reserva la tecla. [Fuentes, alcance y pruebas](fullscreen-and-trash.md).

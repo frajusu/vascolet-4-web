@@ -8,6 +8,7 @@ import { Save } from "../js/save.js";
 import { Audio2 } from "../js/audio.js";
 import { TROPHIES } from "../js/trophies.js";
 import { RenderSettings, setTextureFiltering } from "../js/render-settings.js";
+import { loadAssets } from "../js/assets.js";
 
 const dom = new JSDOM("", { url: "https://menus.test/" });
 const originals = new Map();
@@ -38,6 +39,7 @@ const background = ctx => ctx.draws.find(d => /area0\d\.jpg/.test(d.src));
 const selected = ctx => ctx.draws.find(d => d.src.endsWith("/level.png") && d.rect[0] === 48 && d.rect[1] === 48);
 async function fresh(unlocked, callback = () => {}) {
   localStorage.clear(); Input.reset(); Input.mouse.inside = false;
+  await loadAssets(["assets/gui/menu/menu.png","assets/gui/menu/background.jpg"]);
   Save.unlock(unlocked); await menuInit(() => {}); await chaptersInit(callback);
 }
 
@@ -50,6 +52,20 @@ test("main-menu version uses native centered bitmap text and the bin matches the
   assert.equal(ctx.texts.length,0,"no unrelated system-font version label");
   const before=Save.read();Object.assign(Input.mouse,{inside:true,x:488,y:332});Input.pressed.add("click");menuUpdate();Input.endStep();
   assert.deepEqual(Save.read(),before,"the old out-of-place bin location is inert");
+});
+
+test("trash opens the native progress-loss panel with vertical buttons; No/Esc preserve progress and Yes preserves settings", async () => {
+  await fresh(3);Save.collectItem("&P-Run");Save.writeSettings({music:.3,fullscreen:true});
+  const original=Save.read();
+  const click=(x,y)=>{Object.assign(Input.mouse,{inside:true,x,y});Input.pressed.add("click");menuUpdate();Input.endStep();};
+  click(450,348);const ctx=context();menuDraw(ctx);
+  assert.deepEqual(ctx.draws.find(d=>d.src.endsWith("quit-confirmation.png")).rect,[512,0,512,384,0,0,512,384]);
+  assert.deepEqual(ctx.draws.filter(d=>d.src.endsWith("/menu.png")).map(d=>d.rect.slice(4)),[[201,277,110,30],[201,314,110,30]]);
+  assert.equal(ctx.texts.length,0,"the native art supplies the message");
+  click(370,235);assert.deepEqual(Save.read(),original,"old horizontal-button coordinates are inert");
+  Input.mouse.inside=false;Input.pressed.add("enter");menuUpdate();Input.endStep();assert.deepEqual(Save.read(),original,"default No cancels");
+  click(450,348);Input.pressed.add("esc");menuUpdate();Input.endStep();assert.deepEqual(Save.read(),original);
+  click(450,348);click(256,292);assert.equal(Save.read(),null);assert.equal(Save.settings().music,.3);assert.equal(Save.settings().fullscreen,true);
 });
 
 test("chapter nodes use native manual anchors and correct red/grey/blue crops", async () => {

@@ -553,7 +553,8 @@ test("main boots menu-only, keeps 144 Hz input queued, consumes once during catc
   await until(() => frames.length > 0);
   assert.equal(Game.map, null); assert.equal(Game.player, null);
   assert.ok(!requests.some(path => /maps\/level|texts\.xml|chars\.json/.test(path)));
-  assert.ok(!imageRequests.some(path => /characters|tilesets|hud/.test(path)));
+  assert.ok(!imageRequests.some(path => /characters|tilesets|assets\/images\/hud/.test(path)),
+    "boot may load confirmation GUI, but not gameplay libraries or the in-level HUD");
   render(0);
   key("keydown", "Enter", "Enter"); render(7); key("keyup", "Enter", "Enter");
   await until(() => !document.getElementById("boot")); render(14);
