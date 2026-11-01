@@ -4,7 +4,8 @@ import { readFile } from "node:fs/promises";
 import { JSDOM } from "jsdom";
 import { parseAnims } from "../js/tmx.js";
 import { AnimPlayer } from "../js/sprite.js";
-import { createEnemy } from "../js/enemies.js";
+import { createEnemy, updateEnemy, enemySpriteFlip } from "../js/enemies.js";
+import { createEnemyShot, updateEnemyShot } from "../js/enemy-projectiles.js";
 import {
   BOSS_KINDS, BOSS_MINIONS, updateBoss, damageBoss,
 } from "../js/bosses.js";
@@ -33,7 +34,7 @@ const EXPECTED_STATE_ANIMS = {
   BigUglyDragon: ["normal", "attack"],
   GiantDragonfly: ["normal"],
   BigAnguila: ["normal", "attack"],
-  BigPirana: ["normal"],
+  BigPirana: ["normalSkinned", "normal"],
   BigBat: ["normal"],
   BigGhost: ["normal"],
   BigSpider: ["normal", "shooting"],
@@ -112,7 +113,7 @@ test("camera wait starts each boss once, initializes its animation, and remains 
     const seen = step(e, player, 1 / 60, context.api, 900);
     assert.equal(e.fight, true, kind);
     assert.equal(context.calls.bossStart, 1, kind);
-    assert.ok(seen.size > 1 || ["BigBird", "BigUglyDragon", "GiantDragonfly"].includes(kind),
+    assert.ok(seen.size > 1 || ["BigBird", "BigUglyDragon", "GiantDragonfly", "BigBat"].includes(kind),
       `${kind} should leave its initial state`);
     assert.ok(e.animName && e.anim.has(e.animName), `${kind}: ${e.animName}`);
     assert.ok(e.anim.cur?.frames?.length, `${kind}: current frame`);
@@ -120,9 +121,9 @@ test("camera wait starts each boss once, initializes its animation, and remains 
   }
 });
 
-test("custom arena bounds are honored by flying controllers", () => {
+test("custom arena bounds contain solid-body flyers and swimmers", () => {
   const player = { x: 1300, y: 620, w: 8, h: 60 };
-  const flyers = ["BigBird", "BigUglyDragon", "GiantDragonfly", "BigAnguila", "BigPirana", "BigBat", "BigGhost"];
+  const flyers = ["BigUglyDragon", "BigAnguila", "BigPirana", "BigBat"];
   for (const kind of flyers) {
     const e = boss(kind);
     const bounds = { x: 700, y: 400, w: 600, h: 300 };
@@ -133,7 +134,7 @@ test("custom arena bounds are honored by flying controllers", () => {
   }
 });
 
-test("damage respects fight, hurt, explicit invulnerability, and resumes the state pose", () => {
+test("damage respects cooldown and invulnerability without replacing a living pose with corpse art", () => {
   const player = { x: 1080, y: 600 };
   const e = boss("BigBird");
   const context = api(e);
@@ -143,14 +144,14 @@ test("damage respects fight, hurt, explicit invulnerability, and resumes the sta
   assert.equal(damageBoss(e, 1, 2), true);
   assert.equal(e.hp, hp - 2);
   assert.equal(e.hurtT, 0.25);
-  assert.equal(e.anim.cur.name, "damage");
+  assert.equal(e.anim.cur.name, "normal");
   assert.equal(damageBoss(e), false);
   e.vulnerable = false;
   step(e, player, 0.3, context.api, 1);
   assert.equal(damageBoss(e), false);
   e.vulnerable = true;
   assert.equal(damageBoss(e), true);
-  assert.equal(e.anim.cur.name, "damage");
+  assert.equal(e.anim.cur.name, "normal");
   step(e, player, 0.3, context.api, 1);
   assert.notEqual(e.anim.cur.name, "damage");
 
@@ -160,8 +161,8 @@ test("damage respects fight, hurt, explicit invulnerability, and resumes the sta
   assert.equal(damageBoss(furry), true);
   updateBoss(furry, { x: 1100, y: 600 }, 1 / 60, furryContext.api);
   updateBoss(furry, { x: 1100, y: 600 }, 1 / 60, furryContext.api);
-  assert.equal(furry.state, "attack");
-  assert.equal(furry.anim.cur.name, "damage", "state change must not replace the hurt pose");
+  assert.equal(furry.state, "normal", "native normal wait lasts three seconds near the player");
+  assert.equal(furry.anim.cur.name, "normal");
 });
 
 test("generic death lasts four seconds, explodes, freezes, and notifies exactly once", () => {
@@ -214,7 +215,7 @@ test("TopoNinja alternates stand, kick, jump, and three-star attacks", () => {
   }
   assert.ok(context.calls.shoot.length >= 12);
   assert.ok(context.calls.shoot.every(call => call.options.aim === true));
-  assert.equal(e.y, e.homeY, "Topo returns to its support plane");
+  assert.ok(e.y <= e.homeY, "Topo never falls below its support plane");
 });
 
 test("BigBird performs horizontal passes and always keeps a visible death pose", () => {
@@ -266,14 +267,14 @@ test("BigPirana releases exactly five blowfish in each charge attack", () => {
   assert.ok(fish.length >= 5);
 });
 
-test("BigBat patrols at its recovered speed and periodically spawns bats", () => {
+test("BigBat steers continuously with native acceleration and periodically spawns bats", () => {
   const e = boss("BigBat", { seed: 13579 });
   const context = api(e);
   step(e, { x: 1180, y: 620 }, 1 / 60, context.api, 1);
   assert.equal(e.state, "normal");
-  assert.equal(Math.abs(e.vx), 100);
+  assert.ok(Math.abs(Math.abs(e.vx) - 100) <= 48 / 60 + 1e-9);
   const seen = step(e, { x: 1180, y: 620 }, 1 / 60, context.api, 3600);
-  assert.ok(seen.has("seek"));
+  assert.deepEqual([...seen], ["normal"], "native has no invented one-second seek phase");
   assert.ok(context.calls.spawn.filter(call => call.kind === "Bat").length >= 1);
 });
 
@@ -294,15 +295,13 @@ test("Malmark2 cycles through Spot markers, summons minions, and alternates atta
   ];
   const context = api(e, { markers });
   const seen = step(e, { x: 1180, y: 620 }, 1 / 60, context.api, 4800);
-  assert.ok(seen.has("teleport"));
+  assert.ok(seen.has("travel"));
   assert.ok(seen.has("attack1"));
   assert.ok(seen.has("attack2"));
-  for (const marker of markers) {
-    assert.ok(context.calls.spawn.some(call => Math.abs(call.x - (marker.x + 40)) < 1e-9 ||
-      Math.abs(call.x - marker.x) < 1e-9), `marker ${marker.x} was never used`);
-  }
+  assert.ok(context.calls.spawn.every(call => markers.some(marker =>
+    Math.hypot(call.x-marker.x, call.y+156-marker.y) <= 33)), "summons occur at the destination, within native 32px stop distance");
   assert.ok(context.calls.spawn.some(call => ["Bat", "DragonFly", "Bee"].includes(call.kind)));
-  assert.ok(context.calls.shoot.length >= 5);
+  assert.ok(context.calls.shoot.length >= 1);
 });
 
 test("every boss remains safe with no optional API, no animation, and no player", () => {
@@ -324,4 +323,155 @@ test("setState animation names are stable across repeated updates", () => {
     updateBoss(e, { x: 2000, y: 600 }, 1 / 60, context.api);
     assert.equal(e.animName, first, kind);
   }
+});
+
+test("Topo stars follow the three Custom frames of the ORIGINAL shot animation", () => {
+  const e=boss("TopoNinja"),p={x:1180,y:630},context=api(e);
+  updateBoss(e,p,0,context.api);
+  e.state="attack";e.stateTime=0;e.anim.restart("shot");e.flags=[];
+  const times=[];
+  context.api.shoot=(_,options)=>{times.push(e.stateTime);assert.equal(options.homingSpeed,320);assert.equal(options.offsetY,-70);};
+  for(let i=0;i<115;i++)updateBoss(e,p,1/60,context.api);
+  assert.equal(times.length,3);
+  for(const [i,at]of [11/12,13/12,15/12].entries())assert.ok(Math.abs(times[i]-at)<=1/60+1e-8);
+  assert.equal(e.state,"attack","shot pose lasts 23/12 s, not the old 1.05 s");
+  step(e,p,1/60,context.api,3);assert.equal(e.state,"stand");
+});
+
+test("Topo preparation launches on PhysicEvent and preserves the native -960 impulse", () => {
+  const e=boss("TopoNinja"),p={x:1500,y:630},context=api(e);
+  updateBoss(e,p,0,context.api);e.state="prepareJump";e.stateTime=0;e.anim.restart("roll");e.flags=[];
+  for(let i=0;i<20;i++)updateBoss(e,p,1/60,context.api);
+  assert.equal(e.state,"prepareJump");
+  updateBoss(e,p,1/60,context.api);assert.equal(e.state,"jump");assert.equal(e.vy,-960);
+  updateBoss(e,p,1/60,context.api);assert.equal(e.vy,-930);assert.equal(e.vx,8);
+});
+
+test("three birds share the native attack turn and each pursues for 5–8 seconds", () => {
+  const birds=[1,2,3].map(seed=>boss("BigBird",{seed})),p={x:1180,y:630},attacked=new Set();
+  const durations=[];let previous=null,started=0;
+  for(let i=0;i<3600;i++){
+    for(const e of birds)updateBoss(e,p,1/60,{
+      inCamera:()=>true,claimBird:b=>!birds.some(o=>o!==b&&o.state==="attack"&&o.hp>0),
+    });
+    const active=birds.filter(e=>e.state==="attack");assert.ok(active.length<=1);
+    if(previous&&active[0]!==previous)durations.push((i-started)/60);
+    if(active[0]!==previous){previous=active[0];started=i;}
+    if(active[0])attacked.add(active[0]);
+  }
+  assert.equal(attacked.size,3);assert.ok(durations.length>=6);
+  assert.ok(durations.every(t=>t>=5&&t<=8+1/60));
+});
+
+test("Pirana sheds its protective skin for ten seconds and releases five helpers at native offsets", () => {
+  const e=boss("BigPirana"),p={x:1180,y:630},context=api(e);
+  updateBoss(e,p,0,context.api);assert.equal(e.animName,"normalSkinned");assert.equal(damageBoss(e),false);
+  assert.ok(e.thinkT>=8&&e.thinkT<=10);
+  while(e.state==="normal")updateBoss(e,p,1/60,context.api);
+  assert.equal(e.animName,"normal");assert.equal(damageBoss(e),true);
+  assert.equal(context.calls.spawn.length,5);
+  assert.deepEqual(context.calls.spawn.map(c=>[Math.round((c.x-e.x)*e.dir)||0,Math.round(c.y-e.y)]),[[0,-40],[30,0],[-30,0],[30,-80],[-30,-80]]);
+  const x=e.x,y=e.y;step(e,p,1/60,context.api,599);
+  assert.equal(e.state,"attack");assert.equal(e.x,x);assert.equal(e.y,y);
+  step(e,p,1/60,context.api,2);assert.equal(e.state,"normal");assert.equal(damageBoss(e),false);
+});
+
+test("Furry smash emits one falling child on EACH MakeEffect, rather than two arbitrary timers", () => {
+  const e=boss("FurryCritter"),p={x:1180,y:630},context=api(e);
+  updateBoss(e,p,0,context.api);e.state="smash";e.stateTime=0;e.anim.restart("smash");e.flags=[];
+  step(e,p,1/60,context.api,66);
+  assert.equal(context.calls.spawn.length,3);assert.equal(context.calls.shake,3);
+  assert.ok(context.calls.spawn.every(c=>c.y===e.y-300));
+});
+
+test("UglyDragon keeps steering while emitting the short native flame stream", () => {
+  const e=boss("BigUglyDragon"),p={x:1500,y:800},context=api(e);
+  updateBoss(e,p,0,context.api);e.state="attack";e.stateTime=0;e.shootT=0;e.anim.restart("attack");
+  const x=e.x;step(e,p,1/60,context.api,12);
+  assert.ok(e.x>x);assert.equal(context.calls.shoot.length,12);
+  assert.ok(context.calls.shoot.every(c=>c.options.offsetX===32&&c.options.aim!==true));
+});
+
+test("Malmark flies at 180 px/s to a random Spot; attack2 changes pose without restarting the two-second state", () => {
+  const e=boss("Malmark2"),p={x:1100,y:630},context=api(e,{markers:[{x:1800,y:600}]});
+  updateBoss(e,p,0,context.api);e.thinkT=0;
+  updateBoss(e,p,1/60,context.api);assert.equal(e.state,"travel");
+  let previous={x:e.x,y:e.y};
+  while(e.state==="travel"){
+    updateBoss(e,p,1/60,context.api);
+    const displacement=Math.hypot(e.x-previous.x,e.y-previous.y);
+    assert.ok(displacement<=3+1e-8,"no teleport or snapping");previous={x:e.x,y:e.y};
+  }
+  assert.equal(e.state,"attack1");
+  step(e,p,1/60,context.api,61);assert.equal(e.state,"attack2");assert.ok(e.stateTime>=1);
+  step(e,p,1/60,context.api,60);assert.equal(e.state,"normal");
+});
+
+test("level-9 dragonfly can retreat beyond the map edge and return in an attacking pass", () => {
+  const e=boss("GiantDragonfly",{x:3856,y:702,homeX:3856,homeY:702}),p={x:3736,y:702};
+  const context=api(e,{bounds:{left:0,right:4096,top:0,bottom:1024},inCamera:b=>b.x>=3480&&b.x<=3992});
+  let outside=false,passed=false;const states=new Set();
+  for(let i=0;i<1200;i++){
+    updateBoss(e,p,1/60,context.api);outside||=e.x>4096;states.add(e.state);
+    if(e.state==="attack"&&e.x<p.x)passed=true;
+  }
+  assert.ok(outside);assert.ok(passed);assert.ok(states.has("normal")&&states.has("attack"));
+});
+
+test("retreating bosses face their target rather than flipping with backward velocity", () => {
+  assert.equal(enemySpriteFlip({kind:"BigGhost",boss:true,dir:1,vx:-120}),false);
+  assert.equal(enemySpriteFlip({kind:"GiantDragonfly",boss:true,dir:-1,vx:320}),true);
+});
+
+test("Topo homing stars steer at 320 and use their original one-second stick effect", () => {
+  const target={x:600,y:200,w:8,h:60},e={x:300,y:200,dir:1};
+  const shot=createEnemyShot(e,null,{library:"TopoNinja",aim:true,target,speed:320,homingSpeed:320,targetOffsetY:-8,endLife:1,terrain:true});
+  const context={tileAt:()=>0,camera:{x:0,y:0},hurtPlayer:()=>{}};
+  updateEnemyShot(shot,target,1/60,context);assert.ok(Math.abs(Math.hypot(shot.vx,shot.vy)-320)<1e-8);
+  target.x=10;target.y=350;updateEnemyShot(shot,target,1/60,context);assert.ok(shot.vx<0&&shot.vy>0);
+  shot.ending=true;shot.anim={update(){},finished:false};
+  updateEnemyShot(shot,target,.75,context);assert.equal(shot.removed,false);
+  updateEnemyShot(shot,target,.26,context);assert.equal(shot.removed,true);
+});
+
+test("Malmark randomly summons the three native species OR the Fireball2 homing projectile", () => {
+  const e=boss("Malmark2",{seed:424242}),context=api(e,{markers:[{x:1000,y:600}]});
+  step(e,{x:1180,y:620},1/60,context.api,12000);
+  assert.deepEqual(new Set(context.calls.spawn.map(c=>c.kind)),new Set(["Bat","DragonFly","Bee"]));
+  assert.ok(context.calls.shoot.length>0);
+  assert.ok(context.calls.shoot.every(c=>c.options.library==="fireball2"&&c.options.homingAfter===1&&c.options.homingUntil===6));
+});
+
+test("boss-owned blowfish wait 0.25 seconds, aim at speed 100, then periodically retarget", () => {
+  const e=createEnemy({name:"BigPiranaBlowFish",x:300,y:200});e.owner={kind:"BigPirana"};
+  const p={x:600,y:230},context={moveBody:(b,dt)=>{b.x+=b.vx*dt;b.y+=b.vy*dt;},waterAt:()=>true};
+  for(let i=0;i<14;i++)updateEnemy(e,p,1/60,context);
+  assert.equal(e.vx,0);assert.equal(e.vy,0);
+  for(let i=0;i<3;i++)updateEnemy(e,p,1/60,context);
+  assert.ok(e.vx>0);assert.ok(Math.abs(Math.hypot(e.vx,e.vy)-100)<1e-8);
+  p.x=0;for(let i=0;i<120;i++)updateEnemy(e,p,1/60,context);assert.ok(e.vx<0);
+});
+
+test("GameD friction is braking, not fake gravity, for birds and ghosts", () => {
+  for(const [kind,friction,offset]of [["BigBird",100,0],["BigGhost",60,64]]){
+    const e=boss(kind),context=api(e),p={x:e.x+500,y:e.y+offset};
+    updateBoss(e,p,0,context.api);e.vx=120;e.vy=0;const y=e.y;
+    updateBoss(e,p,1/60,context.api);
+    assert.ok(Math.abs(e.vx-(120-friction/60))<1e-8);assert.equal(e.y,y);assert.equal(e.vy,0);
+  }
+});
+
+test("native BigBat wall collisions reflect half the horizontal velocity", () => {
+  const e=boss("BigBat"),p={x:e.x+500,y:e.y+120},context=api(e);
+  updateBoss(e,p,0,context.api);e.vx=120;e.vy=0;
+  updateBoss(e,p,1/60,{...context.api,moveBody:b=>{b.hitWall=true;b.vx=0;}});
+  assert.ok(Math.abs(e.vx-(-120.8*.5))<1e-8);
+});
+
+test("damage-driven boss bars follow the most recently hit bird; Topo and Bat request theirs on entry", () => {
+  const birds=[boss("BigBird"),boss("BigBird")];
+  for(const e of birds){updateBoss(e,{x:1200,y:600},0,api(e).api);assert.equal(e.bossBarRequested,false);}
+  for(const e of birds){assert.equal(damageBoss(e),true);assert.equal(e.bossBarRequested,true);}
+  assert.ok(birds[1].bossBarOrder>birds[0].bossBarOrder);
+  for(const kind of ["TopoNinja","BigBat"]){const e=boss(kind);updateBoss(e,{x:1200,y:600},0,api(e).api);assert.equal(e.bossBarRequested,true);}
 });

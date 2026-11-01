@@ -218,7 +218,7 @@ export async function loadLevel(n, fresh = true) {
   if (G.enemies.some(e => e.kind === "Panal")) await ensureChar("Bee");
   const helpers = new Set();
   for (const e of G.enemies) for (const kind of ({ FurryCritter:["FurryCritterChild"], BigAnguila:["Anguila"],
-    BigPirana:["BigPiranaBlowFish"], BigBat:["Bat"], BigSpider:["LittleSpider"], Malmark2:["Bat","DragonFly","Bee"] })[e.kind] || []) helpers.add(kind);
+    BigPirana:["BigPiranaBlowFish"], BigBat:["Bat"], BigSpider:["LittleSpider"], Malmark2:["Bat","DragonFly","Bee","fireball2"] })[e.kind] || []) helpers.add(kind);
   await Promise.all([...helpers].map(ensureChar));
   if (G.platforms.length) { await ensureChar("Platform"); attachPlatforms(); }
   const itemChar = G.charCache.get("Items");
@@ -498,8 +498,8 @@ export function gameUpdate(dt) {
   p.fireCd = Math.max(0, p.fireCd - dt);
   for (const e of G.enemies) {
     if (!e.active && Math.abs(e.x - p.x) < 512 && Math.abs(e.y - p.y) < 420) e.active = true;
-    const finishingBoss = e.boss && e.state === "dying";
-    if (!finishingBoss && (!e.active || Math.abs(e.x - p.x) > 900 || Math.abs(e.y - p.y) > 700)) continue;
+    const runningBoss = e.boss && e.fight && !e.defeated;
+    if (!runningBoss && (!e.active || Math.abs(e.x - p.x) > 900 || Math.abs(e.y - p.y) > 700)) continue;
     carryPlatform(e, G.platforms || []);
     if (e.boss && !["scorpion-boss","native-boss"].includes(e.behavior) && e.hp > 0 && !e.fight &&
       e.x >= G.camX && e.x <= G.camX + W && e.y >= G.camY && e.y <= G.camY + H) {
@@ -511,6 +511,8 @@ export function gameUpdate(dt) {
       bossStart: () => { G.musicMode = "boss"; void Audio2.music(G.map.props["music,boss"] ? MUS + G.map.props["music,boss"] : null); },
       minionCount: () => G.enemies.filter(m => m.minion && m.hp > 0).length, spawnMinion,
       spawn: spawnEnemy, nearby: (kind,owner) => G.enemies.filter(other => other.kind === kind && other.owner === owner && other.hp > 0 && !other.removed).length,
+      birdStarted: () => e.kind === "BigBird" && G.enemies.some(other => other.kind === "BigBird" && other.fight),
+      claimBird: b => !G.enemies.some(other => other !== b && other.kind === "BigBird" && other.state === "attack" && other.hp > 0),
       waterAt: (x,y) => !!waterAt(G.water || [],x,y), sound: levelSound, markers: G.markers, bounds: bossBounds(e),
       shake: time => { G.shakeT = Math.max(G.shakeT, time); },
       explosion: b => { impact(b.x + Math.sin(b.stateTime * 47) * 45, b.y - 30 + Math.cos(b.stateTime * 31) * 30, 2); levelSound("v_explosion"); },
@@ -579,11 +581,16 @@ export function gameUpdate(dt) {
       openDialog("Juego salvado.", null, 2.7);
     }
   }
-  // Scorpion keeps its bar through the death sequence; other bosses remain proximity-based.
+  // Native Topo/Bat/Scorpion show on entry; other bars are requested by damage.
+  // With three birds, the LAST hit owns the bar rather than array order.
   G.bossHP = 0; G.bossMax = 1; G.bossHead = null; G.bossVisible = false;
+  let bossBarOrder = -1;
   for (const e of G.enemies) {
     if (!e.boss || e.defeated) continue;
     if (e.behavior === "scorpion-boss" || e.behavior === "native-boss" ? !e.fight : e.hp <= 0 || Math.hypot(e.x - p.x, e.y - p.y) > 520) continue;
+    if (e.behavior === "native-boss" && !e.bossBarRequested) continue;
+    if ((e.bossBarOrder || 0) < bossBarOrder) continue;
+    bossBarOrder = e.bossBarOrder || 0;
     G.bossVisible = true; G.bossHP = Math.max(0, e.hp); G.bossMax = e.maxhp; G.bossHead = e.kind;
   }
   // particulas de polvo
@@ -688,7 +695,8 @@ function attachPlatforms() {
 
 function bossBounds(e) {
   const G = Game;
-  let left = Math.max(0,e.homeX-640), right = Math.min(G.gw*TILE,e.homeX+640);
+  const reach = e.kind === "GiantDragonfly" ? 1024 : 640;
+  let left = Math.max(0,e.homeX-reach), right = Math.min(G.gw*TILE,e.homeX+reach);
   if (e.kind === "Malmark2" && G.markers.length) {
     left = Math.max(0,Math.min(...G.markers.map(m=>m.x))-96);right = Math.min(G.gw*TILE,Math.max(...G.markers.map(m=>m.x))+128);
   }

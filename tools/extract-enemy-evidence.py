@@ -10,12 +10,21 @@ from elftools.elf.elffile import ELFFile
 
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--subject', choices=['Fly', 'Frog', 'Flower', 'Beetle', 'Snail', 'PlayerDamage', 'PlayerProgress', 'BigScorpion', 'MountedPlayers', 'AutoCamera', 'Swimming', 'Platforms'], default='Frog')
+parser.add_argument('--subject', choices=['Fly', 'Frog', 'Flower', 'Beetle', 'Snail', 'PlayerDamage', 'PlayerProgress', 'BigScorpion', 'MountedPlayers', 'AutoCamera', 'Swimming', 'Platforms', 'BossActions', 'BossStates'], default='Frog')
 parser.add_argument('--compact', action='store_true', help='Only annotated strings/actions/constants, for focused review')
 parser.add_argument('--binary', type=Path, default=root.parent / 'Vascolet4.activity/bin/vascolet4')
 parser.add_argument('--output', type=Path, default=root / 'analysis/native-evidence')
 args = parser.parse_args()
 ranges = {
+    'BossStates': [(0x08141e9d, 0x081510e0), (0x08178c80, 0x08179e90),
+                   (0x08171e78, 0x08172580), (0x08079e95, 0x08079fe9)],
+    'BossActions': [(0x0818f6a0, 0x0818f711), (0x0818f840, 0x0818f8e7),
+                    (0x081e8c40, 0x081e8d18), (0x081ea850, 0x081ea980),
+                    (0x081eeb70, 0x081eeee9), (0x08201b20, 0x08201cb8),
+                    (0x081e7680, 0x081e76ff), (0x081e9a70, 0x081e9bc2),
+                    (0x082a4b80, 0x082a4bc4), (0x082a4fa0, 0x082a50b1),
+                    (0x081ea420, 0x081ea65d), (0x0819fa70, 0x0819ffdc),
+                    (0x0819ffe0, 0x081a037e)],
     'Fly': [(0x0816c8f5, 0x0816d080), (0x08078c20, 0x08078d70)],
     'Frog': [(0x08170434, 0x08170b70), (0x080797f0, 0x08079940)],
     'Flower': [(0x0816ecd8, 0x0816f4e2), (0x080792b0, 0x08079400)],

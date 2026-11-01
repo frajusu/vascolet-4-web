@@ -26,7 +26,7 @@ objetos, condición de victoria, espera final y desbloqueo persistente.
 | 9 | GiantDragonfly | Retirada, embestidas y proyectiles |
 | 10 | BigAnguila | Natación, crías Anguila, fruta5/alimento |
 | 11 | Exit real | Pasaje acuático/autoscroll y natación |
-| 12 | BigPirana | Agua y refuerzos BigPiranaBlowFish limitados |
+| 12 | BigPirana | Agua, fase protegida/expuesta y cinco BigPiranaBlowFish por oleada |
 | 13 | BigBat | Run, doble salto, verdura4/alimento y crías Bat |
 | 14 | Exit real | Mariposa, ruta diagonal y trampas |
 | 15 | BigSpider | Descenso, disparos, crías y subida |
@@ -50,6 +50,25 @@ El nivel1 mantiene además su pelea de arena con boomerangs reales sin protecci�
 de jugador ni modificaciones de HP durante el combate (`test:level1`).
 
 ## Enemigos y jefes
+
+### Revisión centrada en bosses
+
+Se contrastaron las 12 arenas con capturas del Windows original en una copia
+temporal aislada y con sus estados/acciones simbolizados. Se corrigieron los
+11 controladores posteriores y la explosión final del escorpión: turnos de los
+tres pájaros, fases de protección de la piraña, vuelos de Malmark entre Spot,
+flags reales del topo y smash, aceleraciones/frenado/rebotes y refuerzos.
+
+`npm run test:bosses` entra directamente a las 14 peleas, observa sus patrones y
+usa **boomerangs reales** para vencer. El jugador recibe inventario de capítulo,
+protección y colocaciones controladas; no se sobrescriben HP ni se llama a la
+función de daño desde el test. Complementa la prueba de campaña que usa golpes
+de estado. Fuentes, parámetros y límites: [evidencia de bosses](native-boss-evidence.md).
+
+Verificación de esta revisión: **149 tests aprobados**, **14/14 encuentros**
+superados con boomerangs, campaña **18/18** con final y arranque del paquete de
+producción comprobados. Se conservaron los hashes de los 18 mapas, 12 pistas y
+34 efectos del original.
 
 - `js/bosses.js` implementa los 11 controladores posteriores; BigScorpion conserva
   su controlador específico. Esperan a entrar en cámara, atacan/se desplazan,
@@ -119,7 +138,7 @@ las dimensiones del recorrido.
 - `npm run test:campaign`: comprobación secuencial de los 18 mapas y final.
 - Regresiones de gameplay, nivel1, monturas, presentación y ayuda/render.
 
-Resultado de cierre: **126 tests aprobados**, prueba secuencial de **18/18**
+Resultado del cierre inicial de campaña: **126 tests aprobados**, prueba secuencial de **18/18**
 niveles aprobada, 20 objetos permanentes y final alcanzados. Pasaron también
 `test:gameplay` (incluido el retorno antes intermitente), `test:level1`,
 `test:stage-modes`, `test:presentation`, `test:help-rendering`, `test:menus`,

@@ -9,6 +9,7 @@ export function damageScorpion(b) {
   b.hp--; b.freeze = .2; b.hurtT = .25; b.look = true;
   if (b.hp <= 0) {
     b.state = "dying"; b.stateTime = 0; b.vx = b.vy = 0;
+    b.deathBooms = 0; b.contact = false;
     b.anim?.restart("dead"); b.cur = b.anim?.frame;
   }
   return true;
@@ -22,8 +23,12 @@ export function updateScorpion(b, player, dt, api) {
   b.stateTime += dt;
   b.freeze = Math.max(0, (b.freeze || 0) - dt); b.hurtT = Math.max(0, b.hurtT - dt);
   if (b.state === "dying") {
-    if (b.stateTime >= 4) { b.state = "defeated"; b.defeated = true; api.bossDefeated?.(b); }
-    else if (b.stateTime < 3 && Math.floor((b.stateTime - dt) * 10) !== Math.floor(b.stateTime * 10)) api.explosion?.(b);
+    const explosions = Math.min(30, Math.floor(Math.min(b.stateTime, 3) * 10 + 1e-8));
+    while (b.deathBooms < explosions) { b.deathBooms++; api.explosion?.(b); }
+    if (b.stateTime >= 4) {
+      for (let i = 0; i < 5; i++) api.explosion?.(b);
+      api.shake?.(.2); b.state = "defeated"; b.defeated = true; api.bossDefeated?.(b);
+    }
     return;
   }
   if (b.state === "defeated") return;

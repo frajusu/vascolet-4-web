@@ -17,6 +17,7 @@
     "test:stage-modes": "node tools/browser-stage-modes.mjs",
     "test:presentation": "node tools/browser-presentation.mjs",
     "test:campaign": "node tools/browser-campaign.mjs",
+    "test:bosses": "node tools/browser-bosses.mjs",
     "test:fullscreen-trash": "node tools/browser-fullscreen-trash.mjs",
     "test:startup": "node tools/browser-startup.mjs"
   },

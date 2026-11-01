@@ -32,6 +32,7 @@ export function enemyAnimation(e, name, restart = false) {
 }
 
 export function enemySpriteFlip(e) {
+  if (e.boss || BOSS_KINDS.has(e.kind)) return e.dir < 0;
   // Verified first-area atlases face right. Art orientation is independent of AI.
   if (ENEMY_PROFILES[e.kind]) return (Math.abs(e.vx) > 1 ? e.vx : e.dir) < 0;
   return e.dir > 0;

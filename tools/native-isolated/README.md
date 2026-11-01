@@ -32,3 +32,20 @@ de rendimiento/audio con la ejecución habitual del original.
 `runner.py` ofrece `NativeRunner`, `keys` (códigos DIK privados), `press`, `capture`
 y lecturas de memoria acotadas. `observe_original.py`, el observador interactivo
 anterior, requiere ahora `VASCOLET_INTERACTIVE_INPUT=1` explícito.
+
+## Referencias directas de bosses
+
+```sh
+python tools/native-isolated/bosses.py
+# Sólo arenas concretas:
+python tools/native-isolated/bosses.py 3 12 18
+```
+
+Crea una segunda copia en TEMP, coloca su `Start` junto al boss y carga ese mapa
+como nivel 1. Conserva el resto de sus objetos y toma cinco capturas mediante el
+escritorio invisible. Comprueba los hashes del ejecutable/mapa originales y el
+escritorio de entrada antes/después. Cada arena tarda alrededor de un minuto.
+El jugador nativo puede recibir daño: las capturas no certifican una pelea ganada
+ni están sincronizadas por frame con la web. La prueba web directa es
+`npm run test:bosses`: allí sí se usa protección y colocación controlada del
+jugador, y el daño llega mediante boomerangs reales sin asignar HP a los bosses.

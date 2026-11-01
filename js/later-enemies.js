@@ -29,7 +29,19 @@ function flyer(e, player, dt, api, dx, dy, { accel = e.acceleration || 300, targ
   e.ground = solid(api.tileAt, e.x, e.y + 1);
 }
 
-function swimPatrol(e, dt, api) {
+function swimPatrol(e, player, dt, api) {
+  if(e.kind === "BigPiranaBlowFish" && e.owner?.kind === "BigPirana") {
+    // Boss-summoned helpers wait 0.25 s, then aim anew every 1+random(1) s.
+    if(e.bossAimT === undefined) { e.bossAimT=.25; e.vx=e.vy=0; }
+    e.bossAimT-=dt;
+    if(e.bossAimT<=0&&player) {
+      const dx=player.x-e.x,dy=player.y-32-e.y,d=Math.hypot(dx,dy)||1;
+      e.vx=dx/d*100;e.vy=dy/d*100;e.dir=Math.sign(e.vx)||e.dir;e.bossAimT=1+enemyRandom(e);
+    }
+    if(!inWater(e,api))e.vy=60;
+    if(e.ground)e.vy=-60;
+    api.moveBody(e,dt,0);return;
+  }
   e.vx = e.dir * e.speed; e.vy = 0;
   if (solid(api.tileAt, e.x + e.dir * (e.w / 2 + 2), e.y - e.h / 2)) {
     e.dir *= -1; e.vx = e.dir * e.speed;
@@ -328,7 +340,7 @@ export function updateLaterEnemy(e, player, dt, api) {
     }
     return true;
   }
-  if (e.behavior === "swim-patrol") { swimPatrol(e, dt, api); return true; }
+  if (e.behavior === "swim-patrol") { swimPatrol(e, player, dt, api); return true; }
   if (e.behavior === "piranha") { piranha(e, player, dt, api, dx, dy); return true; }
   if (e.behavior === "blowfish") { blowfish(e, player, dt, api, dx, dy); return true; }
   if (e.behavior === "falling-trap") { fallingTrap(e, player, dt, api, dx, dy); return true; }

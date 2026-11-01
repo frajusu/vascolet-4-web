@@ -1,261 +1,125 @@
-# Native boss evidence and calibration
+# Bosses: native evidence and direct arena verification
 
-This document separates facts recovered from the native game data from timings
-and movement values that were calibrated for the Canvas port. The implementation
-lives in `js/bosses.js`; deterministic coverage lives in `tools/bosses.test.mjs`.
+The boss-only revision replaces the campaign's approximate patterns with state,
+action and animation evidence from the original. There are **12 boss types and
+14 encounters**: level 4 contains three BigBirds. BigScorpion retains its separate
+controller; the other eleven use `js/bosses.js`.
 
-## Sources
+## Reproducible sources
 
-- `analysis/states2-behavior.txt`
-  - generic boss death: lines 13337-13980
-  - `BigBird`: lines 15229-16200
-- `analysis/states3-behavior.txt`
-  - `BigAnguila`: lines 141-1535
-  - `BigBat`: lines 1548-2250
-  - `TopoNinja`: lines 2304-5300
-  - `FurryCritter`: lines 5372-6700
-  - `BigUglyDragon`: lines 7024-7727
-  - `GiantDragonfly`: lines 7727-8444
-  - `BigGhost`: lines 8444-9600
-  - `BigPirana`: lines 9607-10884
-  - `BigSpider`: lines 10884-11987
-  - `Malmark2`: lines 11987-13330
-- `js/character-catalog.js`, `assets/chars.json`, and the shipped character
-  libraries supplied HP, body size, gravity, animations, and art.
-- `assets/data/maps/level3.tmx`, `level4.tmx`, `level6.tmx`, `level7.tmx`,
-  `level9.tmx`, `level10.tmx`, `level12.tmx`, `level13.tmx`, `level15.tmx`,
-  `level16.tmx`, and `level18.tmx` supplied placements and `Spot1`-`Spot5`.
+Original symbolized i386 ELF SHA256:
+`95f3798f7e1be2bb75a85d637e74750beb41787cbd260549232f88f5cd759573`.
 
-The analysis files are symbolized disassembly. String labels are evidence of
-native state names and actions. Numeric immediates described as recovered below
-are quoted from that disassembly. Any timing not stated as recovered is an
-explicit port calibration.
-
-## Recovered constants
-
-| Boss | HP | Body | Gravity | Recovered motion |
-| --- | ---: | --- | ---: | --- |
-| `TopoNinja` | 30 | 80x100 | 1800 | jump impulse `-960` |
-| `BigBird` | 25 | 80x40 | 0 | aerial pass at `320` |
-| `FurryCritter` | 100 | 124x80 | 0 | base speed `60` |
-| `BigUglyDragon` | 30 | 120x56 | 0 | base speed `120` |
-| `GiantDragonfly` | 25 | 120x56 | 0 | attack/dash speed `240` |
-| `BigAnguila` | 50 | 128x32 | 0 | base speed `60` |
-| `BigPirana` | 30 | 92x96 | 0 | base speed `60`; five blowfish |
-| `BigBat` | 30 | 90x42 | 0 | patrol speed `100`; child timer `5` |
-| `BigGhost` | 30 | 62x64 | 0 | base speed `60`; shoot interval `0.5`-`1.0` |
-| `BigSpider` | 70 | 92x108 | 0 | descend `192` at `240`; climb at `60` |
-| `Malmark2` | 100 | 30x120 | 0 | `Spot1`-`Spot5` teleport markers |
-
-`BigScorpion` is intentionally absent. It remains implemented by
-`js/scorpion-boss.js` and is not re-created by the new module.
-
-## Recovered state labels
-
-The native state machines use named states and some uppercase internal labels.
-The Canvas port keeps short lower-case state names where the behavior maps
-one-to-one. This table records the relationship instead of pretending the port
-has the native scripting engine.
-
-| Boss | Native evidence | Controller states |
-| --- | --- | --- |
-| `TopoNinja` | `wait`, `prepareJump`, `kick`, `attack`, `jump`; labels `TOPO_NINJA_PREPARE_JUMP`, `TOPO_NINJA_JUMP` | `stand` (native `wait`), `prepareJump`, `jump`, `kick`, `attack` |
-| `BigBird` | `BIG_BIRD_WAITING`, `waitingForAttack`, `attacking` | `normal` (wait), `attack` (pass) |
-| `FurryCritter` | `normal`, `moving`, `attack`, `smash` | `normal`, `seek` (native `moving`), `attack`, `smash` |
-| `BigUglyDragon` | `BIG_UGLY_DRAGON_NORMAL`, `BIG_UGLY_DRAGON_ATTACK` | `normal`, `attack` |
-| `GiantDragonfly` | `GIANT_DRAGONFLY_NORMAL`, `GIANT_DRAGONFLY_ATTACK` | `normal`, `attack` |
-| `BigAnguila` | `normal`, `attack` | `normal`, `attack` |
-| `BigPirana` | `BIG_PIRANA_NORMAL`, `BIG_PIRANA_ATTACK`, `normalSkinned` | `normal`, `attack` |
-| `BigBat` | `BIG_BAT_INITIAL_WAIT`, `BIG_BAT_NORMAL` | `normal`; optional seek phase |
-| `BigGhost` | `BIG_GHOST_NORMAL`, `BIG_GHOST_ATTACK`, `shoot` | `normal`, `attack` |
-| `BigSpider` | `BIG_SPIDER_NORMAL`, `BIG_SPIDER_ATTACK` | `normal`, `down`, `attack`, `up` |
-| `Malmark2` | `normal`, `attack1`, `attack2`, teleport through `Spot` markers | `normal`, `teleport`, `attack1`, `attack2` |
-
-The common wrapper states are port-level names: `waiting`, `dying`, and
-`defeated`. The native engine uses camera activation and generic boss states for
-the same phases.
-
-## Recovered animation sets
-
-Only names that exist in the shipped XML are requested. If a library lacks a
-dedicated pose, the controller falls back to `normal` rather than inventing a
-name.
-
-| Boss | Animation names |
-| --- | --- |
-| `TopoNinja` | `stand`, `shot`, `roll`, `star`, `starDead`, `dead`, `kick` |
-| `BigBird` | `damage`, `dead`, `normal` |
-| `FurryCritter` | `damage`, `dead`, `moving`, `attack`, `smash`, `normal` |
-| `BigUglyDragon` | `damage`, `dead`, `normal`, `attack` |
-| `GiantDragonfly` | `damage`, `dead`, `normal` |
-| `BigAnguila` | `normal`, `attack` (no `dead` in this library) |
-| `BigPirana` | `damage`, `dead`, `normal`, `normalSkinned` |
-| `BigBat` | `damage`, `dead`, `normal` |
-| `BigGhost` | `damage`, `dead`, `normal` |
-| `BigSpider` | `damage`, `dead`, `normal`, `shooting` |
-| `Malmark2` | `damage`, `dead`, `normal`, `attack1`, `attack2` |
-| `FurryCritterChild` | `damage`, `dead`, `walk`, `normal` |
-| `Anguila` child | `normal`, `attack`, `dead` |
-| `BigPiranaBlowFish` | uses its own non-boss profile |
-| `LittleSpider` | `normal` |
-| `Bat` child | `damage`, `dead`, `normal` |
-
-## Generic boss lifecycle
-
-Recovered from `GENERIC_BOSS_INITIAL_WAIT`, `GENERIC_BOSS_DEAD`, and the
-`GENERIC_BOSS_STATIC_DEAD` section:
-
-- Bosses begin in an initial wait and start the boss music when they become
-  active.
-- The fight starts on entering the camera. `api.bossStart(e)` is emitted once.
-- `hp <= 0` enters a dying state; movement, gravity, and contact are disabled.
-- Regular explosions occur every `0.1` seconds through `3.0` seconds.
-- At `4.0` seconds the native script makes five more explosions, shakes the
-  screen, and calls `Die`.
-- The port emits 30 regular explosions, then 5 final explosions, then
-  `bossDefeated` once. It does not reproduce the native white tint because the
-  Canvas API has no tint callback in this module.
-- Dying and defeated bosses ignore player distance. They cannot be damaged
-  again.
-
-## Per-boss behavior and calibrated values
-
-### `TopoNinja`
-
-Recovered: `wait` chooses among `kick`, `prepareJump`, and `attack`; the jump
-uses gravity `1800` and impulse `-960`; `kick`, `roll`, `shot`, `star`, and
-`starDead` are the native poses/actions.
-
-Port calibration:
-
-- wait time `0.1`-`1.4` seconds;
-- kick movement `180` for `0.18` seconds and a `0.58` second state;
-- prepare-jump delay `0.24` seconds, horizontal jump `120`-`220`;
-- attack fires three aimed shots at `0.14`, `0.40`, and `0.66` seconds, then
-  returns after `1.05` seconds.
-
-The three-shot spread and the exact state durations were not recovered. The
-native star child type is recorded in `BOSS_MINIONS`, but the port emits the
-stars through `api.shoot` so they use the existing projectile pipeline.
-
-### `BigBird`
-
-Recovered: gravity `0`, pass speed `320`, initial wait and
-`waitingForAttack`/`attacking` states.
-
-Port calibration: wait `0.8`-`1.8` seconds, pass `1.15` seconds, vertical
-correction limited to `120` pixels/second, hover bob `5` pixels.
-
-### `FurryCritter`
-
-Recovered: `normal`, `moving`, `attack`, `smash`; child type
-`FurryCritterChild`; base speed `60`.
-
-Port calibration: normal wait `2.5`-`3.5` seconds, seek window `0.7`-`1.1`
-seconds, attack/smash split `55/45`, one aimed fireball, up to two children per
-smash, and child cap `2`.
-
-### `BigUglyDragon`
-
-Recovered: `normal`/`attack`, speed `120`, fireball attack.
-
-Port calibration: attack volley at `0.08`, `0.36`, and `0.64` seconds;
-`1.05` second attack; wait `1.0`-`2.0` seconds.
-
-### `GiantDragonfly`
-
-Recovered: `normal`/`attack`, attack speed `240`.
-
-Port calibration: retreat speed `320` inside `180` pixels, approach speed
-`120`, three aimed shots, `0.95` second attack, wait `0.8`-`1.5` seconds.
-
-### `BigAnguila`
-
-Recovered: `normal`/`attack`, speed `60`, child type `Anguila`, two-shot fan.
-
-Port calibration: child spawn every `3.5` seconds with a cap of `2`; fan
-vertical velocities `-50` and `50`; `1.0` second attack; wait `1.0`-`2.0`
-seconds. The source library has no `dead` animation, so death uses `normal`.
-
-### `BigPirana`
-
-Recovered: normal/attack, speed `60`, five `BigPiranaBlowFish` in a charge.
-
-Port calibration: spawn fan positions, lunge speed `100`, `1.25` second attack,
-wait `1.3`-`2.3` seconds.
-
-### `BigBat`
-
-Recovered: normal state, patrol speed `100`, child timer `5` seconds, bat child
-type.
-
-Port calibration: hover wave `24` pixels/second, optional seek phase of `1.0`
-second every `2.4`-`3.6` seconds, child cap `3`.
-
-### `BigGhost`
-
-Recovered: normal/attack/shoot, speed `60`, `0.5`-`1.0` second shoot timer,
-two-shot attack.
-
-Port calibration: retreat inside `200` pixels, approach speed `120`, attack
-speeds `-120` then `240`, both shots aimed, `1.0` second attack, attack every
-`3.0` seconds.
-
-### `BigSpider`
-
-Recovered: normal/attack, descend `192` pixels at `240`, climb at `60`.
-
-Port calibration: normal wait `1.0` second, attack `2.4` seconds, aimed shots
-every `0.2`-`0.5` seconds, one `LittleSpider`, child cap `1`.
-
-### `Malmark2`
-
-Recovered: `normal`, `attack1`, `attack2`, teleport through five `Spot` markers,
-and minion summoning.
-
-Port calibration: fireball at `0.85` seconds; teleport after `2.0`-`3.0`
-seconds; marker visit order; one minion per teleport; attack1/attack2 durations
-`0.9`/`1.1` seconds. Marker centers use TMX object width/height when present and
-fall back to the object origin for plain test markers.
-
-## Integration contract
-
-```js
-updateBoss(enemy, player, dt, api) // true when the kind is handled
-damageBoss(enemy, direction = 1, damage = 1) // true when damage was accepted
+```sh
+python tools/extract-enemy-evidence.py --subject BossStates
+python tools/extract-enemy-evidence.py --subject BossActions
+python tools/extract-enemy-evidence.py --subject BigScorpion
 ```
 
-All callbacks are optional:
+These are bounded disassembly ranges, not global auto-analysis:
 
-- `moveBody(e, dt, gravity)`
-- `tileAt(x, y)`
-- `inCamera(e)`
-- `spawn(kind, x, y, direction, owner)`
-- `nearby(kind, owner)`
-- `shoot(owner, options)`
-- `markers`: array or `(e) => array`
-- `bounds`: object or `(e) => object`
-- `shake(seconds)`
-- `explosion(e)`
-- `bossStart(e)`
-- `bossDefeated(e)`
-- `sound(name)`
+- `0x08141e9d–0x081510e0`: later boss state definitions, including helper spawns.
+- `0x08178c80–0x08179e90`: BigBird group flags, waiting and attack states.
+- `0x08171e78–0x08172580`: StandarFireball/Malmark projectile states.
+- `0x08079e95–0x08079fe9`: StandarFireball factory, selecting **fireball2**.
+- `0x081eeb70`: SetTimer implementation.
+- `0x08201b20`: SeekObject implementation.
+- `0x081e7680`, `0x081e9a70`: GameD defaults and application to physics.
+- `0x082a4fa0`: native per-axis integration; `0x0819fa70`/`0x0819ffe0`:
+  bounded tile-collision routines used to interpret bounce coefficients.
 
-The parent integration now routes all `BOSS_KINDS` through this module from
-`js/enemies.js`, before generic damage/death handling. The runtime uses
-`native-boss`, supplies arena bounds/markers/callbacks, preloads child libraries,
-and waits for `defeated` before completing the stage. Topo stars use their own
-library; BigPirana's living helper group is capped at five. See
-`campaign-status.md` for the combined verification and its explicit fixture scope.
+Existing indexed excerpts `analysis/states2-behavior.txt` and
+`analysis/states3-behavior.txt` are convenient local research outputs. The commands
+above regenerate the relevant evidence without depending on those ignored files.
+Original TMX, descriptor/catalog data and animation XML supply placements, HP,
+body dimensions, animation duration, flags and per-frame displacement.
 
-## Verification
+### Two important corrections to the earlier interpretation
 
-```powershell
-node --test tools/bosses.test.mjs
-node --test tools/integration.test.mjs
+1. **SetTimer(base, spread)** stores `base + randomBetween(0, spread)`. For example,
+   `(3,2)` means **3–5 seconds**, not a reversed min/max interval.
+2. **SeekObject(..., true)** applies separate **accelerations**, not an instant
+   normalized chase velocity. GameD's `+0x0c` field is **horizontal friction**:
+   bird waiting uses 100, ghost uses 60. The negative fields following maximum
+   velocities are **collision bounce coefficients**, not negative friction.
+
+## Per-boss correction
+
+| Level | Boss / HP | Behavior now reconstructed from the source |
+|---|---|---|
+| 1 | BigScorpion / 20 | Existing walk/jump/reinforcement pattern preserved; death emits all 30 periodic and 5 final explosions. |
+| 3 | TopoNinja / 30 | Stand wait `0.1+random(1.4)`; weighted attack/jump/kick choice; roll preparation launches at `PhysicEvent`, `vy=-960`, airborne horizontal force480. Kick launches at its own flag with `vx=640`, `vy=-300`, gravity960 and wall bounce. |
+| 4 | BigBird ×3 / 25 each | Shared fight activation and **one attacker at a time**. Waiting3s, nearby retreat/vertical alignment, friction100. Pursuit lasts `5+random(3)` with force120 and axis caps240. Other birds wait for the shared attack turn. |
+| 6 | FurryCritter / 100 | Three-second nearby wait; original `moving` frame displacement; close-player/boomerang trigger; fire after `1+random(1)` and return after2.1s. Each smash `MakeEffect` shakes and can drop one randomly positioned child from300px above. Native child-count gate is `count<=5`. |
+| 7 | BigUglyDragon / 30 | Axis forces/caps120, vertical target96px above player, camera guard while normal. Fire timer `1+random(2)`; **0.2-second continuous flame stream while steering**, rather than three stationary aimed fireballs. Tile bounce coefficient−1. |
+| 9 | GiantDragonfly / 25 | Retreat inside600px, align72px above player, then commit to a pass with horizontal force240. Keep launch facing until past player and outside camera. Close-range bullet trigger32px. Can leave the map edge during retreat. |
+| 10 | BigAnguila / 50 | Swimming force/caps60. After `1+random(2)`, choose a pair of eels, aimed bullet, diagonal pair or four-way cross; pause in attack for1s. No unrelated recurring child timer. |
+| 12 | BigPirana / 30 | Protected `normalSkinned` phase lasts `8+random(2)`. Release five helpers at native offsets; exposed `normal` pose remains stationary and vulnerable for10s. Repeat. Helpers wait0.25s, aim at speed100 and retarget every `1+random(1)`. |
+| 13 | BigBat / 30 | Continuous steering with forces48/60 toward player−120px, initial horizontal speed100, caps240/120, tile bounce−0.5. Spawn owned bats every5s while native count gate allows it. Removed invented timed seek phase. |
+| 15 | BigSpider / 70 | Normal wait `1+random(1)`; two opposite-facing child spawns and a shot on cycle entry. Descend192px at240; shoot for `2+random(1)`; initial shot delay `0.2+random(0.5)`, repeats `0.3+random(0.1)`; climb at60. |
+| 16 | BigGhost / 30 | Vertical force240 toward player−64px, horizontal friction60 and close retreat; outside-camera return speed60. Normal shots start after `1+random(0.5)` and repeat `0.4+random(0.2)`. After `3+random(3)`, recoil and chase with forces320/120 for `3+random(2)`. |
+| 18 | Malmark2 / 100 | Wait `3+random(2)`, select a random Spot and **fly there at180**, stopping within32px. No teleport. Two-second attack state changes from `attack1` to `attack2` after1s; choose Bat, DragonFly, Bee or native Fireball2 above the hands. Fireball2 accelerates toward player during seconds1–6. |
+
+### Animation-linked behavior
+
+- Topo's `shot` lasts `23/12` seconds. Custom flags occur after **11/12,
+  13/12 and 15/12 seconds**, accounting for long XML frame durations. Stars use
+  the Topo atlas, steer at320 and keep their one-second `starDead` stick effect.
+- Roll launch occurs after `10/30` seconds; entering jump preserves the current
+  roll animation rather than replaying its preparation frames.
+- Smash follows all three MakeEffect flags, not two arbitrary spawn timers.
+- Living damage blinks/shakes the current pose. Exported `damage` images are
+  not substituted for living animations; several look like dead characters.
+- Retreating bosses retain their native facing independently of backward speed.
+
+### Lifecycle and integration
+
+Activation is camera-driven; the bird group additionally shares activation.
+An active fight continues updating outside the ordinary enemy-culling distance.
+This matters for retreat/passes and distant Malmark destinations. Free-flight
+bosses retain native map-collision bypass: a hard map-edge clamp made the
+level-9 dragonfly incapable of reaching its600px retreat distance.
+
+Topo, Bat and Scorpion request their energy bar on entry. Other bosses request
+it on damage. With the three birds, the most recently hit boss owns the bar.
+This avoids showing another bird's untouched HP while the player attacks one.
+
+Damage cooldown is0.25s. Pirana's protected phase rejects damage. Defeat freezes
+movement/contact, emits30 explosions at0.1s intervals through3s, then5 final
+explosions and one defeat callback at4s. The renderer supplies the final white
+flash. Stage completion waits for every relevant boss's defeat callback.
+
+## Direct verification
+
+```sh
+npm test
+npm run test:bosses
+npm run test:campaign
+# Requires Windows and the isolated native adapter:
+python tools/native-isolated/bosses.py
 ```
 
-The boss suite parses the real character XML with `jsdom`, drives the real
-`AnimPlayer`, and covers all eleven controllers, fight gating, damage gating,
-hurt-pose recovery, death timing, explosions, bounds, projectiles, minions,
-markers, and missing optional APIs.
+`test:bosses` opens only boss maps, places a protected player in each arena,
+observes30 simulated seconds without attacking, then fights using actual input,
+player throw animations, boomerang trajectories and collision/damage rules.
+It grants the fruits/snorkel appropriate to that chapter in its isolated save.
+**It never assigns boss HP or calls the damage function directly.** Fleeing
+bosses receive a fixed target so fixture teleporting cannot force an endless
+chase. It checks all14 encounters, bird turn exclusion, death and stage victory,
+and writes snapshots/report under `%TEMP%/opencode/vascolet-bosses-*`.
+
+The Windows observer uses a TEMP copy with Start moved into each original arena.
+It captures the real renderer on an unselected desktop with private input;
+the original executable, assets and real save are not edited. Native references
+were collected for all12 boss maps. They are observations, not frame-synchronized
+comparisons or native victories.
+
+### Remaining fidelity limits
+
+Recovered patterns, action parameters and animation timings are distinct from
+a bit-identical simulation. The shared Canvas collision/sweep engine, JavaScript
+numeric precision, exact frame ordering, projectile contact boxes and minion
+steering retain port differences. Seeded xorshift makes tests reproducible but
+does not reproduce the native RNG stream. These fixtures certify direct combat
+and progression, not natural unaided victories or pixel/frame-perfect Windows
+equivalence.
